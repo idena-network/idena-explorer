@@ -69,7 +69,6 @@ export default function MyApp({ Component, pageProps }) {
         <meta property="og:image:height" content="630" />
         <meta property="og:image" content="./og_image.jpg" />
         <meta property="og:title" content="" />
-        <meta name="description" content="" />
         <meta property="og:description" content="" />
       </Head>
       <ReactQueryConfigProvider config={queryConfig}>
