@@ -1,0 +1,8 @@
+services:
+  - docker
+
+script:
+  - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t explorer .
+  - docker tag explorer $DOCKER_USERNAME/explorer:latest
+  - docker push $DOCKER_USERNAME/explorer:latest
