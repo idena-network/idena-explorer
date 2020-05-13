@@ -27,7 +27,7 @@ export default function MyApp({ Component, pageProps }) {
         />
         <meta
           name="description"
-          content="Idena is novel way to create anonymous identity on blockchain. It allows for proof of humanness and uniqueness for its participants on the basis of Turing test."
+          content="Idena Explorer allows you to explore and search the Idena blockchain for addresses, identities, transactions, flips, blocks, invitations, epochs, mining rewards and validation results taking place on Idena (DNA)"
         />
 
         <link rel="shortcut icon" href="/favicon.ico" />
