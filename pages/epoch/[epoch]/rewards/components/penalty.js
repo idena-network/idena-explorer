@@ -70,8 +70,10 @@ export default function Penalty({ epoch, visible }) {
                         style={{ width: 150 }}
                       >
                         <Link
-                          href="/identity/[address]"
-                          as={`/identity/${item.address}`}
+                          href="/identity/[address]/epoch/[epoch]/rewards"
+                          as={`/identity/${item.address}/epoch/${
+                            epoch + 1
+                          }/rewards`}
                         >
                           <a>{item.address}</a>
                         </Link>

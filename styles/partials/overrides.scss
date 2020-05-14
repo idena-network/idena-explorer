@@ -316,6 +316,14 @@ p {
   content: url('/static/images/idena_black.svg');
 }
 
+.icon-logo-white-small {
+  content: url('/static/images/idena_white_small.svg');
+}
+
+.icon-logo-black-small {
+  content: url('/static/images/idena_black_small.svg');
+}
+
 .btn-signin {
   .spinner {
     display: inline-block;

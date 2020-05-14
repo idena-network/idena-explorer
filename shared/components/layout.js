@@ -160,7 +160,7 @@ function Layout({ children, signinLoading }) {
                   >
                     <a className="btn btn-signin">
                       <img
-                        className={`icon icon-logo-white ${
+                        className={`icon icon-logo-white-small ${
                           signinLoading ? 'hidden' : ''
                         }`}
                         width="24px"
