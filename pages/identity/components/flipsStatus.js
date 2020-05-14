@@ -75,7 +75,7 @@ export default function FlipsStatus({ address }) {
                 className="control-label"
                 data-toggle="tooltip"
                 tooltip={
-                  'Flips with inappropriate content or irrelecant to keywords'
+                  'Flips with inappropriate content or irrelevant to keywords'
                 }
               >
                 Reported
