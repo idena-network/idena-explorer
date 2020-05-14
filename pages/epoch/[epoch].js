@@ -266,26 +266,26 @@ function EpochData({ epoch }) {
               <h3 className="info_block__accent">
                 {txsCount || '-'} / {blocksCount || '-'}
               </h3>
-              <div
+              <TooltipText
                 className="control-label"
                 data-toggle="tooltip"
                 title="Total transactions / Blocks"
               >
                 Transactions / Blocks
-              </div>
+              </TooltipText>
             </div>
             <div className="col-12 col-sm-3 bordered-col">
               <h3 className="info_block__accent">
                 {(invitesSummary && invitesSummary.usedCount) || '-'} /{' '}
                 {(invitesSummary && invitesSummary.allCount) || '-'}
               </h3>
-              <div
+              <TooltipText
                 className="control-label"
                 data-toggle="tooltip"
                 title="Activated / Total issued"
               >
                 Invitations
-              </div>
+              </TooltipText>
             </div>
             <div className="col-12 col-sm-3 bordered-col">
               <h3 className="info_block__accent">{flipsCount || '-'}</h3>
