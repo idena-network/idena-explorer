@@ -18,6 +18,7 @@ import Flips from './components/flips';
 import { useHashChange, useHash } from '../../shared/utils/useHashChange';
 import Blocks from './components/blocks';
 import Transactions from './components/transactions';
+import TooltipText from '../../shared/components/tooltip';
 
 const DEFAULT_TAB = '#identities';
 
@@ -269,7 +270,7 @@ function EpochData({ epoch }) {
               <TooltipText
                 className="control-label"
                 data-toggle="tooltip"
-                title="Total transactions / Blocks"
+                tooltip="Total transactions / Blocks"
               >
                 Transactions / Blocks
               </TooltipText>
@@ -282,7 +283,7 @@ function EpochData({ epoch }) {
               <TooltipText
                 className="control-label"
                 data-toggle="tooltip"
-                title="Activated / Total issued"
+                tooltip="Activated / Total issued"
               >
                 Invitations
               </TooltipText>
