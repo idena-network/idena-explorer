@@ -112,7 +112,7 @@ function TxDetails(data) {
                         alt="pic"
                         width="32"
                       />
-                      <span>{data.from}</span>
+                      <span>{data.to}</span>
                     </a>
                   </Link>
                 ) : (
