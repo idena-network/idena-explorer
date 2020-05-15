@@ -186,14 +186,16 @@ function Flip({ cid }) {
                       : 'Flip is relevant to the keywords'}
                   </p>
                 )}
-                {flip && !flip.words && (
-                  <p className="text_block">
-                    <i className="icon icon--micro_fail"></i>
-                    {
-                      'The flip was reported as having inappropriate content, labels on top of the images showing the right order or text needed to solve the flip'
-                    }
-                  </p>
-                )}
+                {flip &&
+                  !flip.words &&
+                  (flip.wrongWords || flip.status === 'QualifiedByNone') && (
+                    <p className="text_block">
+                      <i className="icon icon--micro_fail"></i>
+                      {
+                        'The flip was reported as having inappropriate content, labels on top of the images showing the right order or text needed to solve the flip'
+                      }
+                    </p>
+                  )}
               </div>
             </div>
           </div>
@@ -376,7 +378,7 @@ function Flip({ cid }) {
                   </div>
                   <div className="col-12 col-sm-4 bordered-col">
                     <h3 className="info_block__accent">
-                      {flip ? flip.wrongWordsVotes : '-'}
+                      {flip && flip.status ? flip.wrongWordsVotes : '-'}
                     </h3>
                     <TooltipText
                       className="control-label"
@@ -397,9 +399,9 @@ function Flip({ cid }) {
         <div className="row">
           <div className="col-12">
             <h3>Qualification committee</h3>
-            <div class="card">
-              <div class="table-responsive">
-                <table class="table">
+            <div className="card">
+              <div className="table-responsive">
+                <table className="table">
                   <thead>
                     <tr>
                       <th>Identity</th>
@@ -458,9 +460,9 @@ function Flip({ cid }) {
                           <td>
                             {item.flipAnswer !== 'None' ? (
                               item.respAnswer === item.flipAnswer ? (
-                                <i class="icon icon--micro_success"></i>
+                                <i className="icon icon--micro_success"></i>
                               ) : (
-                                <i class="icon icon--micro_fail"></i>
+                                <i className="icon icon--micro_fail"></i>
                               )
                             ) : (
                               ''
@@ -490,9 +492,9 @@ function Flip({ cid }) {
         <div className="row">
           <div className="col-12">
             <h3>Challenged identities</h3>
-            <div class="card">
-              <div class="table-responsive">
-                <table class="table">
+            <div className="card">
+              <div className="table-responsive">
+                <table className="table">
                   <thead>
                     <tr>
                       <th>Identity</th>
@@ -544,9 +546,9 @@ function Flip({ cid }) {
                           <td>
                             {item.flipAnswer !== 'None' ? (
                               item.respAnswer === item.flipAnswer ? (
-                                <i class="icon icon--micro_success"></i>
+                                <i className="icon icon--micro_success"></i>
                               ) : (
-                                <i class="icon icon--micro_fail"></i>
+                                <i className="icon icon--micro_fail"></i>
                               )
                             ) : (
                               ''
