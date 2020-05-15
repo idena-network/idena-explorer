@@ -120,7 +120,8 @@ export default function Transactions({address, visible}) {
                   <td>
                     {dnaFmt(
                       precise6(
-                        !(item.amount * 1) && typeof item.transfer !== undefined
+                        !(item.amount * 1) &&
+                          typeof item.transfer !== 'undefined'
                           ? item.transfer
                           : item.amount
                       ),
