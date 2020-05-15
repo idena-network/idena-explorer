@@ -1,31 +1,31 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react'
 import {
   getOnlineMinersCount,
   getOnlineIdentitiesCount,
-} from '../../../shared/api';
-import TooltipText from '../../../shared/components/tooltip';
+} from '../../../shared/api'
+import TooltipText from '../../../shared/components/tooltip'
 
 const initialState = {
   online: '-',
   total: '-',
-};
+}
 
 export default function Identities() {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(initialState)
 
   useEffect(() => {
     async function getData() {
       const [online, total] = await Promise.all([
         getOnlineMinersCount(),
         getOnlineIdentitiesCount(),
-      ]);
+      ])
       setState({
         online,
         total,
-      });
+      })
     }
-    getData();
-  }, []);
+    getData()
+  }, [])
 
   return (
     <div className="col-12 col-sm-3">
@@ -49,5 +49,5 @@ export default function Identities() {
         </div>
       </div>
     </div>
-  );
+  )
 }

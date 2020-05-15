@@ -1,7 +1,7 @@
-import Layout from '../../shared/components/layout';
-import { NavItem, NavLink, TabPane, TabContent } from 'reactstrap';
-import Coins from './components/coins';
-import Vested from './components/vested';
+import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
+import Layout from '../../shared/components/layout'
+import Coins from './components/coins'
+import Vested from './components/vested'
 
 function Circulation() {
   return (
@@ -19,7 +19,7 @@ function Circulation() {
               <div className="col">
                 <ul className="nav nav-tabs" role="tablist">
                   <NavItem>
-                    <NavLink active={true}>
+                    <NavLink active>
                       <h3>Vested coins</h3>
                     </NavLink>
                   </NavItem>
@@ -28,7 +28,7 @@ function Circulation() {
             </div>
           </div>
 
-          <TabContent activeTab={'vestedCoins'}>
+          <TabContent activeTab="vestedCoins">
             <TabPane tabId="vestedCoins">
               <div className="card">
                 <Vested />
@@ -46,14 +46,14 @@ function Circulation() {
               className="btn btn-block btn-secondary"
               href="https://medium.com/idena/idena-community-report-current-state-and-next-steps-dce97a0e3034"
             >
-              <i className="icon icon--medium"></i>
+              <i className="icon icon--medium" />
               <span>See Idena community report for details</span>
             </a>
           </div>
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
-export default Circulation;
+export default Circulation

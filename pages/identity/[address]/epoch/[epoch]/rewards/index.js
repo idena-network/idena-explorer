@@ -1,5 +1,7 @@
-import Layout from '../../../../../../shared/components/layout';
-import { useQuery } from 'react-query';
+import {useQuery} from 'react-query'
+import Link from 'next/link'
+import {TabContent, TabPane, NavItem, NavLink} from 'reactstrap'
+import Layout from '../../../../../../shared/components/layout'
 import {
   getEpochRewardsSummary,
   getIdentityAuthorsBadByEpoch,
@@ -9,116 +11,112 @@ import {
   getIdentityRewardedInvitesByEpoch,
   getIdentitySavedInviteRewardsByEpoch,
   getIdentityAvailableInvitesByEpoch,
-} from '../../../../../../shared/api';
+} from '../../../../../../shared/api'
 import {
   epochFmt,
-  dateFmt,
   dnaFmt,
   identityStatusFmt,
   iconToSrc,
   flipQualificationStatusFmt,
   isIdentityPassed,
-} from '../../../../../../shared/utils/utils';
-import Link from 'next/link';
-import TooltipText from '../../../../../../shared/components/tooltip';
-import { TabContent, TabPane, NavItem, NavLink } from 'reactstrap';
+} from '../../../../../../shared/utils/utils'
+import TooltipText from '../../../../../../shared/components/tooltip'
 import {
   useHash,
   useHashChange,
-} from '../../../../../../shared/utils/useHashChange';
+} from '../../../../../../shared/utils/useHashChange'
 
-const DEFAULT_TAB = '#flips';
+const DEFAULT_TAB = '#flips'
 
-function Reward({ epoch, address = '' }) {
-  const { hash, setHash, hashReady } = useHash();
-  useHashChange((hash) => setHash(hash));
+function Reward({epoch, address = ''}) {
+  const {hash, setHash, hashReady} = useHash()
+  useHashChange((hash) => setHash(hash))
 
-  epoch = parseInt(epoch);
+  // eslint-disable-next-line no-param-reassign
+  epoch = parseInt(epoch)
 
-  const { data: identityInfo } = useQuery(
+  const {data: identityInfo} = useQuery(
     ['epoch/identity', address, epoch - 1],
     (_, address, epoch) => getIdentityByEpoch(address, epoch)
-  );
+  )
 
-  const { data: validationPenalty } = useQuery(
+  const {data: validationPenalty} = useQuery(
     ['epoch/identity/authors/bad', address, epoch - 1],
     (_, address, epoch) => getIdentityAuthorsBadByEpoch(address, epoch)
-  );
+  )
 
-  const { data: identityRewards } = useQuery(
+  const {data: identityRewards} = useQuery(
     ['epoch/identity/rewards', address, epoch - 1],
     (_, address, epoch) => getIdentityRewardsByEpoch(address, epoch)
-  );
+  )
 
-  const { data: rewardsSummary } = useQuery(
+  const {data: rewardsSummary} = useQuery(
     ['epoch/rewardsSummary', epoch - 1],
     (_, epoch) => getEpochRewardsSummary(epoch)
-  );
+  )
 
-  const { data: rewardedFlips } = useQuery(
+  const {data: rewardedFlips} = useQuery(
     ['epoch/identity/rewardedFlips', address, epoch - 1],
     (_, address, epoch) => getIdentityRewardedFlipsByEpoch(address, epoch)
-  );
+  )
 
-  const { data: rewardedInvites } = useQuery(
+  const {data: rewardedInvites} = useQuery(
     ['epoch/identity/rewardedInvites', address, epoch - 1],
     (_, address, epoch) => getIdentityRewardedInvitesByEpoch(address, epoch)
-  );
+  )
 
-  const { data: availableInvites } = useQuery(
+  const {data: availableInvites} = useQuery(
     ['epoch/identity/availableInvites', address, epoch - 1],
     (_, address, epoch) => getIdentityAvailableInvitesByEpoch(address, epoch)
-  );
+  )
 
-  const { data: savedInvites } = useQuery(
+  const {data: savedInvites} = useQuery(
     ['epoch/identity/savedInvites', address, epoch - 1],
     (_, address, epoch) => getIdentitySavedInviteRewardsByEpoch(address, epoch)
-  );
+  )
 
   const getPenalizationReason = (reason) => {
     switch (reason) {
       case 'WrongWords':
-        return 'Yes (flip was reported)';
+        return 'Yes (flip was reported)'
       case 'QualifiedByNone':
-        return 'Yes (flip was not availalbe)';
+        return 'Yes (flip was not availalbe)'
       case 'NoQualifiedFlips':
-        return 'Yes (non of the flips are qualified)';
+        return 'Yes (non of the flips are qualified)'
+      default:
     }
-    return '';
-  };
+    return ''
+  }
 
   const getReward = (arr, type) => {
     if (!arr) {
-      return 0;
+      return 0
     }
-    const item = arr.find((x) => x.type === type);
+    const item = arr.find((x) => x.type === type)
     if (!item) {
-      return 0;
+      return 0
     }
-    return item.balance * 1 + item.stake * 1;
-  };
+    return item.balance * 1 + item.stake * 1
+  }
 
   const getInvitationsReward = () =>
     getReward(identityRewards, 'Invitations') +
     getReward(identityRewards, 'Invitations2') +
     getReward(identityRewards, 'Invitations3') +
     getReward(identityRewards, 'SavedInvite') +
-    getReward(identityRewards, 'SavedInviteWin');
+    getReward(identityRewards, 'SavedInviteWin')
 
-  const getValidationReward = () => getReward(identityRewards, 'Validation');
+  const getValidationReward = () => getReward(identityRewards, 'Validation')
 
-  const getFlipsReward = () => getReward(identityRewards, 'Flips');
+  const getFlipsReward = () => getReward(identityRewards, 'Flips')
 
-  const getMissingValidationReward = () => {
-    return (
-      (identityInfo &&
-        rewardsSummary &&
-        (!isIdentityPassed(identityInfo.state) || validationPenalty) &&
-        Math.pow((epoch - identityInfo.birthEpoch) * 1, 1 / 3) *
-          rewardsSummary.validationShare) ||
-      0
-    );
-  };
+  const getMissingValidationReward = () =>
+    (identityInfo &&
+      rewardsSummary &&
+      (!isIdentityPassed(identityInfo.state) || validationPenalty) &&
+      (epoch - identityInfo.birthEpoch) ** (1 / 3) *
+        rewardsSummary.validationShare) ||
+    0
 
   const getMissingFlipsReward = () =>
     (rewardsSummary &&
@@ -128,7 +126,7 @@ function Reward({ epoch, address = '' }) {
         rewardsSummary.flipsShare * identityInfo.availableFlips -
           getFlipsReward()
       )) ||
-    0;
+    0
 
   const invitationRewards = [
     ...getRewardedData(
@@ -152,13 +150,13 @@ function Reward({ epoch, address = '' }) {
       rewardedInvites,
       rewardsSummary
     ),
-  ];
+  ]
 
   const getMissingInvitationsReward = () =>
     invitationRewards.reduce(
       (prev, cur) => prev + cur.missingInvitationReward,
       0
-    );
+    )
 
   return (
     <Layout>
@@ -167,13 +165,13 @@ function Reward({ epoch, address = '' }) {
           <div className="col-auto">
             <div className="section_main__image">
               <img
-                src={'https://robohash.org/' + address.toLowerCase()}
+                src={`https://robohash.org/${address.toLowerCase()}`}
                 alt="pic"
                 width="160"
               />
               <div className="verified_sign">
                 {identityInfo && identityInfo.state === 'Human' && (
-                  <i className="icon icon--status"></i>
+                  <i className="icon icon--status" />
                 )}
               </div>
             </div>
@@ -200,14 +198,14 @@ function Reward({ epoch, address = '' }) {
                 as={`/identity/${address}/epoch/${epoch}/validation`}
               >
                 <a className="btn btn-secondary btn-small">
-                  <i className="icon icon--report"></i>
+                  <i className="icon icon--report" />
                   <span>Validation results</span>
                 </a>
               </Link>
 
               <Link href="/address/[address]" as={`/address/${address}`}>
                 <a className="btn btn-small btn-secondary">
-                  <i className="icon icon--coins"></i>
+                  <i className="icon icon--coins" />
                   <span>Address details</span>
                 </a>
               </Link>
@@ -225,7 +223,7 @@ function Reward({ epoch, address = '' }) {
                 <div className="control-label">Identity:</div>
                 <div
                   className="text_block text_block--ellipsis"
-                  style={{ width: '80%' }}
+                  style={{width: '80%'}}
                 >
                   <Link href="/identity/[address]" as={`/identity/${address}`}>
                     <a>{address}</a>
@@ -292,7 +290,7 @@ function Reward({ epoch, address = '' }) {
                         ? 'icon--micro_fail'
                         : 'icon--micro_success'
                     }`}
-                  ></i>
+                  />
                 </div>
               </div>
             </div>
@@ -387,7 +385,7 @@ function Reward({ epoch, address = '' }) {
                 <div className="row">
                   <div className="col-12 col-sm-12 bordered-col">
                     <h3 className="info_block__accent">
-                      <span style={{ color: 'red' }}>
+                      <span style={{color: 'red'}}>
                         {(rewardsSummary &&
                           identityInfo &&
                           dnaFmt(
@@ -417,7 +415,7 @@ function Reward({ epoch, address = '' }) {
               <div className="info_block">
                 <div className="row">
                   <div className="col-12 col-sm-4 bordered-col">
-                    <h3 className="info_block__accent" style={{ color: 'red' }}>
+                    <h3 className="info_block__accent" style={{color: 'red'}}>
                       {dnaFmt(getMissingValidationReward())}
                     </h3>
                     <TooltipText
@@ -429,7 +427,7 @@ function Reward({ epoch, address = '' }) {
                     </TooltipText>
                   </div>
                   <div className="col-12 col-sm-4 bordered-col">
-                    <h3 className="info_block__accent" style={{ color: 'red' }}>
+                    <h3 className="info_block__accent" style={{color: 'red'}}>
                       {dnaFmt(getMissingFlipsReward())}
                     </h3>
                     <TooltipText
@@ -441,7 +439,7 @@ function Reward({ epoch, address = '' }) {
                     </TooltipText>
                   </div>
                   <div className="col-12 col-sm-4 bordered-col">
-                    <h3 className="info_block__accent" style={{ color: 'red' }}>
+                    <h3 className="info_block__accent" style={{color: 'red'}}>
                       {dnaFmt(getMissingInvitationsReward())}
                     </h3>
                     <TooltipText
@@ -503,16 +501,16 @@ function Reward({ epoch, address = '' }) {
                             Status
                           </TooltipText>
                         </th>
-                        <th style={{ width: 100 }}>
+                        <th style={{width: 100}}>
                           Reward <br />
                           paid, DNA
                         </th>
-                        <th style={{ width: 100 }}>
+                        <th style={{width: 100}}>
                           Missed
                           <br />
                           reward, DNA
                         </th>
-                        <th style={{ width: 100 }}>Details</th>
+                        <th style={{width: 100}}>Details</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -525,7 +523,10 @@ function Reward({ epoch, address = '' }) {
                           <tr key={idx}>
                             <td>
                               <div className="user-pic">
-                                <img src="/static/images/flip_icn.png" />
+                                <img
+                                  src="/static/images/flip_icn.png"
+                                  alt="flip_icon"
+                                />
                               </div>
                               <div className="text_block text_block--ellipsis">
                                 Flip was not submitted
@@ -534,7 +535,7 @@ function Reward({ epoch, address = '' }) {
                             <td>-</td>
                             <td>-</td>
                             <td>-</td>
-                            <td style={{ color: 'red' }}>
+                            <td style={{color: 'red'}}>
                               {dnaFmt(
                                 rewardsSummary && rewardsSummary.flipsShare,
                                 ''
@@ -559,11 +560,11 @@ function Reward({ epoch, address = '' }) {
                                   alt="pic"
                                   width="44"
                                   height="44"
-                                ></img>
+                                />
                               </div>
                               <div
                                 className="text_block text_block--ellipsis"
-                                style={{ width: 200 }}
+                                style={{width: 200}}
                               >
                                 <Link
                                   href="/flip/[cid]"
@@ -583,9 +584,7 @@ function Reward({ epoch, address = '' }) {
                                     <i className="icon icon--micro_success" />
                                   )}
                                   <span>
-                                    {item.words.word1.name +
-                                      '/' +
-                                      item.words.word2.name}
+                                    {`${item.words.word1.name}/${item.words.word2.name}`}
                                   </span>
                                 </>
                               ) : (
@@ -605,7 +604,7 @@ function Reward({ epoch, address = '' }) {
                                 ''
                               )}
                             </td>
-                            <td style={{ color: 'red' }}>
+                            <td style={{color: 'red'}}>
                               {dnaFmt(
                                 rewardsSummary &&
                                   !item.rewarded &&
@@ -639,22 +638,22 @@ function Reward({ epoch, address = '' }) {
 
                         <th>Invited identity</th>
 
-                        <th style={{ width: 160 }}>
+                        <th style={{width: 160}}>
                           <TooltipText tooltip="Validation result of the invited person">
                             Validation
                           </TooltipText>
                         </th>
 
-                        <th style={{ width: 100 }}>
+                        <th style={{width: 100}}>
                           Reward <br />
                           paid, DNA
                         </th>
-                        <th style={{ width: 100 }}>
+                        <th style={{width: 100}}>
                           Missed
                           <br />
                           reward, DNA
                         </th>
-                        <th style={{ width: 100 }}>Details</th>
+                        <th style={{width: 100}}>Details</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -675,7 +674,7 @@ function Reward({ epoch, address = '' }) {
                             <td>
                               <div
                                 className="text_block text_block--ellipsis"
-                                style={{ width: 200 }}
+                                style={{width: 200}}
                               >
                                 {(item.hash && (
                                   <Link
@@ -693,17 +692,14 @@ function Reward({ epoch, address = '' }) {
                                 <>
                                   <div className="user-pic">
                                     <img
-                                      src={
-                                        'https://robohash.org/' +
-                                        item.activationAuthor.toLowerCase()
-                                      }
+                                      src={`https://robohash.org/${item.activationAuthor.toLowerCase()}`}
                                       alt="pic"
                                       width="32"
                                     />
                                   </div>
                                   <div
                                     className="text_block text_block--ellipsis"
-                                    style={{ width: 120 }}
+                                    style={{width: 120}}
                                   >
                                     <Link
                                       href="/identity/[address]"
@@ -718,7 +714,7 @@ function Reward({ epoch, address = '' }) {
                             </td>
                             <td>{item.validationResult}</td>
                             <td>{dnaFmt(item.invitationReward, '')}</td>
-                            <td style={{ color: 'red' }}>
+                            <td style={{color: 'red'}}>
                               {dnaFmt(item.missingInvitationReward, '')}
                             </td>
                             <td>{item.reason}</td>
@@ -733,7 +729,7 @@ function Reward({ epoch, address = '' }) {
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
 function getRewardedData(
@@ -743,45 +739,45 @@ function getRewardedData(
   validationPenalty
 ) {
   if (!rewardsSummary || !rewardedInvites) {
-    return [];
+    return []
   }
   return rewardedInvites
     .map((item) => {
       if (item.killInviteeHash || !item.activationHash) {
-        return null;
+        return null
       }
 
-      let isValidated = false,
-        result = '-';
+      let isValidated = false
+      let result = '-'
 
       if (item.state) {
         if (isIdentityPassed(item.state)) {
-          isValidated = true;
-          result = 'Successfull';
+          isValidated = true
+          result = 'Successfull'
         } else {
-          result = 'Failed';
+          result = 'Failed'
         }
       }
 
-      let rewardCoef = 3;
+      let rewardCoef = 3
       if (item.epoch === epoch - 1) {
-        rewardCoef = rewardCoef * 3;
+        rewardCoef *= 3
       } else if (item.epoch === epoch - 2) {
-        rewardCoef = rewardCoef * 6;
+        rewardCoef *= 6
       }
 
-      let invitationReward = rewardsSummary.invitationsShare * rewardCoef;
-      let missingInvitationReward = 0;
-      let reason = '-';
+      let invitationReward = rewardsSummary.invitationsShare * rewardCoef
+      let missingInvitationReward = 0
+      let reason = '-'
 
       if (isValidated && validationPenalty) {
-        reason = 'Validation penalty';
-        missingInvitationReward = invitationReward;
-        invitationReward = 0;
+        reason = 'Validation penalty'
+        missingInvitationReward = invitationReward
+        invitationReward = 0
       } else if (!isValidated) {
-        reason = 'Invitee failed';
-        missingInvitationReward = invitationReward;
-        invitationReward = 0;
+        reason = 'Invitee failed'
+        missingInvitationReward = invitationReward
+        invitationReward = 0
       }
 
       return {
@@ -792,41 +788,41 @@ function getRewardedData(
         invitationReward,
         missingInvitationReward,
         reason,
-      };
+      }
     })
-    .filter((x) => x);
+    .filter((x) => x)
 }
 
 function getCurrentEpochSavedInvites(epoch, savedInvites, rewardsSummary) {
   if (!savedInvites || !rewardsSummary) {
-    return [];
+    return []
   }
-  const res = [];
-  for (let i = 0; i < savedInvites.length; i++) {
-    const item = savedInvites[i];
-    let invitationReward = rewardsSummary.invitationsShare * 1;
-    let missingInvitationReward = invitationReward;
+  const res = []
+  for (let i = 0; i < savedInvites.length; i += 1) {
+    const item = savedInvites[i]
+    let invitationReward = rewardsSummary.invitationsShare * 1
+    let missingInvitationReward = invitationReward
 
-    if (item.value == 'SavedInvite') {
-      missingInvitationReward = missingInvitationReward * 2; //not a winner => x2
+    if (item.value === 'SavedInvite') {
+      missingInvitationReward *= 2 // not a winner => x2
     }
-    if (item.value == 'SavedInviteWin') {
-      invitationReward = invitationReward * 2; //winner => x2
+    if (item.value === 'SavedInviteWin') {
+      invitationReward *= 2 // winner => x2
     }
 
-    for (let j = 0; j < item.count; j++) {
+    for (let j = 0; j < item.count; j += 1) {
       res.push({
-        epoch: epoch,
+        epoch,
         title: 'Saved invititation reward',
         validationResult: '-',
         invitationReward,
         missingInvitationReward,
         reason: 'Missed invitation',
-      });
+      })
     }
   }
 
-  return res;
+  return res
 }
 
 function getPreviousEpochSavedInvites(
@@ -837,20 +833,20 @@ function getPreviousEpochSavedInvites(
   rewardsSummary
 ) {
   if (!rewardedInvites || !availableInvites) {
-    return [];
+    return []
   }
-  const available = availableInvites.find((x) => x.epoch == epoch - back);
+  const available = availableInvites.find((x) => x.epoch === epoch - back)
   if (!available) {
-    return [];
+    return []
   }
   const activatedCount = rewardedInvites.filter(
     (x) => x.epoch === epoch - back && x.activationHash
-  );
-  const res = [];
-  for (let i = 0; i < available.invites - activatedCount; i++) {
-    var invitationReward = 0;
-    var missingInvitationReward =
-      rewardsSummary.invitationsShare * 3 ** (1 + back);
+  )
+  const res = []
+  for (let i = 0; i < available.invites - activatedCount; i += 1) {
+    const invitationReward = 0
+    const missingInvitationReward =
+      rewardsSummary.invitationsShare * 3 ** (1 + back)
 
     res.push({
       epoch: epoch - back,
@@ -859,13 +855,13 @@ function getPreviousEpochSavedInvites(
       invitationReward,
       missingInvitationReward,
       reason: 'Missed invitation',
-    });
+    })
   }
-  return res;
+  return res
 }
 
-Reward.getInitialProps = function ({ query }) {
-  return { epoch: query.epoch, address: query.address };
-};
+Reward.getInitialProps = function ({query}) {
+  return {epoch: query.epoch, address: query.address}
+}
 
-export default Reward;
+export default Reward

@@ -1,35 +1,34 @@
-import { precise2, lastSeenFmt } from '../../../shared/utils/utils';
-import Link from 'next/link';
+import Link from 'next/link'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {Fragment} from 'react'
+import {precise2, lastSeenFmt} from '../../../shared/utils/utils'
 import {
   getOnlineIdentities,
   getOnlineIdentitiesCount,
-} from '../../../shared/api';
-import TooltipText from '../../../shared/components/tooltip';
-import { SkeletonRows } from '../../../shared/components/skeleton';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { Fragment } from 'react';
+} from '../../../shared/api'
+import TooltipText from '../../../shared/components/tooltip'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function Miners({ visible }) {
-  const fetchIdentities = (_, skip = 0) => getOnlineIdentities(skip, LIMIT);
+export default function Miners({visible}) {
+  const fetchIdentities = (_, skip = 0) => getOnlineIdentities(skip, LIMIT)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `identities`,
     fetchIdentities,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: identitiesCount } = useQuery(
+  const {data: identitiesCount} = useQuery(
     visible && 'identitiesCount',
     getOnlineIdentitiesCount
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -42,7 +41,7 @@ export default function Miners({ visible }) {
                 Last seen
               </TooltipText>
             </th>
-            <th style={{ width: 150 }}>Miner status</th>
+            <th style={{width: 150}}>Miner status</th>
             <th>
               <TooltipText tooltip="Mining penalty left">
                 Penalty, DNA
@@ -51,8 +50,7 @@ export default function Miners({ visible }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={4}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={4} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
@@ -61,9 +59,7 @@ export default function Miners({ visible }) {
                     <td>
                       <div className="user-pic">
                         <img
-                          src={
-                            'https://robohash.org/' + item.address.toLowerCase()
-                          }
+                          src={`https://robohash.org/${item.address.toLowerCase()}`}
                           alt="pic"
                           width="32"
                         />
@@ -88,14 +84,18 @@ export default function Miners({ visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {identitiesCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

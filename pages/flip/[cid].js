@@ -1,4 +1,6 @@
-import Layout from '../../shared/components/layout';
+import {useQuery} from 'react-query'
+import Link from 'next/link'
+import Layout from '../../shared/components/layout'
 import {
   getFlip,
   getFlipContent,
@@ -6,44 +8,42 @@ import {
   getFlipShortAnswers,
   getFlipLongAnswers,
   getIdentityByEpoch,
-} from '../../shared/api';
-import { useQuery } from 'react-query';
-import Link from 'next/link';
+} from '../../shared/api'
 import {
   epochFmt,
   dateTimeFmt,
   identityStatusFmt,
-} from '../../shared/utils/utils';
-import TooltipText from '../../shared/components/tooltip';
+} from '../../shared/utils/utils'
+import TooltipText from '../../shared/components/tooltip'
 
-function Flip({ cid }) {
-  const { data: flip } = useQuery(['flip', cid], (_, cid) => getFlip(cid));
+function Flip({cid}) {
+  const {data: flip} = useQuery(['flip', cid], (_, cid) => getFlip(cid))
 
-  const { data: flipContent } = useQuery(['flipContent', cid], (_, cid) =>
+  const {data: flipContent} = useQuery(['flipContent', cid], (_, cid) =>
     getFlipContent(cid)
-  );
+  )
 
-  const { data: adjacentFlips } = useQuery(['adjacentFlips', cid], (_, cid) =>
+  const {data: adjacentFlips} = useQuery(['adjacentFlips', cid], (_, cid) =>
     getAdjacentFlips(cid)
-  );
+  )
 
-  const { data: shortAnswers } = useQuery(['shortAnswers', cid], (_, cid) =>
+  const {data: shortAnswers} = useQuery(['shortAnswers', cid], (_, cid) =>
     getFlipShortAnswers(cid)
-  );
+  )
 
-  const { data: longAnswers } = useQuery(['longAnswers', cid], (_, cid) =>
+  const {data: longAnswers} = useQuery(['longAnswers', cid], (_, cid) =>
     getFlipLongAnswers(cid)
-  );
+  )
 
-  const epoch = flip ? flip.epoch : 0;
+  const epoch = flip ? flip.epoch : 0
 
   const prevCid =
-    adjacentFlips && adjacentFlips.prev && adjacentFlips.prev.value;
+    adjacentFlips && adjacentFlips.prev && adjacentFlips.prev.value
 
   const nextCid =
-    adjacentFlips && adjacentFlips.next && adjacentFlips.next.value;
+    adjacentFlips && adjacentFlips.next && adjacentFlips.next.value
 
-  const positions = getImagesPositions(flipContent);
+  const positions = getImagesPositions(flipContent)
 
   return (
     <Layout>
@@ -59,7 +59,7 @@ function Flip({ cid }) {
         <div className="button-group">
           <Link href="/flip/[cid]" as={`/flip/${prevCid}`}>
             <a className="btn btn-secondary btn-small" disabled={!prevCid}>
-              <i className="icon icon--thin_arrow_left"></i>
+              <i className="icon icon--thin_arrow_left" />
               <span>Previous flip</span>
             </a>
           </Link>
@@ -67,7 +67,7 @@ function Flip({ cid }) {
           <Link href="/flip/[cid]" as={`/flip/${nextCid}`}>
             <a className="btn btn-secondary btn-small" disabled={!nextCid}>
               <span>Next flip</span>
-              <i className="icon icon--thin_arrow_right"></i>
+              <i className="icon icon--thin_arrow_right" />
             </a>
           </Link>
         </div>
@@ -76,8 +76,8 @@ function Flip({ cid }) {
       <section className="section section_info">
         <div className="row">
           <div className="col-12 col-sm-4">
-            <div className="row" style={{ flexWrap: 'nowrap' }}>
-              <div className="col-12 col-sm-6" style={{ flex: '0 0 0' }}>
+            <div className="row" style={{flexWrap: 'nowrap'}}>
+              <div className="col-12 col-sm-6" style={{flex: '0 0 0'}}>
                 <div className="flipframe">
                   <div>
                     <img
@@ -107,7 +107,7 @@ function Flip({ cid }) {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-sm-6" style={{ flex: '0 0 0' }}>
+              <div className="col-12 col-sm-6" style={{flex: '0 0 0'}}>
                 <div className="flipframe">
                   <div>
                     <img
@@ -178,7 +178,7 @@ function Flip({ cid }) {
                           ? 'icon icon--micro_fail'
                           : 'icon icon--micro_success'
                       }
-                    ></i>
+                    />
                     {flip.wrongWords || flip.status === 'QualifiedByNone'
                       ? flip.status === 'QualifiedByNone'
                         ? 'The flip was not available for the network during the validation'
@@ -190,10 +190,10 @@ function Flip({ cid }) {
                   !flip.words &&
                   (flip.wrongWords || flip.status === 'QualifiedByNone') && (
                     <p className="text_block">
-                      <i className="icon icon--micro_fail"></i>
-                      {
-                        'The flip was reported as having inappropriate content, labels on top of the images showing the right order or text needed to solve the flip'
-                      }
+                      <i className="icon icon--micro_fail" />
+                      The flip was reported as having inappropriate content,
+                      labels on top of the images showing the right order or
+                      text needed to solve the flip
                     </p>
                   )}
               </div>
@@ -211,21 +211,20 @@ function Flip({ cid }) {
                 <div className="control-label">Author:</div>
                 <div
                   className="text_block text_block--ellipsis"
-                  style={{ width: '80%' }}
+                  style={{width: '80%'}}
                 >
                   {flip ? (
                     <Link
                       href="/identity/[address]"
-                      as={'/identity/' + flip.author}
+                      as={`/identity/${flip.author}`}
                     >
                       <a>
                         <img
+                          alt="user-pic"
                           className="user-pic"
                           width="32"
-                          src={
-                            'https://robohash.org/' + flip.author.toLowerCase()
-                          }
-                        ></img>
+                          src={`https://robohash.org/${flip.author.toLowerCase()}`}
+                        />
                         <span>{flip.author}</span>
                       </a>
                     </Link>
@@ -238,7 +237,7 @@ function Flip({ cid }) {
                 <div className="control-label">Epoch:</div>
                 <div className="text_block">
                   {flip ? (
-                    <Link href="/epoch/[epoch]" as={'/epoch/' + flip.epoch}>
+                    <Link href="/epoch/[epoch]" as={`/epoch/${flip.epoch}`}>
                       <a>{epochFmt(flip.epoch)}</a>
                     </Link>
                   ) : (
@@ -265,7 +264,7 @@ function Flip({ cid }) {
                   {flip ? (
                     <Link
                       href="/block/[block]"
-                      as={'/block/' + flip.blockHeight}
+                      as={`/block/${flip.blockHeight}`}
                     >
                       <a>{flip.blockHeight}</a>
                     </Link>
@@ -277,12 +276,12 @@ function Flip({ cid }) {
                 <div className="control-label">Tx:</div>
                 <div
                   className="text_block text_block--ellipsis"
-                  style={{ width: '80%' }}
+                  style={{width: '80%'}}
                 >
                   {flip ? (
                     <Link
                       href="/transaction/[hash]"
-                      as={'/transaction/' + flip.txHash}
+                      as={`/transaction/${flip.txHash}`}
                     >
                       <a>{flip.txHash}</a>
                     </Link>
@@ -405,17 +404,17 @@ function Flip({ cid }) {
                   <thead>
                     <tr>
                       <th>Identity</th>
-                      <th style={{ width: 190 }}>
+                      <th style={{width: 190}}>
                         <TooltipText tooltip="Identity status before the validation">
                           Status
                         </TooltipText>
                       </th>
-                      <th style={{ width: 140 }}>
+                      <th style={{width: 140}}>
                         <TooltipText tooltip="Answer given on qualification session">
                           Answer
                         </TooltipText>
                       </th>
-                      <th style={{ width: 140 }}>
+                      <th style={{width: 140}}>
                         <TooltipText tooltip="Reporting irrelevance to keywords, inappropriate content, labels on top of the images showing the right order or text needed to solve the flip">
                           Reporting
                           <br />
@@ -432,10 +431,7 @@ function Flip({ cid }) {
                           <td>
                             <div className="user-pic">
                               <img
-                                src={
-                                  'https://robohash.org/' +
-                                  item.address.toLowerCase()
-                                }
+                                src={`https://robohash.org/${item.address.toLowerCase()}`}
                                 alt="pic"
                                 width="32"
                               />
@@ -454,15 +450,15 @@ function Flip({ cid }) {
                               <IdentityStatus
                                 epoch={epoch}
                                 address={item.address}
-                              ></IdentityStatus>
+                              />
                             )}
                           </td>
                           <td>
                             {item.flipAnswer !== 'None' ? (
                               item.respAnswer === item.flipAnswer ? (
-                                <i className="icon icon--micro_success"></i>
+                                <i className="icon icon--micro_success" />
                               ) : (
-                                <i className="icon icon--micro_fail"></i>
+                                <i className="icon icon--micro_fail" />
                               )
                             ) : (
                               ''
@@ -498,12 +494,12 @@ function Flip({ cid }) {
                   <thead>
                     <tr>
                       <th>Identity</th>
-                      <th style={{ width: 190 }}>
+                      <th style={{width: 190}}>
                         <TooltipText tooltip="Identity status before the validation">
                           Status
                         </TooltipText>
                       </th>
-                      <th style={{ width: 140 }}>
+                      <th style={{width: 140}}>
                         <TooltipText tooltip="Answer given on qualification session">
                           Answer
                         </TooltipText>
@@ -518,10 +514,7 @@ function Flip({ cid }) {
                           <td>
                             <div className="user-pic">
                               <img
-                                src={
-                                  'https://robohash.org/' +
-                                  item.address.toLowerCase()
-                                }
+                                src={`https://robohash.org/${item.address.toLowerCase()}`}
                                 alt="pic"
                                 width="32"
                               />
@@ -540,15 +533,15 @@ function Flip({ cid }) {
                               <IdentityStatus
                                 epoch={epoch}
                                 address={item.address}
-                              ></IdentityStatus>
+                              />
                             )}
                           </td>
                           <td>
                             {item.flipAnswer !== 'None' ? (
                               item.respAnswer === item.flipAnswer ? (
-                                <i className="icon icon--micro_success"></i>
+                                <i className="icon icon--micro_success" />
                               ) : (
-                                <i className="icon icon--micro_fail"></i>
+                                <i className="icon icon--micro_fail" />
                               )
                             ) : (
                               ''
@@ -567,59 +560,57 @@ function Flip({ cid }) {
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
 function getImagesPositions(flipContent) {
-  const res = {};
+  const res = {}
   if (!flipContent) {
-    return res;
+    return res
   }
-  for (var i = 0; i < flipContent.Pics.length; i++) {
-    var buffArray = new Uint8Array(
+  for (let i = 0; i < flipContent.Pics.length; i += 1) {
+    const buffArray = new Uint8Array(
       flipContent.Pics[i]
         .substring(2)
         .match(/.{1,2}/g)
         .map((byte) => parseInt(byte, 16))
-    );
-    var lposition = -1,
-      rposition = -1;
+    )
+    let lposition = -1
+    let rposition = -1
 
     if (flipContent.LeftOrder == null) {
-      lposition = i == 0 ? 0 : -1;
-      rposition = i == 1 ? 0 : -1;
+      lposition = i === 0 ? 0 : -1
+      rposition = i === 1 ? 0 : -1
     } else {
-      for (var j = 0; j < flipContent.Pics.length; j++) {
-        if (flipContent.LeftOrder[j] == i) lposition = j;
-        if (flipContent.RightOrder[j] == i) rposition = j;
+      for (let j = 0; j < flipContent.Pics.length; j += 1) {
+        if (flipContent.LeftOrder[j] === i) lposition = j
+        if (flipContent.RightOrder[j] === i) rposition = j
       }
     }
 
-    var src = URL.createObjectURL(
-      new Blob([buffArray], { type: 'image/jpeg' })
-    );
+    const src = URL.createObjectURL(new Blob([buffArray], {type: 'image/jpeg'}))
 
     if (lposition >= 0) {
-      res['L' + lposition] = src;
+      res[`L${lposition}`] = src
     }
     if (rposition >= 0) {
-      res['R' + rposition] = src;
+      res[`R${rposition}`] = src
     }
   }
-  return res;
+  return res
 }
 
-function IdentityStatus({ epoch, address }) {
-  const { data } = useQuery(
+function IdentityStatus({epoch, address}) {
+  const {data} = useQuery(
     ['identityByEpoch', epoch, address],
     (_, epoch, address) => getIdentityByEpoch(address, epoch)
-  );
+  )
 
-  return <span>{data ? identityStatusFmt(data.prevState) : '-'}</span>;
+  return <span>{data ? identityStatusFmt(data.prevState) : '-'}</span>
 }
 
-Flip.getInitialProps = function ({ query }) {
-  return { cid: query.cid };
-};
+Flip.getInitialProps = function ({query}) {
+  return {cid: query.cid}
+}
 
-export default Flip;
+export default Flip

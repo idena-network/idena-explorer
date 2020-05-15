@@ -1,37 +1,36 @@
-import { precise2, identityStatusFmt } from '../../../../../shared/utils/utils';
-import Link from 'next/link';
+import Link from 'next/link'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {Fragment} from 'react'
 import {
   getEpochBadAuthors,
   getEpochBadAuthorsCount,
-} from '../../../../../shared/api';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { Fragment } from 'react';
-import { SkeletonRows } from '../../../../../shared/components/skeleton';
+} from '../../../../../shared/api'
+import {identityStatusFmt} from '../../../../../shared/utils/utils'
+import {SkeletonRows} from '../../../../../shared/components/skeleton'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function Penalty({ epoch, visible }) {
+export default function Penalty({epoch, visible}) {
   const fetchBadAuthors = (_, epoch, skip = 0) =>
-    getEpochBadAuthors(epoch, skip, LIMIT);
+    getEpochBadAuthors(epoch, skip, LIMIT)
 
-  const fetchBadAuthorsCount = (_, epoch) => getEpochBadAuthorsCount(epoch);
+  const fetchBadAuthorsCount = (_, epoch) => getEpochBadAuthorsCount(epoch)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && [`${epoch}/badAuthors`, epoch],
     fetchBadAuthors,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: badCount } = useQuery(
+  const {data: badCount} = useQuery(
     visible && ['epoch/badAuthors/count', epoch],
     fetchBadAuthorsCount
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -48,8 +47,7 @@ export default function Penalty({ epoch, visible }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={4}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={4} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
@@ -58,16 +56,14 @@ export default function Penalty({ epoch, visible }) {
                     <td>
                       <div className="user-pic">
                         <img
-                          src={
-                            'https://robohash.org/' + item.address.toLowerCase()
-                          }
+                          src={`https://robohash.org/${item.address.toLowerCase()}`}
                           alt="pic"
                           width="32"
                         />
                       </div>
                       <div
                         className="text_block text_block--ellipsis"
-                        style={{ width: 150 }}
+                        style={{width: 150}}
                       >
                         <Link
                           href="/identity/[address]/epoch/[epoch]/rewards"
@@ -94,14 +90,18 @@ export default function Penalty({ epoch, visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {badCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

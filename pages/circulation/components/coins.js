@@ -1,36 +1,36 @@
-import { useEffect, useState } from 'react';
-import { getCirculationSupply, getTotalCoins } from '../../../shared/api';
-import { precise2, dnaFmt } from '../../../shared/utils/utils';
-import TooltipText from '../../../shared/components/tooltip';
+import {useEffect, useState} from 'react'
+import {getCirculationSupply, getTotalCoins} from '../../../shared/api'
+import {precise2, dnaFmt} from '../../../shared/utils/utils'
+import TooltipText from '../../../shared/components/tooltip'
 
 const initialState = {
   circulationSupply: '-',
   totalSupply: '-',
   vestedCoins: '-',
   stakedCoins: '-',
-};
+}
 
 export default function Coins() {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(initialState)
 
   useEffect(() => {
     async function getData() {
       const [circulation, totalCoins] = await Promise.all([
         getCirculationSupply(),
         getTotalCoins(),
-      ]);
+      ])
       const totalSupply = precise2(
         1 * totalCoins.totalBalance + 1 * totalCoins.totalStake
-      );
+      )
       setState({
         circulationSupply: dnaFmt(precise2(circulation), ''),
         totalSupply: dnaFmt(totalSupply, ''),
         vestedCoins: dnaFmt(precise2(totalSupply - circulation), ''),
         stakedCoins: dnaFmt(precise2(totalCoins.totalStake), ''),
-      });
+      })
     }
-    getData();
-  }, []);
+    getData()
+  }, [])
 
   return (
     <>
@@ -95,5 +95,5 @@ export default function Coins() {
         </div>
       </div>
     </>
-  );
+  )
 }

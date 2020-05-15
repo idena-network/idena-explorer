@@ -1,22 +1,22 @@
-import Link from 'next/link';
-import Supply from './components/supply';
-import Identities from './components/identities';
-import Layout from '../../shared/components/layout';
-import { NavItem, NavLink, TabPane, TabContent } from 'reactstrap';
-import EpochsTable from './components/epochs';
-import TopAddress from './components/topaddress';
-import Miners from './components/miners';
-import { useQuery } from 'react-query';
-import { getLastEpoch } from '../../shared/api';
-import { useHash, useHashChange } from '../../shared/utils/useHashChange';
+import Link from 'next/link'
+import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
+import {useQuery} from 'react-query'
+import Supply from './components/supply'
+import Identities from './components/identities'
+import Layout from '../../shared/components/layout'
+import EpochsTable from './components/epochs'
+import TopAddress from './components/topaddress'
+import Miners from './components/miners'
+import {getLastEpoch} from '../../shared/api'
+import {useHash, useHashChange} from '../../shared/utils/useHashChange'
 
-const DEFAULT_TAB = '#epochs';
+const DEFAULT_TAB = '#epochs'
 
 function Home() {
-  const { hash, setHash, hashReady } = useHash();
-  useHashChange((hash) => setHash(hash));
+  const {hash, setHash, hashReady} = useHash()
+  useHashChange((hash) => setHash(hash))
 
-  const { data } = useQuery('last-epoch', getLastEpoch);
+  const {data} = useQuery('last-epoch', getLastEpoch)
 
   return (
     <Layout>
@@ -31,7 +31,7 @@ function Home() {
         <div className="button-group">
           <Link href="/circulation">
             <a className="btn btn-secondary btn-small">
-              <i className="icon icon--coins"></i>
+              <i className="icon icon--coins" />
               <span>Circulating supply</span>
             </a>
           </Link>
@@ -41,7 +41,7 @@ function Home() {
             as={`/epoch/${data && data.epoch}/validation`}
           >
             <a className="btn btn-secondary btn-small">
-              <i className="icon icon--report"></i>
+              <i className="icon icon--report" />
               <span>Validation results</span>
             </a>
           </Link>
@@ -50,8 +50,9 @@ function Home() {
             className="btn btn-secondary btn-small"
             href="https://idena.today"
             target="_blank"
+            rel="noreferrer"
           >
-            <i className="icon icon--timer"></i>
+            <i className="icon icon--timer" />
             <span>More stats</span>
           </a>
         </div>
@@ -118,7 +119,7 @@ function Home() {
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
-export default Home;
+export default Home

@@ -1,21 +1,21 @@
-import { getIdentityShortAnswersByEpoch } from '../../../../../../../shared/api';
-import TooltipText from '../../../../../../../shared/components/tooltip';
-import { useQuery } from 'react-query';
-import Link from 'next/link';
-import { SkeletonRows } from '../../../../../../../shared/components/skeleton';
+import {useQuery} from 'react-query'
+import Link from 'next/link'
+import {getIdentityShortAnswersByEpoch} from '../../../../../../../shared/api'
+import TooltipText from '../../../../../../../shared/components/tooltip'
+import {SkeletonRows} from '../../../../../../../shared/components/skeleton'
 
-export default function ShortAnswers({ address, epoch, visible }) {
-  const { data: answers, status } = useQuery(
+export default function ShortAnswers({address, epoch, visible}) {
+  const {data: answers, status} = useQuery(
     visible && ['epoch/identity/shortAnswers', address, epoch - 1],
     (_, address, epoch) => getIdentityShortAnswersByEpoch(address, epoch)
-  );
+  )
 
   return (
     <div className="table-responsive">
       <table className="table">
         <thead>
           <tr>
-            <th style={{ width: 300 }}>Flip</th>
+            <th style={{width: 300}}>Flip</th>
             <th>
               <TooltipText tooltip="Answer agreed by qualification committee">
                 Right
@@ -30,40 +30,35 @@ export default function ShortAnswers({ address, epoch, visible }) {
             </th>
             <th>Answer</th>
             <th>Score</th>
-            <th></th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={6}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={6} />)}
           {answers &&
             answers.map((item) => {
-              let ico = item.respAnswer === 'None' ? '' : 'icon--micro_fail',
-                score = 0;
+              let ico = item.respAnswer === 'None' ? '' : 'icon--micro_fail'
+              let score = 0
 
-              if (item.flipStatus == 'Qualified') {
-                if (item.flipAnswer == item.respAnswer) {
-                  score = 1;
-                  ico = 'icon--micro_success';
+              if (item.flipStatus === 'Qualified') {
+                if (item.flipAnswer === item.respAnswer) {
+                  score = 1
+                  ico = 'icon--micro_success'
+                }
+              } else if (item.flipStatus === 'WeaklyQualified') {
+                if (item.flipAnswer === item.respAnswer) {
+                  score = 1
+                  ico = 'icon--micro_success'
+                } else if (item.respAnswer !== 'None') {
+                  score = 0.5
+                  ico = ''
+                } else {
+                  score = '-'
+                  ico = ''
                 }
               } else {
-                if (item.flipStatus == 'WeaklyQualified') {
-                  if (item.flipAnswer == item.respAnswer) {
-                    score = 1;
-                    ico = 'icon--micro_success';
-                  } else {
-                    if (item.respAnswer != 'None') {
-                      score = 0.5;
-                      ico = '';
-                    } else {
-                      score = '-';
-                      ico = '';
-                    }
-                  }
-                } else {
-                  score = '-';
-                  ico = '';
-                }
+                score = '-'
+                ico = ''
               }
               return (
                 <tr>
@@ -74,18 +69,18 @@ export default function ShortAnswers({ address, epoch, visible }) {
                         alt="pic"
                         width="44"
                         height="44"
-                      ></img>
+                      />
                     </div>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 300 }}
+                      style={{width: 300}}
                     >
                       <Link href="/flip/[cid]" as={`/flip/${item.cid}`}>
                         <a>{item.cid}</a>
                       </Link>
                     </div>
                   </td>
-                  <td>{item.flipAnswer == 'None' ? '-' : item.flipAnswer}</td>
+                  <td>{item.flipAnswer === 'None' ? '-' : item.flipAnswer}</td>
                   <td>
                     {item.flipStatus === 'Qualified'
                       ? 'Strong'
@@ -101,10 +96,10 @@ export default function ShortAnswers({ address, epoch, visible }) {
                   <td>{score}</td>
                   <td>{item.respWrongWords ? 'Reported' : '-'}</td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </table>
     </div>
-  );
+  )
 }

@@ -1,47 +1,47 @@
-import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { getCurrentSession, logout as doLogout } from '../api';
+import {useEffect, useState, createContext, useContext} from 'react'
+import {useQuery} from 'react-query'
+import {getCurrentSession, logout as doLogout} from '../api'
 
-const SessionContext = React.createContext();
+const SessionContext = createContext()
 
 // eslint-disable-next-line react/prop-types
-function SessionProvider({ children }) {
-  const [state, setState] = useState({ auth: false, ready: false });
-  const { data: sessionResult, status: sessionStatus } = useQuery(
+function SessionProvider({children}) {
+  const [state, setState] = useState({auth: false, ready: false})
+  const {data: sessionResult, status: sessionStatus} = useQuery(
     ['auth/session-provider'],
     () => getCurrentSession(),
-    { retry: false }
-  );
+    {retry: false}
+  )
 
   useEffect(() => {
     if (sessionResult) {
-      setState({ auth: true, address: sessionResult.address, ready: true });
+      setState({auth: true, address: sessionResult.address, ready: true})
     } else if (sessionStatus === 'error') {
-      setState({ auth: false, ready: true });
+      setState({auth: false, ready: true})
     }
-  }, [sessionResult, sessionStatus]);
+  }, [sessionResult, sessionStatus])
 
   const logout = () => {
-    doLogout().then(() => setState({ auth: false, ready: true }));
-  };
+    doLogout().then(() => setState({auth: false, ready: true}))
+  }
 
   const setSession = (address) => {
-    setState({ auth: true, ready: true, address: address });
-  };
+    setState({auth: true, ready: true, address})
+  }
 
   return (
-    <SessionContext.Provider value={{ session: state, logout, setSession }}>
+    <SessionContext.Provider value={{session: state, logout, setSession}}>
       {children}
     </SessionContext.Provider>
-  );
+  )
 }
 
 function useSession() {
-  const context = React.useContext(SessionContext);
+  const context = useContext(SessionContext)
   if (context === undefined) {
-    throw new Error('useSession must be used within a SessionProvider');
+    throw new Error('useSession must be used within a SessionProvider')
   }
-  return context;
+  return context
 }
 
-export { SessionProvider, useSession };
+export {SessionProvider, useSession}

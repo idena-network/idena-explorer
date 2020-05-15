@@ -1,9 +1,9 @@
-import Layout from '../shared/components/layout';
+import Layout from '../shared/components/layout'
 
 export default function Error404() {
   return (
     <Layout>
-      <section className="section section_message" style={{ height: '80vh' }}>
+      <section className="section section_message" style={{height: '80vh'}}>
         <div className="container">
           <div className="row justify-content-center align-items-center">
             <div className="col-md-8">
@@ -16,5 +16,5 @@ export default function Error404() {
         </div>
       </section>
     </Layout>
-  );
+  )
 }

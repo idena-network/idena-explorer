@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import Layout from '../../shared/components/layout';
-import { NavItem, NavLink, TabPane, TabContent } from 'reactstrap';
-import { useQuery } from 'react-query';
+import Link from 'next/link'
+import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
+import {useQuery} from 'react-query'
+import Layout from '../../shared/components/layout'
 import {
   getLastEpoch,
   getEpoch,
@@ -10,29 +10,30 @@ import {
   getEpochBlocksCount,
   getEpochFlipsCount,
   getEpochInvitesSummary,
-} from '../../shared/api';
-import { epochFmt, dateTimeFmt } from '../../shared/utils/utils';
-import Identities from './components/identities';
-import Invitations from './components/invitations';
-import Flips from './components/flips';
-import { useHashChange, useHash } from '../../shared/utils/useHashChange';
-import Blocks from './components/blocks';
-import Transactions from './components/transactions';
-import TooltipText from '../../shared/components/tooltip';
+} from '../../shared/api'
+import {epochFmt, dateTimeFmt} from '../../shared/utils/utils'
+import Identities from './components/identities'
+import Invitations from './components/invitations'
+import Flips from './components/flips'
+import {useHashChange, useHash} from '../../shared/utils/useHashChange'
+import Blocks from './components/blocks'
+import Transactions from './components/transactions'
+import TooltipText from '../../shared/components/tooltip'
 
-const DEFAULT_TAB = '#identities';
+const DEFAULT_TAB = '#identities'
 
-function Epoch({ epoch }) {
-  const fetchEpoch = (_, epoch) => getEpoch(epoch);
+function Epoch({epoch}) {
+  const fetchEpoch = (_, epoch) => getEpoch(epoch)
 
-  const { hash, setHash, hashReady } = useHash();
-  useHashChange((hash) => setHash(hash));
+  const {hash, setHash, hashReady} = useHash()
+  useHashChange((hash) => setHash(hash))
 
-  epoch = parseInt(epoch);
+  // eslint-disable-next-line no-param-reassign
+  epoch = parseInt(epoch)
 
-  const { data: lastEpoch } = useQuery('last-epoch', getLastEpoch);
-  const { data: epochData } = useQuery(['epoch', epoch - 1], fetchEpoch);
-  const { data: nextEpochData } = useQuery(['epoch', epoch], fetchEpoch);
+  const {data: lastEpoch} = useQuery('last-epoch', getLastEpoch)
+  const {data: epochData} = useQuery(['epoch', epoch - 1], fetchEpoch)
+  const {data: nextEpochData} = useQuery(['epoch', epoch], fetchEpoch)
 
   return (
     <Layout>
@@ -42,7 +43,7 @@ function Epoch({ epoch }) {
         <div className="button-group">
           <Link href="/epoch/[epoch]" as={`/epoch/${epoch - 1}${hash}`}>
             <a className="btn btn-secondary btn-small" disabled={epoch === 1}>
-              <i className="icon icon--thin_arrow_left"></i>
+              <i className="icon icon--thin_arrow_left" />
               <span>Previous epoch</span>
             </a>
           </Link>
@@ -53,7 +54,7 @@ function Epoch({ epoch }) {
               disabled={!lastEpoch || epoch === lastEpoch.epoch}
             >
               <span>Next epoch</span>
-              <i className="icon icon--thin_arrow_right"></i>
+              <i className="icon icon--thin_arrow_right" />
             </a>
           </Link>
 
@@ -62,14 +63,14 @@ function Epoch({ epoch }) {
             as={`/epoch/${epoch}/validation`}
           >
             <a className="btn btn-secondary btn-small">
-              <i className="icon icon--report"></i>
+              <i className="icon icon--report" />
               <span>Validation results</span>
             </a>
           </Link>
 
           <Link href="/epoch/[epoch]/rewards" as={`/epoch/${epoch}/rewards`}>
             <a className="btn btn-small btn-secondary">
-              <i className="icon icon--coins"></i>
+              <i className="icon icon--coins" />
               <span>Rewards</span>
             </a>
           </Link>
@@ -80,8 +81,8 @@ function Epoch({ epoch }) {
         epochData={epochData}
         nextEpochData={nextEpochData}
         lastEpoch={lastEpoch}
-      ></EpochDetails>
-      <EpochData epoch={epoch}></EpochData>
+      />
+      <EpochData epoch={epoch} />
 
       <section className="section section_tabs">
         <div className="tabs">
@@ -180,10 +181,10 @@ function Epoch({ epoch }) {
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
-function EpochDetails({ epochData, nextEpochData, lastEpoch }) {
+function EpochDetails({epochData, nextEpochData, lastEpoch}) {
   return (
     <section className="section section_details">
       <h3>Details</h3>
@@ -225,33 +226,32 @@ function EpochDetails({ epochData, nextEpochData, lastEpoch }) {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-function EpochData({ epoch }) {
-  const { data: txsCount } = useQuery(['epoch/txsCount', epoch], (_, epoch) =>
+function EpochData({epoch}) {
+  const {data: txsCount} = useQuery(['epoch/txsCount', epoch], (_, epoch) =>
     getEpochTransactionsCount(epoch)
-  );
+  )
 
-  const { data: blocksCount } = useQuery(
+  const {data: blocksCount} = useQuery(
     ['epoch/blocksCount', epoch],
     (_, epoch) => getEpochBlocksCount(epoch)
-  );
+  )
 
-  const { data: flipsCount } = useQuery(
-    ['epoch/flipsCount', epoch],
-    (_, epoch) => getEpochFlipsCount(epoch)
-  );
+  const {data: flipsCount} = useQuery(['epoch/flipsCount', epoch], (_, epoch) =>
+    getEpochFlipsCount(epoch)
+  )
 
-  const { data: invitesSummary } = useQuery(
+  const {data: invitesSummary} = useQuery(
     ['epoch/invitesSummary', epoch],
     (_, epoch) => getEpochInvitesSummary(epoch)
-  );
+  )
 
-  const { data: identitiesCount } = useQuery(
+  const {data: identitiesCount} = useQuery(
     ['epoch/identites/count', epoch - 1],
     (_, epoch) => getEpochIdentitiesCount(epoch)
-  );
+  )
 
   return (
     <section className="section section_details">
@@ -296,11 +296,11 @@ function EpochData({ epoch }) {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-Epoch.getInitialProps = function ({ query }) {
-  return { epoch: query.epoch };
-};
+Epoch.getInitialProps = function ({query}) {
+  return {epoch: query.epoch}
+}
 
-export default Epoch;
+export default Epoch

@@ -1,34 +1,32 @@
-import { precise2, precise6, dateTimeFmt } from '../../../shared/utils/utils';
-import Link from 'next/link';
-import { getEpochBlocks, getEpochBlocksCount } from '../../../shared/api';
-import TooltipText, { IconTooltip } from '../../../shared/components/tooltip';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { Fragment } from 'react';
-import { SkeletonRows } from '../../../shared/components/skeleton';
+import Link from 'next/link'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {Fragment} from 'react'
+import {precise2, precise6, dateTimeFmt} from '../../../shared/utils/utils'
+import {getEpochBlocks, getEpochBlocksCount} from '../../../shared/api'
+import TooltipText, {IconTooltip} from '../../../shared/components/tooltip'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function Blocks({ epoch, visible }) {
-  const fetchBlocks = (_, epoch, skip = 0) =>
-    getEpochBlocks(epoch, skip, LIMIT);
+export default function Blocks({epoch, visible}) {
+  const fetchBlocks = (_, epoch, skip = 0) => getEpochBlocks(epoch, skip, LIMIT)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `${epoch}/blocks`,
     [epoch],
     fetchBlocks,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: blocksCount } = useQuery(
+  const {data: blocksCount} = useQuery(
     visible && ['epoch/blocksCount', epoch],
     (_, epoch) => getEpochBlocksCount(epoch)
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -74,8 +72,7 @@ export default function Blocks({ epoch, visible }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={10}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={10} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
@@ -96,17 +93,14 @@ export default function Blocks({ epoch, visible }) {
                         <>
                           <div className="user-pic">
                             <img
-                              src={
-                                'https://robohash.org/' +
-                                item.proposer.toLowerCase()
-                              }
+                              src={`https://robohash.org/${item.proposer.toLowerCase()}`}
                               alt="pic"
                               width="32"
                             />
                           </div>
                           <div
                             className="text_block text_block--ellipsis"
-                            style={{ width: 80 }}
+                            style={{width: 80}}
                           >
                             <Link
                               href="/identity/[address]"
@@ -144,19 +138,23 @@ export default function Blocks({ epoch, visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {blocksCount})
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-function BlockFlag({ flag }) {
+function BlockFlag({flag}) {
   switch (flag) {
     case 'FlipLotteryStarted':
       return (
@@ -165,7 +163,7 @@ function BlockFlag({ flag }) {
           className="icon icon--timer"
           placement="top"
         />
-      );
+      )
     case 'ShortSessionStarted':
       return (
         <IconTooltip
@@ -173,7 +171,7 @@ function BlockFlag({ flag }) {
           className="icon icon--timer"
           placement="top"
         />
-      );
+      )
     case 'LongSessionStarted':
       return (
         <IconTooltip
@@ -181,7 +179,7 @@ function BlockFlag({ flag }) {
           className="icon icon--timer"
           placement="top"
         />
-      );
+      )
     case 'AfterLongSessionStarted':
       return (
         <IconTooltip
@@ -189,7 +187,7 @@ function BlockFlag({ flag }) {
           className="icon icon--timer"
           placement="top"
         />
-      );
+      )
     case 'ValidationFinished':
       return (
         <IconTooltip
@@ -197,7 +195,7 @@ function BlockFlag({ flag }) {
           className="icon icon--timer"
           placement="top"
         />
-      );
+      )
     case 'IdentityUpdate':
       return (
         <IconTooltip
@@ -205,7 +203,7 @@ function BlockFlag({ flag }) {
           className="icon icon--menu_contacts"
           placement="top"
         />
-      );
+      )
     case 'OfflinePropose':
       return (
         <IconTooltip
@@ -213,7 +211,7 @@ function BlockFlag({ flag }) {
           className="icon icon--laptop"
           placement="top"
         />
-      );
+      )
     case 'OfflineCommit':
       return (
         <IconTooltip
@@ -221,7 +219,7 @@ function BlockFlag({ flag }) {
           className="icon icon--laptop-red"
           placement="top"
         />
-      );
+      )
     case 'Snapshot':
       return (
         <IconTooltip
@@ -229,7 +227,8 @@ function BlockFlag({ flag }) {
           className="icon icon--photo"
           placement="top"
         />
-      );
+      )
+    default:
   }
-  return null;
+  return null
 }

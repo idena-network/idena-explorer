@@ -1,37 +1,32 @@
-import { precise2, identityStatusFmt } from '../../../shared/utils/utils';
-import Link from 'next/link';
-import {
-  getEpochInvitations,
-  getEpochInvitesSummary,
-} from '../../../shared/api';
-import TooltipText from '../../../shared/components/tooltip';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { Fragment } from 'react';
-import { SkeletonRows } from '../../../shared/components/skeleton';
+import Link from 'next/link'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {Fragment} from 'react'
+import {getEpochInvitations, getEpochInvitesSummary} from '../../../shared/api'
+import TooltipText from '../../../shared/components/tooltip'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function Invitations({ epoch, visible }) {
+export default function Invitations({epoch, visible}) {
   const fetchInvitations = (_, epoch, skip = 0) =>
-    getEpochInvitations(epoch, skip, LIMIT);
+    getEpochInvitations(epoch, skip, LIMIT)
 
-  const { data: invitesSummary } = useQuery(
+  const {data: invitesSummary} = useQuery(
     visible && ['epoch/invitesSummary', epoch],
     (_, epoch) => getEpochInvitesSummary(epoch)
-  );
+  )
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `${epoch}/invitations`,
     [epoch],
     fetchInvitations,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -58,17 +53,16 @@ export default function Invitations({ epoch, visible }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={5}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={5} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
-                page.map((item, j) => (
+                page.map((item) => (
                   <tr key={item.address}>
                     <td>
                       <div
                         className="text_block text_block--ellipsis"
-                        style={{ width: 100 }}
+                        style={{width: 100}}
                       >
                         <Link
                           href="/transaction/[hash]"
@@ -82,16 +76,14 @@ export default function Invitations({ epoch, visible }) {
                     <td>
                       <div className="user-pic">
                         <img
-                          src={
-                            'https://robohash.org/' + item.author.toLowerCase()
-                          }
+                          src={`https://robohash.org/${item.author.toLowerCase()}`}
                           alt="pic"
                           width="32"
                         />
                       </div>
                       <div
                         className="text_block text_block--ellipsis"
-                        style={{ width: 150 }}
+                        style={{width: 150}}
                       >
                         <Link
                           href="/identity/[address]"
@@ -104,7 +96,7 @@ export default function Invitations({ epoch, visible }) {
                     <td>
                       <div
                         className="text_block text_block--ellipsis"
-                        style={{ width: 100 }}
+                        style={{width: 100}}
                       >
                         {item.activationHash ? (
                           <Link
@@ -123,17 +115,14 @@ export default function Invitations({ epoch, visible }) {
                         <>
                           <div className="user-pic">
                             <img
-                              src={
-                                'https://robohash.org/' +
-                                item.activationAuthor.toLowerCase()
-                              }
+                              src={`https://robohash.org/${item.activationAuthor.toLowerCase()}`}
                               alt="pic"
                               width="32"
                             />
                           </div>
                           <div
                             className="text_block text_block--ellipsis"
-                            style={{ width: 150 }}
+                            style={{width: 150}}
                           >
                             <Link
                               href="/identity/[address]"
@@ -162,14 +151,18 @@ export default function Invitations({ epoch, visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {invitesSummary && invitesSummary.allCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

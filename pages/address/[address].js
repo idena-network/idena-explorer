@@ -1,33 +1,33 @@
-import Link from 'next/link';
-import Layout from '../../shared/components/layout';
-import { NavItem, NavLink, TabPane, TabContent } from 'reactstrap';
-import { getEpochsCount, getIdentity, getAddressInfo } from '../../shared/api';
-import { dnaFmt, identityStatusFmt } from '../../shared/utils/utils';
-import Transactions from './components/transactions';
-import { useQuery } from 'react-query';
-import Rewards from './components/rewards';
-import Penalties from './components/penalties';
-import { useHash, useHashChange } from '../../shared/utils/useHashChange';
-import TooltipText from '../../shared/components/tooltip';
+import Link from 'next/link'
+import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
+import {useQuery} from 'react-query'
+import Layout from '../../shared/components/layout'
+import {getEpochsCount, getIdentity, getAddressInfo} from '../../shared/api'
+import {dnaFmt, identityStatusFmt} from '../../shared/utils/utils'
+import Transactions from './components/transactions'
+import Rewards from './components/rewards'
+import Penalties from './components/penalties'
+import {useHash, useHashChange} from '../../shared/utils/useHashChange'
+import TooltipText from '../../shared/components/tooltip'
 
-const DEFAULT_TAB = '#transactions';
+const DEFAULT_TAB = '#transactions'
 
-function Address({ address = '' }) {
-  const { hash, setHash, hashReady } = useHash();
-  useHashChange((hash) => setHash(hash));
+function Address({address = ''}) {
+  const {hash, setHash, hashReady} = useHash()
+  useHashChange((hash) => setHash(hash))
 
-  const { data: addressInfo } = useQuery(['balance', address], (_, address) =>
+  const {data: addressInfo} = useQuery(['balance', address], (_, address) =>
     getAddressInfo(address)
-  );
+  )
 
-  const { data: epochsCount } = useQuery(['epochs', address], (_, address) =>
+  const {data: epochsCount} = useQuery(['epochs', address], (_, address) =>
     getEpochsCount(address)
-  );
+  )
 
-  const { data: identityInfo } = useQuery(
+  const {data: identityInfo} = useQuery(
     epochsCount && ['identity', address],
     (_, address) => getIdentity(address)
-  );
+  )
 
   return (
     <Layout>
@@ -40,10 +40,7 @@ function Address({ address = '' }) {
         </div>
       </section>
 
-      <AddressData
-        addressInfo={addressInfo}
-        identityInfo={identityInfo}
-      ></AddressData>
+      <AddressData addressInfo={addressInfo} identityInfo={identityInfo} />
 
       <section className="section section_tabs">
         <div className="tabs">
@@ -94,7 +91,7 @@ function Address({ address = '' }) {
                 <Transactions
                   address={address}
                   visible={hashReady && (hash === DEFAULT_TAB || !hash)}
-                ></Transactions>
+                />
               </div>
             </TabPane>
             <TabPane tabId="#rewards">
@@ -102,7 +99,7 @@ function Address({ address = '' }) {
                 <Rewards
                   address={address}
                   visible={hashReady && hash === '#rewards'}
-                ></Rewards>
+                />
               </div>
             </TabPane>
             <TabPane tabId="#penalty">
@@ -110,17 +107,17 @@ function Address({ address = '' }) {
                 <Penalties
                   address={address}
                   visible={hashReady && hash === '#penalty'}
-                ></Penalties>
+                />
               </div>
             </TabPane>
           </TabContent>
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
-function AddressData({ addressInfo, identityInfo }) {
+function AddressData({addressInfo, identityInfo}) {
   return (
     <>
       <section className="section section_info">
@@ -150,7 +147,7 @@ function AddressData({ addressInfo, identityInfo }) {
                     className={`col-12 ${
                       identityInfo ? 'col-sm-4' : 'col-sm-6'
                     } bordered-col`}
-                    style={{ display: identityInfo ? 'block' : 'none' }}
+                    style={{display: identityInfo ? 'block' : 'none'}}
                   >
                     <h3 className="info_block__accent">
                       {(addressInfo && dnaFmt(addressInfo.stake)) || '-'}
@@ -190,7 +187,7 @@ function AddressData({ addressInfo, identityInfo }) {
                   <div className="control-label">Identity:</div>
                   <div
                     className="text_block text_block--ellipsis"
-                    style={{ width: '80%' }}
+                    style={{width: '80%'}}
                   >
                     <Link
                       href="/identity/[address]"
@@ -198,13 +195,11 @@ function AddressData({ addressInfo, identityInfo }) {
                     >
                       <a>
                         <img
+                          alt="user-pic"
                           className="user-pic"
                           width="32"
-                          src={
-                            'https://robohash.org/' +
-                            identityInfo.address.toLowerCase()
-                          }
-                        ></img>
+                          src={`https://robohash.org/${identityInfo.address.toLowerCase()}`}
+                        />
                         <span>{identityInfo.address}</span>
                       </a>
                     </Link>
@@ -224,11 +219,11 @@ function AddressData({ addressInfo, identityInfo }) {
         </section>
       )}
     </>
-  );
+  )
 }
 
-Address.getInitialProps = function ({ query }) {
-  return { address: query.address };
-};
+Address.getInitialProps = function ({query}) {
+  return {address: query.address}
+}
 
-export default Address;
+export default Address

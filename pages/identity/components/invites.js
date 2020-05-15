@@ -1,37 +1,33 @@
-import {
-  getIdentityInvites,
-  getIdentityInvitesCount,
-} from '../../../shared/api';
-import TooltipText from '../../../shared/components/tooltip';
-import { epochFmt, dateTimeFmt } from '../../../shared/utils/utils';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import Link from 'next/link';
-import { SkeletonRows } from '../../../shared/components/skeleton';
+import {useInfiniteQuery, useQuery} from 'react-query'
+import Link from 'next/link'
+import {getIdentityInvites, getIdentityInvitesCount} from '../../../shared/api'
+import TooltipText from '../../../shared/components/tooltip'
+import {epochFmt, dateTimeFmt} from '../../../shared/utils/utils'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 10;
+const LIMIT = 10
 
-export default function Invites({ address, visible }) {
+export default function Invites({address, visible}) {
   const fetchInvites = (_, address, skip = 0) =>
-    getIdentityInvites(address, skip, LIMIT);
+    getIdentityInvites(address, skip, LIMIT)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `${address}/invites`,
     [address],
     fetchInvites,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: invitesCount } = useQuery(
+  const {data: invitesCount} = useQuery(
     visible && `${address}/invites/count`,
     [address],
     (_, address) => getIdentityInvitesCount(address)
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -52,7 +48,7 @@ export default function Invites({ address, visible }) {
             </th>
             <th>Activated</th>
             <th>Invited identity</th>
-            <th style={{ width: 160 }}>
+            <th style={{width: 160}}>
               <TooltipText tooltip="Validation result of the invited person">
                 Validation
               </TooltipText>
@@ -60,8 +56,7 @@ export default function Invites({ address, visible }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={7}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={7} />)}
           {data.map(
             (page) =>
               page &&
@@ -78,7 +73,7 @@ export default function Invites({ address, visible }) {
                   <td>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 60 }}
+                      style={{width: 60}}
                     >
                       <Link
                         href="/transaction/[hash]"
@@ -94,7 +89,7 @@ export default function Invites({ address, visible }) {
                       <td>
                         <div
                           className="text_block text_block--ellipsis"
-                          style={{ width: 120 }}
+                          style={{width: 120}}
                         >
                           <Link
                             href="/transaction/[hash]"
@@ -108,7 +103,7 @@ export default function Invites({ address, visible }) {
                       <td>
                         <div
                           className="text_block text_block--ellipsis"
-                          style={{ width: 120 }}
+                          style={{width: 120}}
                         >
                           <Link
                             href="/identity/[address]"
@@ -117,10 +112,7 @@ export default function Invites({ address, visible }) {
                             <a>
                               <img
                                 className="user-pic"
-                                src={
-                                  'https://robohash.org/' +
-                                  item.activationAuthor.toLowerCase()
-                                }
+                                src={`https://robohash.org/${item.activationAuthor.toLowerCase()}`}
                                 alt="pic"
                                 width="32"
                               />
@@ -151,14 +143,18 @@ export default function Invites({ address, visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {invitesCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

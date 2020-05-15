@@ -1,48 +1,46 @@
-import { dateTimeFmt, epochFmt, dnaFmt } from '../../../shared/utils/utils';
-import Link from 'next/link';
-import { getPenalties, getPenaltiesCount } from '../../../shared/api';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { SkeletonRows } from '../../../shared/components/skeleton';
+import Link from 'next/link'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {dateTimeFmt, epochFmt, dnaFmt} from '../../../shared/utils/utils'
+import {getPenalties, getPenaltiesCount} from '../../../shared/api'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function Penalties({ address, visible }) {
+export default function Penalties({address, visible}) {
   const fetchPenalties = (_, address, skip = 0) =>
-    getPenalties(address, skip, LIMIT);
+    getPenalties(address, skip, LIMIT)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `${address}/penalties`,
     [address],
     fetchPenalties,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: penaltiesCount } = useQuery(
+  const {data: penaltiesCount} = useQuery(
     visible && `${address}/penalties/count`,
     [address],
     (_, address) => getPenaltiesCount(address)
-  );
+  )
 
   return (
     <div className="table-responsive">
       <table className="table">
         <thead>
           <tr>
-            <th style={{ width: 100 }}>Epoch</th>
+            <th style={{width: 100}}>Epoch</th>
             <th>Block</th>
             <th>Timestamp</th>
             <th>Penalty, DNA</th>
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={4}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={4} />)}
           {data.map(
             (page) =>
               page &&
@@ -51,7 +49,7 @@ export default function Penalties({ address, visible }) {
                   <td>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 100 }}
+                      style={{width: 100}}
                     >
                       <Link href="/epoch/[epoch]" as={`/epoch/${item.epoch}`}>
                         <a>{epochFmt(item.epoch)}</a>
@@ -77,14 +75,18 @@ export default function Penalties({ address, visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {penaltiesCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

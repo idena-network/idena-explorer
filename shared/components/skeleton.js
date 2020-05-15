@@ -1,4 +1,5 @@
-export default function Skeleton({ height, ...props }) {
+/* eslint-disable react/jsx-props-no-spreading */
+export default function Skeleton({height, ...props}) {
   return (
     <div {...props}>
       <style jsx>{`
@@ -44,22 +45,19 @@ export default function Skeleton({ height, ...props }) {
         }
       `}</style>
     </div>
-  );
+  )
 }
 
-export function SkeletonRows({ rows = 15, cols }) {
+export function SkeletonRows({rows = 15, cols}) {
   return (
     <>
       {[...Array(rows).keys()].map((i) => (
         <tr key={i}>
           <td colSpan={cols}>
-            <Skeleton
-              height={25}
-              style={{ marginTop: 0, marginBottom: 0 }}
-            ></Skeleton>
+            <Skeleton height={25} style={{marginTop: 0, marginBottom: 0}} />
           </td>
         </tr>
       ))}
     </>
-  );
+  )
 }

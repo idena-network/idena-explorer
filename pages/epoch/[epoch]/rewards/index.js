@@ -1,25 +1,26 @@
-import Layout from '../../../../shared/components/layout';
-import { useQuery } from 'react-query';
-import { getEpoch, getEpochRewardsSummary } from '../../../../shared/api';
-import { epochFmt, dateFmt, dnaFmt } from '../../../../shared/utils/utils';
-import Link from 'next/link';
-import TooltipText from '../../../../shared/components/tooltip';
-import Distribution from './components/distribution';
-import { TabContent, TabPane, NavItem, NavLink } from 'reactstrap';
-import { useHash, useHashChange } from '../../../../shared/utils/useHashChange';
-import Penalty from './components/penalty';
+import {useQuery} from 'react-query'
+import Link from 'next/link'
+import {TabContent, TabPane, NavItem, NavLink} from 'reactstrap'
+import Layout from '../../../../shared/components/layout'
+import {getEpoch, getEpochRewardsSummary} from '../../../../shared/api'
+import {epochFmt, dateFmt, dnaFmt} from '../../../../shared/utils/utils'
+import TooltipText from '../../../../shared/components/tooltip'
+import Distribution from './components/distribution'
+import {useHash, useHashChange} from '../../../../shared/utils/useHashChange'
+import Penalty from './components/penalty'
 
-const DEFAULT_TAB = '#distribution';
+const DEFAULT_TAB = '#distribution'
 
-function Rewards({ epoch }) {
-  const { hash, setHash, hashReady } = useHash();
-  useHashChange((hash) => setHash(hash));
+function Rewards({epoch}) {
+  const {hash, setHash, hashReady} = useHash()
+  useHashChange((hash) => setHash(hash))
 
-  const fetchEpoch = (_, epoch) => getEpoch(epoch);
+  const fetchEpoch = (_, epoch) => getEpoch(epoch)
 
-  epoch = parseInt(epoch);
+  // eslint-disable-next-line no-param-reassign
+  epoch = parseInt(epoch)
 
-  const { data: epochData } = useQuery(['epoch', epoch - 1], fetchEpoch);
+  const {data: epochData} = useQuery(['epoch', epoch - 1], fetchEpoch)
 
   return (
     <Layout>
@@ -35,14 +36,14 @@ function Rewards({ epoch }) {
         <div className="button-group">
           <Link href="/epoch/[epoch]" as={`/epoch/${epoch}`}>
             <a className="btn btn-secondary btn-small">
-              <i className="icon icon--back"></i>
+              <i className="icon icon--back" />
               <span>Back to epoch</span>
             </a>
           </Link>
         </div>
       </section>
 
-      <RewardsData epoch={epoch - 1}></RewardsData>
+      <RewardsData epoch={epoch - 1} />
 
       <section className="section section_tabs">
         <div className="tabs">
@@ -96,14 +97,14 @@ function Rewards({ epoch }) {
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
-function RewardsData({ epoch }) {
-  const { data: rewardsSummary } = useQuery(
+function RewardsData({epoch}) {
+  const {data: rewardsSummary} = useQuery(
     ['epoch/rewardsSummary', epoch],
     (_, epoch) => getEpochRewardsSummary(epoch)
-  );
+  )
 
   return (
     <section className="section section_info">
@@ -179,11 +180,11 @@ function RewardsData({ epoch }) {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-Rewards.getInitialProps = function ({ query }) {
-  return { epoch: query.epoch };
-};
+Rewards.getInitialProps = function ({query}) {
+  return {epoch: query.epoch}
+}
 
-export default Rewards;
+export default Rewards

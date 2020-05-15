@@ -1,47 +1,46 @@
+import {useInfiniteQuery, useQuery} from 'react-query'
+import Link from 'next/link'
 import {
   getAddressFlips,
   getLastEpoch,
   getAddressFlipsCount,
-} from '../../../shared/api';
-import TooltipText from '../../../shared/components/tooltip';
+} from '../../../shared/api'
+import TooltipText from '../../../shared/components/tooltip'
 import {
   epochFmt,
   flipQualificationStatusFmt,
   dateTimeFmt,
   iconToSrc,
-} from '../../../shared/utils/utils';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import Link from 'next/link';
-import { SkeletonRows } from '../../../shared/components/skeleton';
+} from '../../../shared/utils/utils'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 10;
+const LIMIT = 10
 
-export default function Flips({ address, visible }) {
+export default function Flips({address, visible}) {
   const fetchFlips = (_, address, skip = 0) =>
-    getAddressFlips(address, skip, LIMIT);
+    getAddressFlips(address, skip, LIMIT)
 
-  const { data: lastEpoch } = useQuery(visible && 'lastEpoch', (_) =>
+  const {data: lastEpoch} = useQuery(visible && 'lastEpoch', () =>
     getLastEpoch()
-  );
+  )
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `${address}/flips`,
     [address],
     fetchFlips,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: flipsCount } = useQuery(
+  const {data: flipsCount} = useQuery(
     visible && `${address}/flips/count`,
     [address],
     (_, address) => getAddressFlipsCount(address)
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -58,13 +57,12 @@ export default function Flips({ address, visible }) {
                 Status
               </TooltipText>
             </th>
-            <th style={{ width: 100 }}>Created</th>
-            <th style={{ width: 90 }}>Size</th>
+            <th style={{width: 100}}>Created</th>
+            <th style={{width: 90}}>Size</th>
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={6}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={6} />)}
           {data.map(
             (page) =>
               page &&
@@ -95,11 +93,11 @@ export default function Flips({ address, visible }) {
                         alt="pic"
                         width="44"
                         height="44"
-                      ></img>
+                      />
                     </div>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 120 }}
+                      style={{width: 120}}
                     >
                       <Link href="/flip/[cid]" as={`/flip/${item.cid}`}>
                         <a>{item.cid}</a>
@@ -111,9 +109,9 @@ export default function Flips({ address, visible }) {
                       <>
                         {item.wrongWords ||
                         item.status === 'QualifiedByNone' ? (
-                          <i className="icon icon--micro_fail"></i>
+                          <i className="icon icon--micro_fail" />
                         ) : (
-                          <i className="icon icon--micro_success"></i>
+                          <i className="icon icon--micro_success" />
                         )}
                         <span>
                           {item.words.word1.name}
@@ -135,14 +133,18 @@ export default function Flips({ address, visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {flipsCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

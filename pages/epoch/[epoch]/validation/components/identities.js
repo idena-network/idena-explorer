@@ -1,44 +1,40 @@
-import { precise2, identityStatusFmt } from '../../../../../shared/utils/utils';
-import Link from 'next/link';
+import Link from 'next/link'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {Fragment} from 'react'
 import {
   getEpochIdentities,
   getEpochIdentitiesCount,
-} from '../../../../../shared/api';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { Fragment } from 'react';
-import { SkeletonRows } from '../../../../../shared/components/skeleton';
+} from '../../../../../shared/api'
+import {precise2, identityStatusFmt} from '../../../../../shared/utils/utils'
+import {SkeletonRows} from '../../../../../shared/components/skeleton'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function Identities({ epoch, visible, states, prevStates }) {
+export default function Identities({epoch, visible, states, prevStates}) {
   const fetchIdentities = (_, epoch, states, prevStates, skip = 0) =>
-    getEpochIdentities(epoch, skip, LIMIT, states, prevStates);
+    getEpochIdentities(epoch, skip, LIMIT, states, prevStates)
 
   const fetchEpochIdentitiesCount = (_, epoch, states, prevStates) =>
-    getEpochIdentitiesCount(epoch, states, prevStates);
+    getEpochIdentitiesCount(epoch, states, prevStates)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && [`${epoch}/identities`, epoch, states, prevStates],
     fetchIdentities,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: identitiesCount } = useQuery(
+  const {data: identitiesCount} = useQuery(
     visible && ['epoch/identites/count', epoch, states, prevStates],
     fetchEpochIdentitiesCount
-  );
+  )
 
-  const formatPoints = (point, count) => {
-    return (
-      point + ' out of ' + count + ' (' + precise2((point / count) * 100) + '%)'
-    );
-  };
+  const formatPoints = (point, count) =>
+    `${point} out of ${count} (${precise2((point / count) * 100)}%)`
 
   return (
     <div className="table-responsive">
@@ -61,8 +57,7 @@ export default function Identities({ epoch, visible, states, prevStates }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={6}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={6} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
@@ -71,16 +66,14 @@ export default function Identities({ epoch, visible, states, prevStates }) {
                     <td>
                       <div className="user-pic">
                         <img
-                          src={
-                            'https://robohash.org/' + item.address.toLowerCase()
-                          }
+                          src={`https://robohash.org/${item.address.toLowerCase()}`}
                           alt="pic"
                           width="32"
                         />
                       </div>
                       <div
                         className="text_block text_block--ellipsis"
-                        style={{ width: 150 }}
+                        style={{width: 150}}
                       >
                         <Link
                           href="/identity/[address]"
@@ -126,14 +119,18 @@ export default function Identities({ epoch, visible, states, prevStates }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {identitiesCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

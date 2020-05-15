@@ -1,12 +1,12 @@
-import Layout from '../../shared/components/layout';
-import { useQuery } from 'react-query';
-import { getTransaction } from '../../shared/api';
-import { PageLoading, PageError } from '../../shared/components/loading';
-import { dnaFmt, dateTimeFmt, epochFmt } from '../../shared/utils/utils';
-import Link from 'next/link';
+import {useQuery} from 'react-query'
+import Link from 'next/link'
+import Layout from '../../shared/components/layout'
+import {getTransaction} from '../../shared/api'
+import {PageLoading, PageError} from '../../shared/components/loading'
+import {dnaFmt, dateTimeFmt, epochFmt} from '../../shared/utils/utils'
 
-function Tx({ hash }) {
-  const { data, error, status } = useQuery(hash, getTransaction);
+function Tx({hash}) {
+  const {data, error, status} = useQuery(hash, getTransaction)
 
   return (
     <Layout>
@@ -22,14 +22,14 @@ function Tx({ hash }) {
       {error && status !== 'loading' && <PageError />}
       {data && TxDetails(data)}
     </Layout>
-  );
+  )
 }
 
-Tx.getInitialProps = function ({ query }) {
-  return { hash: query.hash };
-};
+Tx.getInitialProps = function ({query}) {
+  return {hash: query.hash}
+}
 
-export default Tx;
+export default Tx
 
 function TxDetails(data) {
   return (
@@ -49,7 +49,7 @@ function TxDetails(data) {
               <div className="control-label">Epoch:</div>
               <div className="text_block">
                 <Link href="/epoch/[epoch]" as={`/epoch/${data.epoch}`}>
-                  <a href="">{epochFmt(data.epoch)}</a>
+                  <a>{epochFmt(data.epoch)}</a>
                 </Link>
               </div>
 
@@ -58,13 +58,13 @@ function TxDetails(data) {
 
               <div
                 className="text_block text_block--ellipsis"
-                style={{ width: '80%' }}
+                style={{width: '80%'}}
               >
                 <Link href="/address/[address]" as={`/address/${data.from}`}>
                   <a>
                     <img
                       className="user-pic"
-                      src={'https://robohash.org/' + data.from.toLowerCase()}
+                      src={`https://robohash.org/${data.from.toLowerCase()}`}
                       alt="pic"
                       width="32"
                     />
@@ -77,7 +77,7 @@ function TxDetails(data) {
               <div className="control-label">Amount:</div>
               <div className="text_block">
                 {dnaFmt(
-                  !data.amount && typeof data.transfer !== undefined
+                  !data.amount && typeof data.transfer !== 'undefined'
                     ? data.transfer
                     : data.amount
                 )}
@@ -101,14 +101,14 @@ function TxDetails(data) {
 
               <div
                 className="text_block text_block--ellipsis"
-                style={{ width: '80%' }}
+                style={{width: '80%'}}
               >
                 {data.to ? (
                   <Link href="/address/[address]" as={`/address/${data.to}`}>
                     <a>
                       <img
                         className="user-pic"
-                        src={'https://robohash.org/' + data.to.toLowerCase()}
+                        src={`https://robohash.org/${data.to.toLowerCase()}`}
                         alt="pic"
                         width="32"
                       />
@@ -132,5 +132,5 @@ function TxDetails(data) {
         </div>
       </div>
     </section>
-  );
+  )
 }
