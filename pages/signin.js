@@ -69,8 +69,7 @@ function Signin({baseUrl, callbackUrl, attempt}) {
             <img
               alt="icon"
               className="icon-logo-black"
-              width={62}
-              style={{margin: 50}}
+              style={{margin: 50, maxWidth: 62}}
             />
 
             <div style={{display: state === LOADING ? 'block' : 'none'}}>
