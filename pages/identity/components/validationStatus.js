@@ -36,6 +36,7 @@ export default function ValidationStatus({identityInfo}) {
             <div className="col-12 col-sm-4 bordered-col">
               <h3 className="info_block__accent">
                 {(identityInfo &&
+                  identityInfo.totalShortAnswers.flipsCount &&
                   `${precise2(
                     (identityInfo.totalShortAnswers.point /
                       identityInfo.totalShortAnswers.flipsCount) *
