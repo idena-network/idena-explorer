@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react'
-import {getCirculationSupply, getTotalCoins} from '../../../shared/api'
+import {getCirculatingSupply, getTotalCoins} from '../../../shared/api'
 import {precise2, dnaFmt} from '../../../shared/utils/utils'
 import TooltipText from '../../../shared/components/tooltip'
 
 const initialState = {
   totalSupply: '-',
   totalBurnt: '-',
-  circulationSupply: '-',
+  circulatingSupply: '-',
 }
 
 export default function Supply() {
@@ -15,7 +15,7 @@ export default function Supply() {
   useEffect(() => {
     async function getData() {
       const [supply, totalCoins] = await Promise.all([
-        getCirculationSupply(),
+        getCirculatingSupply(),
         getTotalCoins(),
       ])
       setState({
@@ -26,7 +26,7 @@ export default function Supply() {
           )
         ),
         totalBurnt: dnaFmt(precise2(totalCoins.burnt)),
-        circulationSupply: dnaFmt(precise2(supply)),
+        circulatingSupply: dnaFmt(precise2(supply)),
       })
     }
     getData()
@@ -49,7 +49,7 @@ export default function Supply() {
               </TooltipText>
             </div>
             <div className="col-12 col-sm-4 bordered-col">
-              <h3 className="info_block__accent">{state.circulationSupply}</h3>
+              <h3 className="info_block__accent">{state.circulatingSupply}</h3>
               <TooltipText
                 tooltip="Total supply minus by vested and staked coins"
                 className="control-label"
