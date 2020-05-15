@@ -15,7 +15,7 @@ matrix:
         - npm ci
       script:
         - npm run build
-    - if: type = push
+    - if: type != pull_request
       script:
         - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t explorer .
