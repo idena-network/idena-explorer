@@ -7,7 +7,7 @@ export function PageLoading() {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
 export function PageError() {
@@ -19,5 +19,5 @@ export function PageError() {
         </div>
       </div>
     </section>
-  );
+  )
 }

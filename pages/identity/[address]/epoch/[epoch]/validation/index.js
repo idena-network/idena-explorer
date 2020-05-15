@@ -1,33 +1,34 @@
-import Link from 'next/link';
-import Layout from '../../../../../../shared/components/layout';
-import { NavItem, NavLink, TabPane, TabContent } from 'reactstrap';
-import { getIdentityByEpoch } from '../../../../../../shared/api';
+import Link from 'next/link'
+import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
+import {useQuery} from 'react-query'
+import Layout from '../../../../../../shared/components/layout'
+import {getIdentityByEpoch} from '../../../../../../shared/api'
 import {
   identityStatusFmt,
   epochFmt,
   precise2,
-} from '../../../../../../shared/utils/utils';
-import { useQuery } from 'react-query';
-import TooltipText from '../../../../../../shared/components/tooltip';
-import ShortAnswers from './components/shortAnswers';
-import LongAnswers from './components/longAnswers';
+} from '../../../../../../shared/utils/utils'
+import TooltipText from '../../../../../../shared/components/tooltip'
+import ShortAnswers from './components/shortAnswers'
+import LongAnswers from './components/longAnswers'
 import {
   useHash,
   useHashChange,
-} from '../../../../../../shared/utils/useHashChange';
+} from '../../../../../../shared/utils/useHashChange'
 
-const DEFAULT_TAB = '#shortAnswers';
+const DEFAULT_TAB = '#shortAnswers'
 
-function Validation({ address = '', epoch }) {
-  const { hash, setHash, hashReady } = useHash();
-  useHashChange((hash) => setHash(hash));
+function Validation({address = '', epoch}) {
+  const {hash, setHash, hashReady} = useHash()
+  useHashChange((hash) => setHash(hash))
 
-  epoch = parseInt(epoch);
+  // eslint-disable-next-line no-param-reassign
+  epoch = parseInt(epoch)
 
-  const { data: identity } = useQuery(
+  const {data: identity} = useQuery(
     ['epoch/identity', address, epoch - 1],
     (_, address, epoch) => getIdentityByEpoch(address, epoch)
-  );
+  )
 
   return (
     <Layout>
@@ -36,13 +37,13 @@ function Validation({ address = '', epoch }) {
           <div className="col-auto">
             <div className="section_main__image">
               <img
-                src={'https://robohash.org/' + address.toLowerCase()}
+                src={`https://robohash.org/${address.toLowerCase()}`}
                 alt="pic"
                 width="160"
               />
               <div className="verified_sign">
                 {identity && identity.state === 'Human' && (
-                  <i className="icon icon--status"></i>
+                  <i className="icon icon--status" />
                 )}
               </div>
             </div>
@@ -57,7 +58,7 @@ function Validation({ address = '', epoch }) {
               as={`/identity/${address}/epoch/${epoch}/rewards`}
             >
               <a className="btn btn-small btn-primary">
-                <i className="icon icon--coins"></i>
+                <i className="icon icon--coins" />
                 <span>Validation rewards</span>
               </a>
             </Link>
@@ -65,11 +66,7 @@ function Validation({ address = '', epoch }) {
         </div>
       </section>
 
-      <AnswersData
-        identity={identity}
-        address={address}
-        epoch={epoch}
-      ></AnswersData>
+      <AnswersData identity={identity} address={address} epoch={epoch} />
 
       <section className="section section_tabs">
         <div className="tabs">
@@ -106,7 +103,7 @@ function Validation({ address = '', epoch }) {
                   address={address}
                   epoch={epoch}
                   visible={hashReady && (hash === DEFAULT_TAB || !hash)}
-                ></ShortAnswers>
+                />
               </div>
             </TabPane>
             <TabPane tabId="#longAnswers">
@@ -115,51 +112,49 @@ function Validation({ address = '', epoch }) {
                   address={address}
                   epoch={epoch}
                   visible={hashReady && hash === '#longAnswers'}
-                ></LongAnswers>
+                />
               </div>
             </TabPane>
           </TabContent>
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
-function AnswersData({ address, epoch, identity }) {
-  let result = '-',
-    shortInTime = '-',
-    longInTime = '-';
+function AnswersData({address, epoch, identity}) {
+  let result = '-'
+  let shortInTime = '-'
+  let longInTime = '-'
 
   if (identity) {
     if (identity.missed) {
       if (identity.shortAnswers.flipsCount) {
-        result = 'Late submission';
-        shortInTime = 'Late';
-        longInTime = 'Late';
+        result = 'Late submission'
+        shortInTime = 'Late'
+        longInTime = 'Late'
       } else {
-        result = 'Missed validation';
+        result = 'Missed validation'
         if (identity.approved) {
-          shortInTime = 'Not accomplished';
-          longInTime = 'No answers';
+          shortInTime = 'Not accomplished'
+          longInTime = 'No answers'
         } else {
-          shortInTime = 'Missing';
-          longInTime = 'Missing';
+          shortInTime = 'Missing'
+          longInTime = 'Missing'
         }
       }
+    } else if (
+      identity.state === 'Newbie' ||
+      identity.state === 'Verified' ||
+      identity.state === 'Human'
+    ) {
+      result = 'Successful'
+      shortInTime = 'In time'
+      longInTime = 'In time'
     } else {
-      if (
-        identity.state === 'Newbie' ||
-        identity.state === 'Verified' ||
-        identity.state === 'Human'
-      ) {
-        result = 'Successful';
-        shortInTime = 'In time';
-        longInTime = 'In time';
-      } else {
-        result = 'Wrong answers';
-        shortInTime = 'In time';
-        longInTime = 'In time';
-      }
+      result = 'Wrong answers'
+      shortInTime = 'In time'
+      longInTime = 'In time'
     }
   }
 
@@ -174,7 +169,7 @@ function AnswersData({ address, epoch, identity }) {
                 <div className="control-label">Identity:</div>
                 <div
                   className="text_block text_block--ellipsis"
-                  style={{ width: '80%' }}
+                  style={{width: '80%'}}
                 >
                   <Link href="/identity/[address]" as={`/identity/${address}`}>
                     <a>{address}</a>
@@ -239,9 +234,9 @@ function AnswersData({ address, epoch, identity }) {
                 <div className="row">
                   <div className="col-12 col-sm-4 bordered-col">
                     <h3 className="info_block__accent">
-                      {((identity && identity.shortAnswers.point) || '-') +
-                        ' / ' +
-                        ((identity && identity.shortAnswers.flipsCount) || '-')}
+                      {`${(identity && identity.shortAnswers.point) || '-'} / ${
+                        (identity && identity.shortAnswers.flipsCount) || '-'
+                      }`}
                     </h3>
                     <TooltipText
                       data-toggle="tooltip"
@@ -254,11 +249,11 @@ function AnswersData({ address, epoch, identity }) {
                   <div className="col-12 col-sm-4 bordered-col">
                     <h3 className="info_block__accent">
                       {identity && identity.shortAnswers.flipsCount
-                        ? precise2(
+                        ? `${precise2(
                             (identity.shortAnswers.point /
                               identity.shortAnswers.flipsCount) *
                               100
-                          ) + '%'
+                          )}%`
                         : '-'}
                     </h3>
                     <div className="control-label">Score</div>
@@ -284,9 +279,9 @@ function AnswersData({ address, epoch, identity }) {
                 <div className="row">
                   <div className="col-12 col-sm-4 bordered-col">
                     <h3 className="info_block__accent">
-                      {((identity && identity.longAnswers.point) || '-') +
-                        ' / ' +
-                        ((identity && identity.longAnswers.flipsCount) || '-')}
+                      {`${(identity && identity.longAnswers.point) || '-'} / ${
+                        (identity && identity.longAnswers.flipsCount) || '-'
+                      }`}
                     </h3>
                     <TooltipText
                       data-toggle="tooltip"
@@ -299,11 +294,11 @@ function AnswersData({ address, epoch, identity }) {
                   <div className="col-12 col-sm-4 bordered-col">
                     <h3 className="info_block__accent">
                       {identity && identity.longAnswers.flipsCount
-                        ? precise2(
+                        ? `${precise2(
                             (identity.longAnswers.point /
                               identity.longAnswers.flipsCount) *
                               100
-                          ) + '%'
+                          )}%`
                         : '-'}
                     </h3>
                     <div className="control-label">Score</div>
@@ -325,11 +320,11 @@ function AnswersData({ address, epoch, identity }) {
         </div>
       </section>
     </>
-  );
+  )
 }
 
-Validation.getInitialProps = function ({ query }) {
-  return { address: query.address, epoch: query.epoch };
-};
+Validation.getInitialProps = function ({query}) {
+  return {address: query.address, epoch: query.epoch}
+}
 
-export default Validation;
+export default Validation

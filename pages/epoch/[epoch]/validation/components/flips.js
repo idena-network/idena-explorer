@@ -1,32 +1,31 @@
-import { getEpochFlips, getEpochFlipsCount } from '../../../../../shared/api';
-import TooltipText from '../../../../../shared/components/tooltip';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import Link from 'next/link';
-import { SkeletonRows } from '../../../../../shared/components/skeleton';
-import { iconToSrc } from '../../../../../shared/utils/utils';
+import {useInfiniteQuery, useQuery} from 'react-query'
+import Link from 'next/link'
+import {getEpochFlips, getEpochFlipsCount} from '../../../../../shared/api'
+import TooltipText from '../../../../../shared/components/tooltip'
+import {SkeletonRows} from '../../../../../shared/components/skeleton'
+import {iconToSrc} from '../../../../../shared/utils/utils'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function Flips({ epoch, visible }) {
-  const fetchFlips = (_, epoch, skip = 0) => getEpochFlips(epoch, skip, LIMIT);
+export default function Flips({epoch, visible}) {
+  const fetchFlips = (_, epoch, skip = 0) => getEpochFlips(epoch, skip, LIMIT)
 
-  const { data: flipsCount } = useQuery(
+  const {data: flipsCount} = useQuery(
     visible && ['epoch/flipsCount', epoch],
     (_, epoch) => getEpochFlipsCount(epoch)
-  );
+  )
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `${epoch}/flips`,
     [epoch],
     fetchFlips,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -63,8 +62,7 @@ export default function Flips({ epoch, visible }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={7}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={7} />)}
           {data.map(
             (page) =>
               page &&
@@ -81,16 +79,16 @@ export default function Flips({ epoch, visible }) {
                         alt="pic"
                         width="44"
                         height="44"
-                      ></img>
+                      />
                       {item.withPrivatePart && (
                         <div className="locked_sign">
-                          <i className="icon icon--lock"></i>
+                          <i className="icon icon--lock" />
                         </div>
                       )}
                     </div>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 100 }}
+                      style={{width: 100}}
                     >
                       <Link href="/flip/[cid]" as={`/flip/${item.cid}`}>
                         <a>{item.cid}</a>
@@ -100,16 +98,14 @@ export default function Flips({ epoch, visible }) {
                   <td>
                     <div className="user-pic">
                       <img
-                        src={
-                          'https://robohash.org/' + item.author.toLowerCase()
-                        }
+                        src={`https://robohash.org/${item.author.toLowerCase()}`}
                         alt="pic"
                         width="32"
                       />
                     </div>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 100 }}
+                      style={{width: 100}}
                     >
                       <Link
                         href="/identity/[address]"
@@ -128,7 +124,7 @@ export default function Flips({ epoch, visible }) {
                           <i className="icon icon--micro_success" />
                         )}
                         <span>
-                          {item.words.word1.name + '/' + item.words.word2.name}
+                          {`${item.words.word1.name}/${item.words.word2.name}`}
                         </span>
                       </>
                     ) : (
@@ -144,7 +140,7 @@ export default function Flips({ epoch, visible }) {
                   ) : (
                     <>
                       <td>
-                        {item.shortRespCount + ' / ' + item.longRespCount}
+                        {`${item.shortRespCount} / ${item.longRespCount}`}
                       </td>
                       <td>
                         {item.status === 'Qualified' ||
@@ -172,14 +168,18 @@ export default function Flips({ epoch, visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {flipsCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

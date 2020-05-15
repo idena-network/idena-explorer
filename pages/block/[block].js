@@ -1,16 +1,15 @@
-import Layout from '../../shared/components/layout';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-import { getBlock } from '../../shared/api';
-import { PageLoading, PageError } from '../../shared/components/loading';
-import { dateTimeFmt, epochFmt, dateFmt } from '../../shared/utils/utils';
-import Link from 'next/link';
-import Transactions from './components/transactions';
-import { NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
-import TooltipText from '../../shared/components/tooltip';
+import {useQuery} from 'react-query'
+import Link from 'next/link'
+import {NavItem, NavLink, TabContent, TabPane} from 'reactstrap'
+import Layout from '../../shared/components/layout'
+import {getBlock} from '../../shared/api'
+import {PageLoading, PageError} from '../../shared/components/loading'
+import {dateTimeFmt, epochFmt} from '../../shared/utils/utils'
+import Transactions from './components/transactions'
+import TooltipText from '../../shared/components/tooltip'
 
-function Block({ block }) {
-  const { data, error, status } = useQuery(block, getBlock);
+function Block({block}) {
+  const {data, error, status} = useQuery(block, getBlock)
 
   return (
     <Layout>
@@ -33,7 +32,7 @@ function Block({ block }) {
               <div className="col">
                 <ul className="nav nav-tabs" role="tablist">
                   <NavItem>
-                    <NavLink active={true}>
+                    <NavLink active>
                       <h3>Transactions</h3>
                     </NavLink>
                   </NavItem>
@@ -42,7 +41,7 @@ function Block({ block }) {
             </div>
           </div>
 
-          <TabContent activeTab={'transactions'}>
+          <TabContent activeTab="transactions">
             <TabPane tabId="transactions">
               <div className="card">
                 {block && <Transactions block={block} />}
@@ -52,14 +51,14 @@ function Block({ block }) {
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
-Block.getInitialProps = function ({ query }) {
-  return { block: query.block };
-};
+Block.getInitialProps = function ({query}) {
+  return {block: query.block}
+}
 
-export default Block;
+export default Block
 
 function BlockDetails(data) {
   return (
@@ -84,7 +83,7 @@ function BlockDetails(data) {
               <div className="control-label">Issuer:</div>
               <div
                 className="text_block text_block--ellipsis"
-                style={{ width: '80%' }}
+                style={{width: '80%'}}
               >
                 {data.proposer ? (
                   <Link
@@ -94,9 +93,7 @@ function BlockDetails(data) {
                     <a>
                       <img
                         className="user-pic"
-                        src={
-                          'https://robohash.org/' + data.proposer.toLowerCase()
-                        }
+                        src={`https://robohash.org/${data.proposer.toLowerCase()}`}
                         alt="pic"
                         width="32"
                       />
@@ -156,12 +153,12 @@ function BlockDetails(data) {
               <div className="text_block">{data.feeRate}</div>
 
               <hr />
-              <div className="control-label"></div>
-              <div className="text_block"></div>
+              <div className="control-label" />
+              <div className="text_block" />
             </div>
           </div>
         </div>
       </div>
     </section>
-  );
+  )
 }

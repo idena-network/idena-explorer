@@ -1,31 +1,32 @@
-import Link from 'next/link';
-import Layout from '../../../../shared/components/layout';
-import { NavItem, NavLink, TabPane, TabContent } from 'reactstrap';
-import { useQuery } from 'react-query';
+import Link from 'next/link'
+import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
+import {useQuery} from 'react-query'
+import Layout from '../../../../shared/components/layout'
 import {
   getEpoch,
   getEpochIdentitiesCount,
   getEpochIdentitiesSummary,
   getEpochFlipWrongWordsSummary,
   getEpochFlipStatesSummary,
-} from '../../../../shared/api';
-import { epochFmt, dateFmt } from '../../../../shared/utils/utils';
-import { useHashChange, useHash } from '../../../../shared/utils/useHashChange';
-import Identities from './components/identities';
-import TooltipText from '../../../../shared/components/tooltip';
-import Flips from './components/flips';
+} from '../../../../shared/api'
+import {epochFmt, dateFmt} from '../../../../shared/utils/utils'
+import {useHashChange, useHash} from '../../../../shared/utils/useHashChange'
+import Identities from './components/identities'
+import TooltipText from '../../../../shared/components/tooltip'
+import Flips from './components/flips'
 
-const DEFAULT_TAB = '#validated';
+const DEFAULT_TAB = '#validated'
 
-function Validation({ epoch }) {
-  const fetchEpoch = (_, epoch) => getEpoch(epoch);
+function Validation({epoch}) {
+  const fetchEpoch = (_, epoch) => getEpoch(epoch)
 
-  const { hash, setHash, hashReady } = useHash();
-  useHashChange((hash) => setHash(hash));
+  const {hash, setHash, hashReady} = useHash()
+  useHashChange((hash) => setHash(hash))
 
-  epoch = parseInt(epoch);
+  // eslint-disable-next-line no-param-reassign
+  epoch = parseInt(epoch)
 
-  const { data: epochData } = useQuery(['epoch', epoch - 1], fetchEpoch);
+  const {data: epochData} = useQuery(['epoch', epoch - 1], fetchEpoch)
 
   return (
     <Layout>
@@ -41,7 +42,7 @@ function Validation({ epoch }) {
         <div className="button-group">
           <Link href="/epoch/[epoch]" as={`/epoch/${epoch}`}>
             <a className="btn btn-secondary btn-small">
-              <i className="icon icon--back"></i>
+              <i className="icon icon--back" />
               <span>Back to epoch</span>
             </a>
           </Link>
@@ -162,32 +163,32 @@ function Validation({ epoch }) {
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
-function ValidationData({ epoch }) {
-  const { data: identitiesSummary } = useQuery(
+function ValidationData({epoch}) {
+  const {data: identitiesSummary} = useQuery(
     ['epoch/identitiesSummary', epoch],
     (_, epoch) => getEpochIdentitiesSummary(epoch)
-  );
+  )
 
-  const { data: flipStatesSummary } = useQuery(
+  const {data: flipStatesSummary} = useQuery(
     ['epoch/flipStatesSummary', epoch],
     (_, epoch) => getEpochFlipStatesSummary(epoch)
-  );
+  )
 
-  const { data: flipWrongWordsSummary } = useQuery(
+  const {data: flipWrongWordsSummary} = useQuery(
     ['epoch/flipWrongWordsSummary', epoch],
     (_, epoch) => getEpochFlipWrongWordsSummary(epoch)
-  );
+  )
 
-  const { data: failedCandidates } = useQuery(
+  const {data: failedCandidates} = useQuery(
     ['epoch/identites/count', epoch, ['Undefined'], ['Candidate']],
     (_, epoch, states, prevStates) =>
       getEpochIdentitiesCount(epoch, states, prevStates)
-  );
+  )
 
-  const { data: failedIdentities } = useQuery(
+  const {data: failedIdentities} = useQuery(
     [
       'epoch/identites/count',
       epoch,
@@ -196,11 +197,10 @@ function ValidationData({ epoch }) {
     ],
     (_, epoch, states, prevStates) =>
       getEpochIdentitiesCount(epoch, states, prevStates)
-  );
+  )
 
-  const getCount = (src, state) => {
-    return (src.find((x) => x.value === state) || { count: 0 }).count;
-  };
+  const getCount = (src, state) =>
+    (src.find((x) => x.value === state) || {count: 0}).count
 
   return (
     <section className="section section_info">
@@ -322,11 +322,11 @@ function ValidationData({ epoch }) {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-Validation.getInitialProps = function ({ query }) {
-  return { epoch: query.epoch };
-};
+Validation.getInitialProps = function ({query}) {
+  return {epoch: query.epoch}
+}
 
-export default Validation;
+export default Validation

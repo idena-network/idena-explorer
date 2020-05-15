@@ -7,6 +7,7 @@ export function useHashChange(onHashChange) {
     window.addEventListener('hashchange', change)
 
     return () => window.removeEventListener('hashchange', change)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }
 

@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
-import { Tooltip } from 'reactstrap';
+/* eslint-disable react/jsx-props-no-spreading */
+import {useState, useRef} from 'react'
+import {Tooltip} from 'reactstrap'
 
 export default function TooltipText({
   tooltip,
@@ -7,9 +8,9 @@ export default function TooltipText({
   placement = 'bottom',
   ...props
 }) {
-  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [tooltipOpen, setTooltipOpen] = useState(false)
 
-  const ref = useRef(null);
+  const ref = useRef(null)
   return (
     <>
       <span ref={ref} {...props}>
@@ -26,18 +27,13 @@ export default function TooltipText({
         </Tooltip>
       )}
     </>
-  );
+  )
 }
 
-export function IconTooltip({
-  tooltip,
-  children,
-  placement = 'bottom',
-  ...props
-}) {
-  const [tooltipOpen, setTooltipOpen] = useState(false);
+export function IconTooltip({tooltip, placement = 'bottom', ...props}) {
+  const [tooltipOpen, setTooltipOpen] = useState(false)
 
-  const ref = useRef(null);
+  const ref = useRef(null)
   return (
     <>
       <i ref={ref} {...props} />
@@ -52,5 +48,5 @@ export function IconTooltip({
         </Tooltip>
       )}
     </>
-  );
+  )
 }

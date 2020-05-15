@@ -1,37 +1,31 @@
-import { getEpochsData, getEpochsDataCount } from '../../../shared/api';
-import {
-  epochFmt,
-  precise2,
-  dnaFmt,
-  dateFmt,
-} from '../../../shared/utils/utils';
-import Link from 'next/link';
-import TooltipText from '../../../shared/components/tooltip';
-import { SkeletonRows } from '../../../shared/components/skeleton';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { Fragment } from 'react';
+import Link from 'next/link'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {Fragment} from 'react'
+import {getEpochsData, getEpochsDataCount} from '../../../shared/api'
+import {epochFmt, precise2, dnaFmt, dateFmt} from '../../../shared/utils/utils'
+import TooltipText from '../../../shared/components/tooltip'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 10;
+const LIMIT = 10
 
-export default function EpochsTable({ visible }) {
-  const fetchEpochs = (_, skip = 0) => getEpochsData(skip, LIMIT + 1);
+export default function EpochsTable({visible}) {
+  const fetchEpochs = (_, skip = 0) => getEpochsData(skip, LIMIT + 1)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `epochs`,
     fetchEpochs,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT + 1
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT + 1
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: epochsCount } = useQuery(
+  const {data: epochsCount} = useQuery(
     visible && 'epochsCount',
     getEpochsDataCount
-  );
+  )
 
   const prepareEpochData = (currentEpoch, previousEpoch) => ({
     epoch: currentEpoch.epoch,
@@ -47,7 +41,7 @@ export default function EpochsTable({ visible }) {
         (currentEpoch.coins.minted - currentEpoch.rewards.total)
     ),
     burnt: precise2(currentEpoch.coins.burnt),
-  });
+  })
 
   return (
     <div className="table-responsive">
@@ -101,16 +95,15 @@ export default function EpochsTable({ visible }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={10}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={10} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
                 page.map((item, idx) => {
-                  if (idx == page.length - 1) {
-                    return null;
+                  if (idx === page.length - 1) {
+                    return null
                   }
-                  const data = prepareEpochData(item, page[idx + 1]);
+                  const data = prepareEpochData(item, page[idx + 1])
                   return (
                     <tr key={data.epoch}>
                       <td>
@@ -142,7 +135,7 @@ export default function EpochsTable({ visible }) {
                       <td>{dnaFmt(data.lastTotalMined, '')}</td>
                       <td>{dnaFmt(data.burnt, '')}</td>
                     </tr>
-                  );
+                  )
                 })}
             </Fragment>
           ))}
@@ -150,14 +143,18 @@ export default function EpochsTable({ visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length - 1 : 0), 0)} of{' '}
           {epochsCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

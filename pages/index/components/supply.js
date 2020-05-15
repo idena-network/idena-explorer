@@ -1,23 +1,23 @@
-import { useEffect, useState } from 'react';
-import { getCirculationSupply, getTotalCoins } from '../../../shared/api';
-import { precise2, dnaFmt } from '../../../shared/utils/utils';
-import TooltipText from '../../../shared/components/tooltip';
+import {useEffect, useState} from 'react'
+import {getCirculationSupply, getTotalCoins} from '../../../shared/api'
+import {precise2, dnaFmt} from '../../../shared/utils/utils'
+import TooltipText from '../../../shared/components/tooltip'
 
 const initialState = {
   totalSupply: '-',
   totalBurnt: '-',
   circulationSupply: '-',
-};
+}
 
 export default function Supply() {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(initialState)
 
   useEffect(() => {
     async function getData() {
       const [supply, totalCoins] = await Promise.all([
         getCirculationSupply(),
         getTotalCoins(),
-      ]);
+      ])
       setState({
         totalSupply: dnaFmt(
           precise2(
@@ -27,10 +27,10 @@ export default function Supply() {
         ),
         totalBurnt: dnaFmt(precise2(totalCoins.burnt)),
         circulationSupply: dnaFmt(precise2(supply)),
-      });
+      })
     }
-    getData();
-  }, []);
+    getData()
+  }, [])
 
   return (
     <div className="col-12 col-sm-9">
@@ -72,5 +72,5 @@ export default function Supply() {
         </div>
       </div>
     </div>
-  );
+  )
 }

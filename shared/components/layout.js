@@ -1,60 +1,61 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import {
   Container,
   DropdownMenu,
   DropdownToggle,
   UncontrolledButtonDropdown,
-} from 'reactstrap';
-import { useState } from 'react';
-import { search } from '../../shared/api';
-import Router, { useRouter } from 'next/router';
-import Link from 'next/link';
-import { useSession } from '../utils/session-context';
+} from 'reactstrap'
+import {useState} from 'react'
+import Router, {useRouter} from 'next/router'
+import Link from 'next/link'
+import {search} from '../api'
+import {useSession} from '../utils/session-context'
 
-function Layout({ children, signinLoading }) {
-  const router = useRouter();
-  const { session, logout } = useSession();
+function Layout({children, signinLoading}) {
+  const router = useRouter()
+  const {session, logout} = useSession()
   const [state, setState] = useState({
     value: '',
     disabled: false,
     signinLoading,
-  });
+  })
 
   const doSearch = async (e) => {
-    e.preventDefault();
-    setState({ ...state, disabled: true });
+    e.preventDefault()
+    setState({...state, disabled: true})
     try {
-      const result = await search(state.value);
+      const result = await search(state.value)
       if (!result || !result.length) {
-        alert('Nothing found...');
+        alert('Nothing found...')
       } else {
-        for (let i = 0; i < result.length; i++) {
-          const item = result[i];
+        for (let i = 0; i < result.length; i += 1) {
+          const item = result[i]
           switch (item.Name) {
             case 'Address': {
-              Router.push(`/address/${item.Value}`);
-              return;
+              Router.push(`/address/${item.Value}`)
+              return
             }
             case 'Block': {
-              Router.push(`/block/${item.Value}`);
-              return;
+              Router.push(`/block/${item.Value}`)
+              return
             }
-            case 'Flip':
-              {
-                Router.push(`/flip/${item.Value}`);
-                return;
-              }
-              ``;
+            case 'Flip': {
+              Router.push(`/flip/${item.Value}`)
+              return
+            }
             case 'Transaction': {
-              Router.push(`/transaction/${item.Value}`);
-              return;
+              Router.push(`/transaction/${item.Value}`)
+              return
             }
+            default:
           }
         }
       }
     } finally {
-      setState({ ...state, disabled: false });
+      setState({...state, disabled: false})
     }
-  };
+  }
 
   return (
     <>
@@ -81,7 +82,7 @@ function Layout({ children, signinLoading }) {
                       className="btn btn-icon"
                       onClick={doSearch}
                     >
-                      <i className="icon icon--search"></i>
+                      <i className="icon icon--search" />
                     </button>
                   </div>
                   <input
@@ -90,7 +91,7 @@ function Layout({ children, signinLoading }) {
                     placeholder="Address, flip, invitation, transaction, block..."
                     className="form-control"
                     onChange={(e) =>
-                      setState({ ...state, value: e.target.value })
+                      setState({...state, value: e.target.value})
                     }
                     disabled={state.disabled}
                   />
@@ -106,7 +107,7 @@ function Layout({ children, signinLoading }) {
                       <div className="user-pic">
                         <img
                           className="user-avatar"
-                          src={'https://robohash.org/' + session.address}
+                          src={`https://robohash.org/${session.address}`}
                           alt="pic"
                           width="40"
                         />
@@ -118,28 +119,26 @@ function Layout({ children, signinLoading }) {
                         computeStyle: {
                           enabled: true,
                           order: 900,
-                          fn: (data) => {
-                            return {
-                              ...data,
-                              styles: {
-                                ...data.styles,
-                              },
-                            };
-                          },
+                          fn: (data) => ({
+                            ...data,
+                            styles: {
+                              ...data.styles,
+                            },
+                          }),
                         },
                       }}
                     >
                       <li>
                         <Link
                           href="/address/[address]"
-                          as={'/address/' + session.address}
+                          as={`/address/${session.address}`}
                         >
                           <a className="btn btn-small btn-icon">
                             <span>My address</span>
                           </a>
                         </Link>
                       </li>
-                      <li className="brake"></li>
+                      <li className="brake" />
                       <li>
                         <a
                           className="btn btn-small btn-icon"
@@ -160,6 +159,7 @@ function Layout({ children, signinLoading }) {
                   >
                     <a className="btn btn-signin">
                       <img
+                        alt="signin"
                         className={`icon icon-logo-white-small ${
                           signinLoading ? 'hidden' : ''
                         }`}
@@ -169,7 +169,7 @@ function Layout({ children, signinLoading }) {
                         className={`spinner ${signinLoading ? '' : 'hidden'}`}
                       >
                         <div className="small progress">
-                          <div></div>
+                          <div />
                         </div>
                       </div>
 
@@ -185,7 +185,7 @@ function Layout({ children, signinLoading }) {
         <Container>{children}</Container>
       </main>
     </>
-  );
+  )
 }
 
-export default Layout;
+export default Layout

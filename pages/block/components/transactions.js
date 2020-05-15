@@ -1,27 +1,25 @@
-import { useEffect, useState } from 'react';
-import { dateTimeFmt, precise6, dnaFmt } from '../../../shared/utils/utils';
-import Link from 'next/link';
-import { getTransactions, getBlockTransactions } from '../../../shared/api';
-import { useInfiniteQuery } from 'react-query';
+import Link from 'next/link'
+import {useInfiniteQuery} from 'react-query'
+import {dateTimeFmt, precise6, dnaFmt} from '../../../shared/utils/utils'
+import {getBlockTransactions} from '../../../shared/api'
 
-const LIMIT = 10;
+const LIMIT = 10
 
-export default function Transactions({ block }) {
+export default function Transactions({block}) {
   const fetchTransactions = (_, block, skip = 0) =>
-    getBlockTransactions(block, skip, LIMIT);
+    getBlockTransactions(block, skip, LIMIT)
 
-  const { data, fetchMore, canFetchMore } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore} = useInfiniteQuery(
     `${block}/transactions`,
     [block],
     fetchTransactions,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -32,8 +30,8 @@ export default function Transactions({ block }) {
             <th>From</th>
             <th>To</th>
             <th>Amount</th>
-            <th style={{ width: 100 }}>Timestamp</th>
-            <th style={{ width: 100 }}>Type</th>
+            <th style={{width: 100}}>Timestamp</th>
+            <th style={{width: 100}}>Type</th>
           </tr>
         </thead>
         <tbody>
@@ -45,7 +43,7 @@ export default function Transactions({ block }) {
                   <td>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 100 }}
+                      style={{width: 100}}
                     >
                       <Link
                         href="/transaction/[hash]"
@@ -58,17 +56,16 @@ export default function Transactions({ block }) {
                   <td>
                     <div className="user-pic">
                       <img
-                        src={
-                          'https://robohash.org/' +
-                          (item.from && item.from.toLowerCase())
-                        }
+                        src={`https://robohash.org/${
+                          item.from && item.from.toLowerCase()
+                        }`}
                         alt="pic"
                         width="32"
                       />
                     </div>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 120 }}
+                      style={{width: 120}}
                     >
                       <Link
                         href="/address/[address]"
@@ -83,16 +80,14 @@ export default function Transactions({ block }) {
                       <>
                         <div className="user-pic">
                           <img
-                            src={
-                              'https://robohash.org/' + item.to.toLowerCase()
-                            }
+                            src={`https://robohash.org/${item.to.toLowerCase()}`}
                             alt="pic"
                             width="32"
                           />
                         </div>
                         <div
                           className="text_block text_block--ellipsis"
-                          style={{ width: 120 }}
+                          style={{width: 120}}
                         >
                           <Link
                             href="/address/[address]"
@@ -109,7 +104,8 @@ export default function Transactions({ block }) {
                   <td>
                     {dnaFmt(
                       precise6(
-                        !(item.amount * 1) && typeof item.transfer !== undefined
+                        !(item.amount * 1) &&
+                          typeof item.transfer !== 'undefined'
                           ? item.transfer
                           : item.amount
                       ),
@@ -125,12 +121,16 @@ export default function Transactions({ block }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more
         </button>
       </div>
     </div>
-  );
+  )
 }

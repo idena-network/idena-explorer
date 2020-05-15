@@ -1,34 +1,33 @@
-import { dateTimeFmt, precise6, dnaFmt } from '../../../shared/utils/utils';
-import Link from 'next/link';
+import Link from 'next/link'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {dateTimeFmt, precise6, dnaFmt} from '../../../shared/utils/utils'
 import {
   getEpochTransactions,
   getEpochTransactionsCount,
-} from '../../../shared/api';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { SkeletonRows } from '../../../shared/components/skeleton';
+} from '../../../shared/api'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function Transactions({ epoch, visible }) {
+export default function Transactions({epoch, visible}) {
   const fetchTransactions = (_, epoch, skip = 0) =>
-    getEpochTransactions(epoch, skip, LIMIT);
+    getEpochTransactions(epoch, skip, LIMIT)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     `${epoch}/transactions`,
     [epoch],
     fetchTransactions,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: txsCount } = useQuery(['epoch/txsCount', epoch], (_, epoch) =>
+  const {data: txsCount} = useQuery(['epoch/txsCount', epoch], (_, epoch) =>
     getEpochTransactionsCount(epoch)
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -39,13 +38,12 @@ export default function Transactions({ epoch, visible }) {
             <th>From</th>
             <th>To</th>
             <th>Amount</th>
-            <th style={{ width: 100 }}>Timestamp</th>
-            <th style={{ width: 100 }}>Type</th>
+            <th style={{width: 100}}>Timestamp</th>
+            <th style={{width: 100}}>Type</th>
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={6}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={6} />)}
           {data.map(
             (page) =>
               page &&
@@ -54,7 +52,7 @@ export default function Transactions({ epoch, visible }) {
                   <td>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 100 }}
+                      style={{width: 100}}
                     >
                       <Link
                         href="/transaction/[hash]"
@@ -67,17 +65,16 @@ export default function Transactions({ epoch, visible }) {
                   <td>
                     <div className="user-pic">
                       <img
-                        src={
-                          'https://robohash.org/' +
-                          (item.from && item.from.toLowerCase())
-                        }
+                        src={`https://robohash.org/${
+                          item.from && item.from.toLowerCase()
+                        }`}
                         alt="pic"
                         width="32"
                       />
                     </div>
                     <div
                       className="text_block text_block--ellipsis"
-                      style={{ width: 120 }}
+                      style={{width: 120}}
                     >
                       <Link
                         href="/address/[address]"
@@ -92,16 +89,14 @@ export default function Transactions({ epoch, visible }) {
                       <>
                         <div className="user-pic">
                           <img
-                            src={
-                              'https://robohash.org/' + item.to.toLowerCase()
-                            }
+                            src={`https://robohash.org/${item.to.toLowerCase()}`}
                             alt="pic"
                             width="32"
                           />
                         </div>
                         <div
                           className="text_block text_block--ellipsis"
-                          style={{ width: 120 }}
+                          style={{width: 120}}
                         >
                           <Link
                             href="/address/[address]"
@@ -118,7 +113,8 @@ export default function Transactions({ epoch, visible }) {
                   <td>
                     {dnaFmt(
                       precise6(
-                        !(item.amount * 1) && typeof item.transfer !== undefined
+                        !(item.amount * 1) &&
+                          typeof item.transfer !== 'undefined'
                           ? item.transfer
                           : item.amount
                       ),
@@ -134,14 +130,18 @@ export default function Transactions({ epoch, visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {txsCount})
         </button>
       </div>
     </div>
-  );
+  )
 }

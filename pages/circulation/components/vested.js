@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { precise2, dnaFmt } from '../../../shared/utils/utils';
-import Link from 'next/link';
-import { getAddressInfo } from '../../../shared/api';
+import {useEffect, useState} from 'react'
+import Link from 'next/link'
+import {precise2, dnaFmt} from '../../../shared/utils/utils'
+import {getAddressInfo} from '../../../shared/api'
 
 const vestedData = [
   {
@@ -64,10 +64,10 @@ const vestedData = [
     date: '-',
     descr: '',
   },
-];
+]
 
 export default function Vested() {
-  const [state, setState] = useState([]);
+  const [state, setState] = useState([])
 
   useEffect(() => {
     async function loadData() {
@@ -78,12 +78,12 @@ export default function Vested() {
             ...vestedData[idx],
           }))
         )
-      );
+      )
 
-      setState(data);
+      setState(data)
     }
-    loadData();
-  }, []);
+    loadData()
+  }, [])
 
   return (
     <div className="table-responsive">
@@ -96,7 +96,7 @@ export default function Vested() {
               DNA
             </th>
             <th>Purpose</th>
-            <th style={{ width: 150 }}>
+            <th style={{width: 150}}>
               Vesting <br />
               date
             </th>
@@ -108,14 +108,14 @@ export default function Vested() {
               <td>
                 <div className="user-pic">
                   <img
-                    src={'https://robohash.org/' + item.address.toLowerCase()}
+                    src={`https://robohash.org/${item.address.toLowerCase()}`}
                     alt="pic"
                     width="32"
                   />
                 </div>
                 <div
                   className="text_block text_block--ellipsis"
-                  style={{ width: 150 }}
+                  style={{width: 150}}
                 >
                   <Link
                     href="/address/[address]"
@@ -133,5 +133,5 @@ export default function Vested() {
         </tbody>
       </table>
     </div>
-  );
+  )
 }

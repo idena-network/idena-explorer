@@ -1,62 +1,58 @@
+import {useInfiniteQuery, useQuery} from 'react-query'
+import Link from 'next/link'
 import {
   getIdentityEpochs,
   getLastEpoch,
   getIdentityEpochsCount,
-} from '../../../shared/api';
-import TooltipText from '../../../shared/components/tooltip';
+} from '../../../shared/api'
+import TooltipText from '../../../shared/components/tooltip'
 import {
   identityStatusFmt,
   dnaFmt,
   precise2,
   epochFmt,
-} from '../../../shared/utils/utils';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import Link from 'next/link';
-import { SkeletonRows } from '../../../shared/components/skeleton';
+} from '../../../shared/utils/utils'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 10;
+const LIMIT = 10
 
-const PASSED = ['Newbie', 'Verified', 'Human'];
+const PASSED = ['Newbie', 'Verified', 'Human']
 
-export default function Epochs({ address, visible }) {
+export default function Epochs({address, visible}) {
   const fetchEpochs = (_, address, skip = 0) =>
-    getIdentityEpochs(address, skip, LIMIT);
+    getIdentityEpochs(address, skip, LIMIT)
 
-  const { data: lastEpoch } = useQuery(visible && 'lastEpoch', (_) =>
+  const {data: lastEpoch} = useQuery(visible && 'lastEpoch', () =>
     getLastEpoch()
-  );
+  )
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `${address}/epochs`,
     [address],
     fetchEpochs,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: epochsCount } = useQuery(
+  const {data: epochsCount} = useQuery(
     visible && `${address}/epochs/count`,
     [address],
     (_, address) => getIdentityEpochsCount(address)
-  );
+  )
 
-  const formatPoints = (point, count) => {
-    return (
-      point + ' out of ' + count + ' (' + precise2((point / count) * 100) + '%)'
-    );
-  };
+  const formatPoints = (point, count) =>
+    `${point} out of ${count} (${precise2((point / count) * 100)}%)`
 
   return (
     <div className="table-responsive">
       <table className="table">
         <thead>
           <tr>
-            <th style={{ width: 100 }}>Epoch</th>
+            <th style={{width: 100}}>Epoch</th>
             <th>
               <TooltipText tooltip="Identity status before the validation">
                 Previous
@@ -69,7 +65,7 @@ export default function Epochs({ address, visible }) {
                 Status
               </TooltipText>
             </th>
-            <th style={{ width: 140 }}>
+            <th style={{width: 140}}>
               Validation
               <br />
               reward, DNA
@@ -82,32 +78,31 @@ export default function Epochs({ address, visible }) {
               Qualification <br />
               score
             </th>
-            <th style={{ width: 100 }}>Validated</th>
-            <th style={{ width: 90 }}>Details</th>
+            <th style={{width: 100}}>Validated</th>
+            <th style={{width: 90}}>Details</th>
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={8}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={8} />)}
           {data.map(
             (page) =>
               page &&
               page.map((item) => {
                 if (lastEpoch && item.epoch === lastEpoch.epoch) {
-                  return null;
+                  return null
                 }
                 const shortScoreTxt = item.shortAnswers.flipsCount
                   ? formatPoints(
                       item.shortAnswers.point,
                       item.shortAnswers.flipsCount
                     )
-                  : '-';
+                  : '-'
                 const longScoreTxt = item.longAnswers.flipsCount
                   ? formatPoints(
                       item.longAnswers.point,
                       item.longAnswers.flipsCount
                     )
-                  : '-';
+                  : '-'
 
                 if (PASSED.some((x) => x === item.state)) {
                   return (
@@ -117,8 +112,8 @@ export default function Epochs({ address, visible }) {
                       address={address}
                       shortScoreTxt={shortScoreTxt}
                       longScoreTxt={longScoreTxt}
-                    ></PassedIdentity>
-                  );
+                    />
+                  )
                 }
                 if (item.missed) {
                   if (item.shortAnswers.flipsCount) {
@@ -129,8 +124,8 @@ export default function Epochs({ address, visible }) {
                         address={address}
                         shortScoreTxt={shortScoreTxt}
                         longScoreTxt={longScoreTxt}
-                      ></LateSubmission>
-                    );
+                      />
+                    )
                   }
                   if (item.requiredFlips > item.madeFlips) {
                     return (
@@ -138,16 +133,16 @@ export default function Epochs({ address, visible }) {
                         key={item.epoch}
                         identity={item}
                         address={address}
-                      ></NotAllowed>
-                    );
+                      />
+                    )
                   }
                   return (
                     <Missed
                       key={item.epoch}
                       identity={item}
                       address={address}
-                    ></Missed>
-                  );
+                    />
+                  )
                 }
                 return (
                   <WrongAnswers
@@ -156,27 +151,31 @@ export default function Epochs({ address, visible }) {
                     address={address}
                     shortScoreTxt={shortScoreTxt}
                     longScoreTxt={longScoreTxt}
-                  ></WrongAnswers>
-                );
+                  />
+                )
               })
           )}
         </tbody>
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {epochsCount})
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-function PassedIdentity({ identity, address, shortScoreTxt, longScoreTxt }) {
+function PassedIdentity({identity, address, shortScoreTxt, longScoreTxt}) {
   return (
     <tr>
       <td>
@@ -214,10 +213,10 @@ function PassedIdentity({ identity, address, shortScoreTxt, longScoreTxt }) {
         </Link>
       </td>
     </tr>
-  );
+  )
 }
 
-function LateSubmission({ identity, address, shortScoreTxt, longScoreTxt }) {
+function LateSubmission({identity, address, shortScoreTxt, longScoreTxt}) {
   return (
     <tr>
       <td>
@@ -244,10 +243,10 @@ function LateSubmission({ identity, address, shortScoreTxt, longScoreTxt }) {
         </Link>
       </td>
     </tr>
-  );
+  )
 }
 
-function WrongAnswers({ identity, address, shortScoreTxt, longScoreTxt }) {
+function WrongAnswers({identity, address, shortScoreTxt, longScoreTxt}) {
   return (
     <tr>
       <td>
@@ -274,10 +273,10 @@ function WrongAnswers({ identity, address, shortScoreTxt, longScoreTxt }) {
         </Link>
       </td>
     </tr>
-  );
+  )
 }
 
-function NotAllowed({ identity, address }) {
+function NotAllowed({identity, address}) {
   return (
     <tr>
       <td>
@@ -304,10 +303,10 @@ function NotAllowed({ identity, address }) {
         </Link>
       </td>
     </tr>
-  );
+  )
 }
 
-function Missed({ identity, address }) {
+function Missed({identity, address}) {
   return (
     <tr>
       <td>
@@ -334,5 +333,5 @@ function Missed({ identity, address }) {
         </Link>
       </td>
     </tr>
-  );
+  )
 }

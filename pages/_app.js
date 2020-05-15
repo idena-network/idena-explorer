@@ -1,8 +1,9 @@
+/* eslint-disable react/jsx-props-no-spreading */
 // pages/_app.js
-import '../styles/index.scss';
-import Head from 'next/head';
-import { ReactQueryConfigProvider } from 'react-query';
-import { SessionProvider } from '../shared/utils/session-context';
+import '../styles/index.scss'
+import Head from 'next/head'
+import {ReactQueryConfigProvider} from 'react-query'
+import {SessionProvider} from '../shared/utils/session-context'
 
 const queryConfig = {
   // Global
@@ -11,9 +12,9 @@ const queryConfig = {
   // useQuery
   retry: 1,
   refetchOnMount: true,
-};
+}
 
-export default function MyApp({ Component, pageProps }) {
+export default function MyApp({Component, pageProps}) {
   return (
     <>
       <Head>
@@ -77,5 +78,5 @@ export default function MyApp({ Component, pageProps }) {
         </SessionProvider>
       </ReactQueryConfigProvider>
     </>
-  );
+  )
 }

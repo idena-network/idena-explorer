@@ -1,48 +1,48 @@
-import Link from 'next/link';
-import Layout from '../../shared/components/layout';
-import { NavItem, NavLink, TabPane, TabContent } from 'reactstrap';
+import Link from 'next/link'
+import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
+import {useQuery} from 'react-query'
+import Layout from '../../shared/components/layout'
 import {
   getIdentityAge,
   getOnlineStatus,
   getIdentity,
   getAddressInfo,
-} from '../../shared/api';
+} from '../../shared/api'
 import {
   dnaFmt,
   identityStatusFmt,
   dateTimeFmt,
   precise6,
-} from '../../shared/utils/utils';
-import { useQuery } from 'react-query';
-import FlipsStatus from './components/flipsStatus';
-import ValidationStatus from './components/validationStatus';
-import Epochs from './components/epochs';
-import Flips from './components/flips';
-import Invites from './components/invites';
-import { useHashChange, useHash } from '../../shared/utils/useHashChange';
-import TooltipText from '../../shared/components/tooltip';
+} from '../../shared/utils/utils'
+import FlipsStatus from './components/flipsStatus'
+import ValidationStatus from './components/validationStatus'
+import Epochs from './components/epochs'
+import Flips from './components/flips'
+import Invites from './components/invites'
+import {useHashChange, useHash} from '../../shared/utils/useHashChange'
+import TooltipText from '../../shared/components/tooltip'
 
-const DEFAULT_TAB = '#validations';
+const DEFAULT_TAB = '#validations'
 
-function Identity({ address = '' }) {
-  const { hash, setHash, hashReady } = useHash();
-  useHashChange((hash) => setHash(hash));
+function Identity({address = ''}) {
+  const {hash, setHash, hashReady} = useHash()
+  useHashChange((hash) => setHash(hash))
 
-  const { data: addressInfo } = useQuery(['balance', address], (_, address) =>
+  const {data: addressInfo} = useQuery(['balance', address], (_, address) =>
     getAddressInfo(address)
-  );
+  )
 
-  const { data: identityInfo } = useQuery(['identity', address], (_, address) =>
+  const {data: identityInfo} = useQuery(['identity', address], (_, address) =>
     getIdentity(address)
-  );
+  )
 
-  const { data: onlineStatus } = useQuery(['online', address], (_, address) =>
+  const {data: onlineStatus} = useQuery(['online', address], (_, address) =>
     getOnlineStatus(address)
-  );
+  )
 
-  const { data: identityAge } = useQuery(['age', address], (_, address) =>
+  const {data: identityAge} = useQuery(['age', address], (_, address) =>
     getIdentityAge(address)
-  );
+  )
 
   return (
     <Layout>
@@ -51,13 +51,13 @@ function Identity({ address = '' }) {
           <div className="col-auto">
             <div className="section_main__image">
               <img
-                src={'https://robohash.org/' + address.toLowerCase()}
+                src={`https://robohash.org/${address.toLowerCase()}`}
                 alt="pic"
                 width="160"
               />
               <div className="verified_sign">
                 {identityInfo && identityInfo.state === 'Human' && (
-                  <i className="icon icon--status"></i>
+                  <i className="icon icon--status" />
                 )}
               </div>
             </div>
@@ -69,7 +69,7 @@ function Identity({ address = '' }) {
 
             <Link href="/address/[address]" as={`/address/${address}`}>
               <a className="btn btn-small btn-primary">
-                <i className="icon icon--coins"></i>
+                <i className="icon icon--coins" />
                 <span>Address details</span>
               </a>
             </Link>
@@ -82,12 +82,12 @@ function Identity({ address = '' }) {
         identityInfo={identityInfo}
         onlineStatus={onlineStatus}
         identityAge={identityAge}
-      ></IdentityData>
+      />
 
       <section className="section section_info">
         <div className="row">
-          <ValidationStatus identityInfo={identityInfo}></ValidationStatus>
-          <FlipsStatus address={address}></FlipsStatus>
+          <ValidationStatus identityInfo={identityInfo} />
+          <FlipsStatus address={address} />
         </div>
       </section>
 
@@ -136,7 +136,7 @@ function Identity({ address = '' }) {
                 <Epochs
                   address={address}
                   visible={hashReady && (hash === DEFAULT_TAB || hash === '')}
-                ></Epochs>
+                />
               </div>
             </TabPane>
             <TabPane tabId="#flips">
@@ -144,7 +144,7 @@ function Identity({ address = '' }) {
                 <Flips
                   address={address}
                   visible={hashReady && hash === '#flips'}
-                ></Flips>
+                />
               </div>
             </TabPane>
             <TabPane tabId="#invites">
@@ -152,27 +152,22 @@ function Identity({ address = '' }) {
                 <Invites
                   address={address}
                   visible={hashReady && hash === '#invites'}
-                ></Invites>
+                />
               </div>
             </TabPane>
           </TabContent>
         </div>
       </section>
     </Layout>
-  );
+  )
 }
 
-function IdentityData({
-  addressInfo,
-  identityInfo,
-  onlineStatus,
-  identityAge,
-}) {
+function IdentityData({addressInfo, identityInfo, onlineStatus, identityAge}) {
   const onlineMiner =
     identityInfo &&
     (identityInfo.state === 'Newbie' ||
       identityInfo.state === 'Verified' ||
-      identityInfo.state === 'Human');
+      identityInfo.state === 'Human')
 
   return (
     <>
@@ -245,11 +240,11 @@ function IdentityData({
         </div>
       </section>
     </>
-  );
+  )
 }
 
-Identity.getInitialProps = function ({ query }) {
-  return { address: query.address };
-};
+Identity.getInitialProps = function ({query}) {
+  return {address: query.address}
+}
 
-export default Identity;
+export default Identity

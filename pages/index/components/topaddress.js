@@ -1,25 +1,24 @@
-import { precise2, dnaFmt } from '../../../shared/utils/utils';
-import Link from 'next/link';
-import { getBalances } from '../../../shared/api';
-import { useInfiniteQuery } from 'react-query';
-import { SkeletonRows } from '../../../shared/components/skeleton';
+import Link from 'next/link'
+import {useInfiniteQuery} from 'react-query'
+import {precise2, dnaFmt} from '../../../shared/utils/utils'
+import {getBalances} from '../../../shared/api'
+import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function TopAddress({ visible }) {
-  const fetchBalances = (_, skip = 0) => getBalances(skip, LIMIT);
+export default function TopAddress({visible}) {
+  const fetchBalances = (_, skip = 0) => getBalances(skip, LIMIT)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && 'topaddress',
     fetchBalances,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
   return (
     <div className="table-responsive">
@@ -32,8 +31,7 @@ export default function TopAddress({ visible }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={3}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={3} />)}
           {data.map(
             (page) =>
               page &&
@@ -42,9 +40,7 @@ export default function TopAddress({ visible }) {
                   <td>
                     <div className="user-pic">
                       <img
-                        src={
-                          'https://robohash.org/' + item.address.toLowerCase()
-                        }
+                        src={`https://robohash.org/${item.address.toLowerCase()}`}
                         alt="pic"
                         width="32"
                       />
@@ -67,12 +63,16 @@ export default function TopAddress({ visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more
         </button>
       </div>
     </div>
-  );
+  )
 }

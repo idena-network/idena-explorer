@@ -1,45 +1,44 @@
-import { identityStatusFmt, precise6 } from '../../../../../shared/utils/utils';
-import Link from 'next/link';
+import Link from 'next/link'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {Fragment} from 'react'
 import {
   getEpochIdentityRewards,
   getEpochIdentityRewardsCount,
-} from '../../../../../shared/api';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { Fragment } from 'react';
-import { SkeletonRows } from '../../../../../shared/components/skeleton';
+} from '../../../../../shared/api'
+import {identityStatusFmt, precise6} from '../../../../../shared/utils/utils'
+import {SkeletonRows} from '../../../../../shared/components/skeleton'
 
-const LIMIT = 30;
+const LIMIT = 30
 
-export default function Distribution({ epoch, visible }) {
+export default function Distribution({epoch, visible}) {
   const fetchRewards = (_, epoch, skip = 0) =>
-    getEpochIdentityRewards(epoch, skip, LIMIT);
+    getEpochIdentityRewards(epoch, skip, LIMIT)
 
-  const fetchRewardsCount = (_, epoch) => getEpochIdentityRewardsCount(epoch);
+  const fetchRewardsCount = (_, epoch) => getEpochIdentityRewardsCount(epoch)
 
-  const { data, fetchMore, canFetchMore, status } = useInfiniteQuery(
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && [`${epoch}/rewards`, epoch],
     fetchRewards,
     {
-      getFetchMore: (lastGroup, allGroups) => {
-        return lastGroup && lastGroup.length === LIMIT
+      getFetchMore: (lastGroup, allGroups) =>
+        lastGroup && lastGroup.length === LIMIT
           ? allGroups.length * LIMIT
-          : false;
-      },
+          : false,
     }
-  );
+  )
 
-  const { data: identitiesCount } = useQuery(
+  const {data: identitiesCount} = useQuery(
     visible && ['epoch/rewards/count', epoch],
     fetchRewardsCount
-  );
+  )
 
   const getReward = (arr, type) => {
-    const item = arr.find((x) => x.type === type);
+    const item = arr.find((x) => x.type === type)
     if (!item) {
-      return 0;
+      return 0
     }
-    return item.balance * 1 + item.stake * 1;
-  };
+    return item.balance * 1 + item.stake * 1
+  }
 
   return (
     <div className="table-responsive">
@@ -52,28 +51,28 @@ export default function Distribution({ epoch, visible }) {
               status
             </th>
             <th>Status</th>
-            <th style={{ width: 80 }}>
+            <th style={{width: 80}}>
               Validation
               <br />
               reward,
               <br />
               DNA
             </th>
-            <th style={{ width: 80 }}>
+            <th style={{width: 80}}>
               Flips
               <br />
               reward,
               <br />
               DNA
             </th>
-            <th style={{ width: 80 }}>
+            <th style={{width: 80}}>
               Invitation
               <br />
               reward,
               <br />
               DNA
             </th>
-            <th style={{ width: 80 }}>
+            <th style={{width: 80}}>
               Total
               <br />
               reward,
@@ -83,39 +82,32 @@ export default function Distribution({ epoch, visible }) {
           </tr>
         </thead>
         <tbody>
-          {!visible ||
-            (status === 'loading' && <SkeletonRows cols={7}></SkeletonRows>)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={7} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
                 page.map((item) => {
-                  const validationReward = getReward(
-                    item.rewards,
-                    'Validation'
-                  );
+                  const validationReward = getReward(item.rewards, 'Validation')
                   const invitaionReward =
                     getReward(item.rewards, 'Invitations') +
                     getReward(item.rewards, 'Invitations2') +
-                    getReward(item.rewards, 'Invitations3');
+                    getReward(item.rewards, 'Invitations3')
 
-                  const flipsReward = getReward(item.rewards, 'Flips');
+                  const flipsReward = getReward(item.rewards, 'Flips')
 
                   return (
                     <tr key={item.address}>
                       <td>
                         <div className="user-pic">
                           <img
-                            src={
-                              'https://robohash.org/' +
-                              item.address.toLowerCase()
-                            }
+                            src={`https://robohash.org/${item.address.toLowerCase()}`}
                             alt="pic"
                             width="32"
                           />
                         </div>
                         <div
                           className="text_block text_block--ellipsis"
-                          style={{ width: 150 }}
+                          style={{width: 150}}
                         >
                           <Link
                             href="/identity/[address]/epoch/[epoch]/rewards"
@@ -155,7 +147,7 @@ export default function Distribution({ epoch, visible }) {
                         )}
                       </td>
                     </tr>
-                  );
+                  )
                 })}
             </Fragment>
           ))}
@@ -163,14 +155,18 @@ export default function Distribution({ epoch, visible }) {
       </table>
       <div
         className="text-center"
-        style={{ display: canFetchMore ? 'block' : 'none' }}
+        style={{display: canFetchMore ? 'block' : 'none'}}
       >
-        <button className="btn btn-small" onClick={() => fetchMore()}>
+        <button
+          type="button"
+          className="btn btn-small"
+          onClick={() => fetchMore()}
+        >
           Show more (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
           {identitiesCount})
         </button>
       </div>
     </div>
-  );
+  )
 }
