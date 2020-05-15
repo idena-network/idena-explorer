@@ -93,7 +93,7 @@ export async function getTotalCoins() {
   return getResponse(apiClient().get('coins'))
 }
 
-export async function getCirculationSupply() {
+export async function getCirculatingSupply() {
   return getResponse(apiClient().get('circulatingsupply?format=short'))
 }
 

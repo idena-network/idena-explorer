@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react'
-import {getCirculationSupply, getTotalCoins} from '../../../shared/api'
+import {getCirculatingSupply, getTotalCoins} from '../../../shared/api'
 import {precise2, dnaFmt} from '../../../shared/utils/utils'
 import TooltipText from '../../../shared/components/tooltip'
 
 const initialState = {
-  circulationSupply: '-',
+  circulatingSupply: '-',
   totalSupply: '-',
   vestedCoins: '-',
   stakedCoins: '-',
@@ -16,16 +16,19 @@ export default function Coins() {
   useEffect(() => {
     async function getData() {
       const [circulation, totalCoins] = await Promise.all([
-        getCirculationSupply(),
+        getCirculatingSupply(),
         getTotalCoins(),
       ])
       const totalSupply = precise2(
         1 * totalCoins.totalBalance + 1 * totalCoins.totalStake
       )
       setState({
-        circulationSupply: dnaFmt(precise2(circulation), ''),
+        circulatingSupply: dnaFmt(precise2(circulation), ''),
         totalSupply: dnaFmt(totalSupply, ''),
-        vestedCoins: dnaFmt(precise2(totalSupply - circulation), ''),
+        vestedCoins: dnaFmt(
+          precise2(totalSupply - circulation - totalCoins.totalStake),
+          ''
+        ),
         stakedCoins: dnaFmt(precise2(totalCoins.totalStake), ''),
       })
     }
@@ -41,7 +44,7 @@ export default function Coins() {
             <div className="row">
               <div className="col-12 col-sm-12 bordered-col">
                 <h3 className="info_block__accent">
-                  {state.circulationSupply}
+                  {state.circulatingSupply}
                 </h3>
                 <TooltipText
                   className="control-label"
