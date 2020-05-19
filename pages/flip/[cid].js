@@ -439,7 +439,9 @@ function Flip({cid}) {
                             <div className="text_block text_block--ellipsis">
                               <Link
                                 href="/identity/[address]/epoch/[epoch]/validation"
-                                as={`/identity/${item.address}/epoch/${epoch}/validation#longAnswers`}
+                                as={`/identity/${item.address}/epoch/${
+                                  epoch + 1
+                                }/validation#longAnswers`}
                               >
                                 <a>{item.address}</a>
                               </Link>
@@ -522,7 +524,9 @@ function Flip({cid}) {
                             <div className="text_block text_block--ellipsis">
                               <Link
                                 href="/identity/[address]/epoch/[epoch]/validation"
-                                as={`/identity/${item.address}/epoch/${epoch}/validation#shortAnswers`}
+                                as={`/identity/${item.address}/epoch/${
+                                  epoch + 1
+                                }/validation#shortAnswers`}
                               >
                                 <a>{item.address}</a>
                               </Link>

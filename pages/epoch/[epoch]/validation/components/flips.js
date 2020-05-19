@@ -109,7 +109,7 @@ export default function Flips({epoch, visible}) {
                     >
                       <Link
                         href="/identity/[address]"
-                        as={`/identity/${item.author}`}
+                        as={`/identity/${item.author}#flips`}
                       >
                         <a>{item.author}</a>
                       </Link>

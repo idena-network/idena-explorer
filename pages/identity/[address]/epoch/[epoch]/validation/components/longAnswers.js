@@ -30,7 +30,7 @@ export default function LongAnswers({address, epoch, visible}) {
             </th>
             <th>Answer</th>
             <th>Score</th>
-            <th> </th>
+            <th>Reporting</th>
           </tr>
         </thead>
         <tbody>
@@ -87,6 +87,7 @@ export default function LongAnswers({address, epoch, visible}) {
                       : item.flipStatus === 'WeaklyQualified'
                       ? 'Weak'
                       : 'No consensus'}
+                    {item.flipWrongWords ? ' (Reported)' : ''}
                   </td>
                   <td>
                     {' '}

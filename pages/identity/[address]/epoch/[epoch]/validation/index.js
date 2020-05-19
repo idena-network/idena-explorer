@@ -6,7 +6,7 @@ import {getIdentityByEpoch} from '../../../../../../shared/api'
 import {
   identityStatusFmt,
   epochFmt,
-  precise2,
+  precise1,
 } from '../../../../../../shared/utils/utils'
 import TooltipText from '../../../../../../shared/components/tooltip'
 import ShortAnswers from './components/shortAnswers'
@@ -126,6 +126,21 @@ function AnswersData({address, epoch, identity}) {
   let result = '-'
   let shortInTime = '-'
   let longInTime = '-'
+  const redColorStle = {color: 'red'}
+
+  const shortScore =
+    identity &&
+    identity.shortAnswers.flipsCount &&
+    (identity.shortAnswers.point / identity.shortAnswers.flipsCount) * 100
+  const longScore =
+    identity &&
+    identity.longAnswers.flipsCount &&
+    (identity.longAnswers.point / identity.longAnswers.flipsCount) * 100
+  const totalScore =
+    identity &&
+    identity.totalShortAnswers.flipsCount &&
+    (identity.totalShortAnswers.point / identity.totalShortAnswers.flipsCount) *
+      100
 
   if (identity) {
     if (identity.missed) {
@@ -136,12 +151,18 @@ function AnswersData({address, epoch, identity}) {
       } else {
         result = 'Missed validation'
         if (identity.approved) {
-          shortInTime = 'Not accomplished'
+          shortInTime = 'No answers'
           longInTime = 'No answers'
         } else {
           shortInTime = 'Missing'
           longInTime = 'Missing'
         }
+      }
+
+      if (identity.longAnswers.flipsCount) {
+        longInTime = 'In time'
+      } else {
+        longInTime = 'Missing'
       }
     } else if (
       identity.state === 'Newbie' ||
@@ -158,6 +179,7 @@ function AnswersData({address, epoch, identity}) {
     }
   }
 
+  console.log(longInTime === 'In time')
   return (
     <>
       <section className="section section_details">
@@ -225,92 +247,148 @@ function AnswersData({address, epoch, identity}) {
           </div>
         </div>
       </section>
+
       <section className="section section_info">
         <div className="row">
-          <div className="col-12 col-sm-6">
-            <h3>Validation answers</h3>
-            <div className="card">
-              <div className="info_block">
-                <div className="row">
-                  <div className="col-12 col-sm-4 bordered-col">
-                    <h3 className="info_block__accent">
-                      {`${(identity && identity.shortAnswers.point) || '-'} / ${
-                        (identity && identity.shortAnswers.flipsCount) || '-'
-                      }`}
-                    </h3>
-                    <TooltipText
-                      data-toggle="tooltip"
-                      className="control-label"
-                      tooltip="Right answers / Solved"
-                    >
-                      Right answers
-                    </TooltipText>
+          <div className="col-12 col-sm-9">
+            <div className="row">
+              <div className="col-12 col-sm-6">
+                <h3>Validation answers</h3>
+                <div className="card">
+                  <div className="info_block">
+                    <div className="row">
+                      <div className="col-12 col-sm-8 bordered-col">
+                        <h3
+                          className="info_block__accent"
+                          style={{
+                            color: `${
+                              shortScore && shortScore < 60 ? 'red' : 'inherit'
+                            }`,
+                          }}
+                        >
+                          {(shortScore &&
+                            `${precise1(shortScore)}%                           
+                            (${identity && identity.shortAnswers.point}/${
+                              identity && identity.shortAnswers.flipsCount
+                            })`) ||
+                            '-'}
+                        </h3>
+                        <TooltipText
+                          data-toggle="tooltip"
+                          className="control-label"
+                          tooltip="Short session score (Right&nbsp;answers/Solved) Min.&nbsp;score&nbsp;required:&nbsp;60%"
+                        >
+                          Score
+                        </TooltipText>
+                      </div>
+
+                      <div className="col-12 col-sm-4 bordered-col">
+                        <h3
+                          className="info_block__accent"
+                          style={{
+                            color: `${
+                              shortInTime === 'In time' ? 'inherit' : 'red'
+                            }`,
+                          }}
+                        >
+                          {shortInTime}
+                        </h3>
+                        <TooltipText
+                          data-toggle="tooltip"
+                          className="control-label"
+                          tooltip="Whether the answers submitted in time or not"
+                        >
+                          Submission
+                        </TooltipText>
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-12 col-sm-4 bordered-col">
-                    <h3 className="info_block__accent">
-                      {identity && identity.shortAnswers.flipsCount
-                        ? `${precise2(
-                            (identity.shortAnswers.point /
-                              identity.shortAnswers.flipsCount) *
-                              100
-                          )}%`
-                        : '-'}
-                    </h3>
-                    <div className="control-label">Score</div>
-                  </div>
-                  <div className="col-12 col-sm-4 bordered-col">
-                    <h3 className="info_block__accent">{shortInTime}</h3>
-                    <TooltipText
-                      data-toggle="tooltip"
-                      className="control-label"
-                      tooltip="Whether the answers submitted in time or not"
-                    >
-                      Submission
-                    </TooltipText>
+                </div>
+              </div>
+              <div className="col-12 col-sm-6">
+                <h3>Qualification answers</h3>
+                <div className="card">
+                  <div className="info_block">
+                    <div className="row">
+                      <div className="col-12 col-sm-8 bordered-col">
+                        <h3
+                          className="info_block__accent"
+                          style={{
+                            color: `${
+                              longScore && longScore < 75 ? 'red' : 'inherit'
+                            }`,
+                          }}
+                        >
+                          {(longScore &&
+                            `${precise1(longScore)}%
+                           (${identity && identity.longAnswers.point}/${
+                              identity && identity.longAnswers.flipsCount
+                            })`) ||
+                            '-'}
+                        </h3>
+                        <TooltipText
+                          data-toggle="tooltip"
+                          className="control-label"
+                          tooltip="Long session score (Right&nbsp;answers/Solved) Min.&nbsp;score&nbsp;required:&nbsp;75%"
+                        >
+                          Score
+                        </TooltipText>
+                      </div>
+
+                      <div className="col-12 col-sm-4 bordered-col">
+                        <h3
+                          className="info_block__accent"
+                          style={{
+                            color: `${
+                              longInTime === 'In time' ? 'inherit' : 'red'
+                            }`,
+                          }}
+                        >
+                          {longInTime}
+                        </h3>
+                        <TooltipText
+                          data-toggle="tooltip"
+                          className="control-label"
+                          tooltip="Whether the answers submitted in time or not"
+                        >
+                          Submission
+                        </TooltipText>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-12 col-sm-6">
-            <h3>Qualification answers</h3>
+
+          <div className="col-12 col-sm-3">
+            <h3>Total score</h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
-                  <div className="col-12 col-sm-4 bordered-col">
-                    <h3 className="info_block__accent">
-                      {`${(identity && identity.longAnswers.point) || '-'} / ${
-                        (identity && identity.longAnswers.flipsCount) || '-'
-                      }`}
+                  <div className="col-12 col-sm-12 bordered-col">
+                    <h3
+                      className="info_block__accent"
+                      style={{
+                        color: `${
+                          totalScore && totalScore < 75 ? 'red' : 'inherit'
+                        }`,
+                      }}
+                    >
+                      {(totalScore &&
+                        `${precise1(totalScore)}% (${
+                          identity && identity.totalShortAnswers.point
+                        }/${
+                          identity && identity.totalShortAnswers.flipsCount
+                        })`) ||
+                        '-'}
                     </h3>
                     <TooltipText
                       data-toggle="tooltip"
                       className="control-label"
-                      tooltip="Right answers / Solved"
+                      tooltip="Total score for all epochs (Right&nbsp;answers/Solved) Min.&nbsp;score&nbsp;required:&nbsp;75%"
                     >
-                      Right answers
-                    </TooltipText>
-                  </div>
-                  <div className="col-12 col-sm-4 bordered-col">
-                    <h3 className="info_block__accent">
-                      {identity && identity.longAnswers.flipsCount
-                        ? `${precise2(
-                            (identity.longAnswers.point /
-                              identity.longAnswers.flipsCount) *
-                              100
-                          )}%`
-                        : '-'}
-                    </h3>
-                    <div className="control-label">Score</div>
-                  </div>
-                  <div className="col-12 col-sm-4 bordered-col">
-                    <h3 className="info_block__accent">{longInTime}</h3>
-                    <TooltipText
-                      data-toggle="tooltip"
-                      className="control-label"
-                      tooltip="Whether the answers submitted in time or not"
-                    >
-                      Submission
+                      Score
                     </TooltipText>
                   </div>
                 </div>

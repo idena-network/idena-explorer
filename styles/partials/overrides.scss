@@ -272,6 +272,7 @@ p {
   }
 
   &:hover,
+  &:focus,
   &:active {
     color: $metal;
     background-color: transparent;
@@ -284,6 +285,7 @@ p {
   color: rgb(83, 86, 92);
 
   &:hover,
+  &:focus,
   &:active {
     color: $primary !important;
     background-color: $white !important;
