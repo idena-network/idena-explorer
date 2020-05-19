@@ -249,6 +249,7 @@ p {
     background-color: $white;
   }
 
+  &:focus,
   &:active {
     background-color: $white !important;
     color: $primary !important;

@@ -242,7 +242,7 @@ function Reward({epoch, address = ''}) {
                 <div className="text_block">
                   {identityInfo
                     ? identityInfo.missed
-                      ? identityInfo.shortAnswers.flipsCount
+                      ? identityInfo.shortAnswersCount
                         ? 'Late submission'
                         : 'Missed validation'
                       : isIdentityPassed(identityInfo.state)

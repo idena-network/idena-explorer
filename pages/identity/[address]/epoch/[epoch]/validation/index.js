@@ -7,6 +7,7 @@ import {
   identityStatusFmt,
   epochFmt,
   precise1,
+  isIdentityPassed,
 } from '../../../../../../shared/utils/utils'
 import TooltipText from '../../../../../../shared/components/tooltip'
 import ShortAnswers from './components/shortAnswers'
@@ -50,18 +51,39 @@ function Validation({address = '', epoch}) {
           </div>
           <div className="col">
             <div className="section_main__group">
-              <h1 className="section_main__title">{address}</h1>
+              <h1 className="section_main__title">
+                <span>Identity validation for epoch </span>
+                <span>{epochFmt(epoch)}</span>
+              </h1>
+              <h3 className="section_main__subtitle">{address}</h3>
+
+              <h3 className="section_main__subtitle">
+                {identity
+                  ? isIdentityPassed(identity.state)
+                    ? 'Successful validation'
+                    : 'Validation failed'
+                  : '-'}
+              </h3>
             </div>
 
-            <Link
-              href="/identity/[address]/epoch/[epoch]/rewards"
-              as={`/identity/${address}/epoch/${epoch}/rewards`}
-            >
-              <a className="btn btn-small btn-primary">
-                <i className="icon icon--coins" />
-                <span>Validation rewards</span>
-              </a>
-            </Link>
+            <div className="button-group">
+              <Link
+                href="/identity/[address]/epoch/[epoch]/rewards"
+                as={`/identity/${address}/epoch/${epoch}/rewards`}
+              >
+                <a className="btn btn-small btn-secondary">
+                  <i className="icon icon--coins" />
+                  <span>Validation rewards</span>
+                </a>
+              </Link>
+
+              <Link href="/address/[address]" as={`/address/${address}`}>
+                <a className="btn btn-small btn-secondary">
+                  <i className="icon icon--coins" />
+                  <span>Address details</span>
+                </a>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -144,18 +166,15 @@ function AnswersData({address, epoch, identity}) {
 
   if (identity) {
     if (identity.missed) {
-      if (identity.shortAnswers.flipsCount) {
+      if (identity.shortAnswersCount) {
         result = 'Late submission'
         shortInTime = 'Late'
-        longInTime = 'Late'
       } else {
         result = 'Missed validation'
         if (identity.approved) {
           shortInTime = 'No answers'
-          longInTime = 'No answers'
         } else {
           shortInTime = 'Missing'
-          longInTime = 'Missing'
         }
       }
 

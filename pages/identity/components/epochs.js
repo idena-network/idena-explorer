@@ -116,7 +116,7 @@ export default function Epochs({address, visible}) {
                   )
                 }
                 if (item.missed) {
-                  if (item.shortAnswers.flipsCount) {
+                  if (item.shortAnswersCount) {
                     return (
                       <LateSubmission
                         key={item.epoch}
