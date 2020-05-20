@@ -150,7 +150,6 @@ function AnswersData({address, epoch, identity}) {
   let result = '-'
   let shortInTime = '-'
   let longInTime = '-'
-  const redColorStle = {color: 'red'}
 
   const shortScore =
     identity &&

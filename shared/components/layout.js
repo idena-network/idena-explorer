@@ -8,11 +8,11 @@ import {
 } from 'reactstrap'
 import {useState} from 'react'
 import Router, {useRouter} from 'next/router'
+import ReactGA from 'react-ga'
 import Link from 'next/link'
 import {Helmet} from 'react-helmet'
 import {search} from '../api'
 import {useSession} from '../utils/session-context'
-import ReactGA from 'react-ga'
 
 function Layout({children, title = '', signinLoading = false}) {
   const router = useRouter()
