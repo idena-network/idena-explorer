@@ -95,6 +95,7 @@
 
 .info_block {
   text-align: center;
+  white-space: nowrap;
 
   &__accent {
     margin-bottom: rem(12px);

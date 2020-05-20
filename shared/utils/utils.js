@@ -1,3 +1,7 @@
+export function precise1(x) {
+  return Math.round(x * 10) / 10
+}
+
 export function precise2(x) {
   return Math.round(x * 100) / 100
 }

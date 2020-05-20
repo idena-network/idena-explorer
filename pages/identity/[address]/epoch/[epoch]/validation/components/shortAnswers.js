@@ -40,7 +40,10 @@ export default function ShortAnswers({address, epoch, visible}) {
               let ico = item.respAnswer === 'None' ? '' : 'icon--micro_fail'
               let score = 0
 
-              if (item.flipStatus === 'Qualified') {
+              if (item.flipWrongWords) {
+                score = '-'
+                ico = ''
+              } else if (item.flipStatus === 'Qualified') {
                 if (item.flipAnswer === item.respAnswer) {
                   score = 1
                   ico = 'icon--micro_success'
@@ -82,7 +85,9 @@ export default function ShortAnswers({address, epoch, visible}) {
                   </td>
                   <td>{item.flipAnswer === 'None' ? '-' : item.flipAnswer}</td>
                   <td>
-                    {item.flipStatus === 'Qualified'
+                    {item.flipWrongWords
+                      ? 'Reported'
+                      : item.flipStatus === 'Qualified'
                       ? 'Strong'
                       : item.flipStatus === 'WeaklyQualified'
                       ? 'Weak'
@@ -94,7 +99,7 @@ export default function ShortAnswers({address, epoch, visible}) {
                     {item.respAnswer === 'None' ? '-' : item.respAnswer}
                   </td>
                   <td>{score}</td>
-                  <td>{item.respWrongWords ? 'Reported' : '-'}</td>
+                  <td> </td>
                 </tr>
               )
             })}
