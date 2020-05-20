@@ -2,7 +2,7 @@ import Layout from '../shared/components/layout'
 
 export default function Error404() {
   return (
-    <Layout>
+    <Layout title="404 page not found">
       <section className="section section_message" style={{height: '80vh'}}>
         <div className="container">
           <div className="row justify-content-center align-items-center">

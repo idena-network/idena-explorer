@@ -2,6 +2,7 @@
 // pages/_app.js
 import '../styles/index.scss'
 import Head from 'next/head'
+import {Helmet} from 'react-helmet'
 import {ReactQueryConfigProvider} from 'react-query'
 import {SessionProvider} from '../shared/utils/session-context'
 
@@ -17,9 +18,13 @@ const queryConfig = {
 export default function MyApp({Component, pageProps}) {
   return (
     <>
+      <Helmet
+        defaultTitle="Idena Blockchain Explorer"
+        titleTemplate="%s - Idena Blockchain Explorer"
+      />
+
       <Head>
         <meta charSet="UTF-8" />
-        <title>Idena Blockchain Explorer</title>
 
         <meta httpEquiv="X-UA-Compatible" content="chrome=1" />
         <meta

@@ -62,7 +62,7 @@ function Signin({baseUrl, callbackUrl, attempt}) {
   }, [sessionResult])
 
   return (
-    <Layout signinLoading={state === LOADING}>
+    <Layout title="Sign-in with Idena app" signinLoading={state === LOADING}>
       <div className="container">
         <div className="card" style={{textAlign: 'center', height: '70vh'}}>
           <div>

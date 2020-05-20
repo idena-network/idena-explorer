@@ -45,7 +45,7 @@ function Identity({address = ''}) {
   )
 
   return (
-    <Layout>
+    <Layout title={`Identity ${address}`}>
       <section className="section section_main">
         <div className="row">
           <div className="col-auto">

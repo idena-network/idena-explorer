@@ -32,7 +32,9 @@ function Validation({address = '', epoch}) {
   )
 
   return (
-    <Layout>
+    <Layout
+      title={`Identity validation ${address} for epoch ${epochFmt(epoch)}`}
+    >
       <section className="section section_main">
         <div className="row">
           <div className="col-auto">

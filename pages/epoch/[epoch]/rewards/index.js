@@ -23,7 +23,7 @@ function Rewards({epoch}) {
   const {data: epochData} = useQuery(['epoch', epoch - 1], fetchEpoch)
 
   return (
-    <Layout>
+    <Layout title={`Rewards paid for epoch ${epochFmt(epoch)}`}>
       <section className="section">
         <div className="section_main__group">
           <h1 className="section_main__title">Rewards paid</h1>

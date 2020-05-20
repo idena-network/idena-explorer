@@ -12,7 +12,7 @@ function Block({block}) {
   const {data, error, status} = useQuery(block, getBlock)
 
   return (
-    <Layout>
+    <Layout title={`Block ${block}`}>
       <section className="section">
         <div className="section_main__group">
           <h1 className="section_main__title">Block</h1>

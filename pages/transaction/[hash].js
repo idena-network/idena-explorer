@@ -9,7 +9,7 @@ function Tx({hash}) {
   const {data, error, status} = useQuery(hash, getTransaction)
 
   return (
-    <Layout>
+    <Layout title={`Transaction ${hash}`}>
       <section className="section">
         <div className="section_main__group">
           <h1 className="section_main__title">Transaction</h1>
