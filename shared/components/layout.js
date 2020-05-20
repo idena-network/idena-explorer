@@ -12,9 +12,13 @@ import Link from 'next/link'
 import {Helmet} from 'react-helmet'
 import {search} from '../api'
 import {useSession} from '../utils/session-context'
+import ReactGA from 'react-ga'
 
 function Layout({children, title = '', signinLoading = false}) {
   const router = useRouter()
+  ReactGA.initialize('UA-139651161-2')
+  ReactGA.pageview(router.asPath)
+
   const {session, logout} = useSession()
   const [state, setState] = useState({
     value: '',
