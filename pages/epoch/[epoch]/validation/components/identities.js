@@ -104,7 +104,9 @@ export default function Identities({epoch, visible, states, prevStates}) {
                     <td>
                       <Link
                         href="/identity/[address]/epoch/[epoch]/validation"
-                        as={`/identity/${item.address}/epoch/${epoch}/validation`}
+                        as={`/identity/${item.address}/epoch/${
+                          epoch + 1
+                        }/validation`}
                       >
                         <a>
                           <i className="icon icon--thin_arrow_right" />
