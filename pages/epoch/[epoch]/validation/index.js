@@ -29,7 +29,7 @@ function Validation({epoch}) {
   const {data: epochData} = useQuery(['epoch', epoch - 1], fetchEpoch)
 
   return (
-    <Layout>
+    <Layout title={`Validation results for epoch ${epochFmt(epoch)}`}>
       <section className="section">
         <div className="section_main__group">
           <h1 className="section_main__title">Validation results</h1>

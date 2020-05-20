@@ -30,7 +30,7 @@ function Address({address = ''}) {
   )
 
   return (
-    <Layout>
+    <Layout title={`Address ${address}`}>
       <section className="section">
         <div className="section_main__group">
           <h1 className="section_main__title">Address</h1>

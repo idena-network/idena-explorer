@@ -32,7 +32,9 @@ function Validation({address = '', epoch}) {
   )
 
   return (
-    <Layout>
+    <Layout
+      title={`Identity validation ${address} for epoch ${epochFmt(epoch)}`}
+    >
       <section className="section section_main">
         <div className="row">
           <div className="col-auto">
@@ -148,7 +150,6 @@ function AnswersData({address, epoch, identity}) {
   let result = '-'
   let shortInTime = '-'
   let longInTime = '-'
-  const redColorStle = {color: 'red'}
 
   const shortScore =
     identity &&

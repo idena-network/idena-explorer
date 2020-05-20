@@ -159,7 +159,7 @@ function Reward({epoch, address = ''}) {
     )
 
   return (
-    <Layout>
+    <Layout title={`Identity rewards ${address} for epoch ${epochFmt(epoch)}`}>
       <section className="section section_main">
         <div className="row">
           <div className="col-auto">

@@ -46,7 +46,7 @@ function Flip({cid}) {
   const positions = getImagesPositions(flipContent)
 
   return (
-    <Layout>
+    <Layout title={`Flip ${cid} `}>
       <section className="section">
         <div className="section_main__group">
           <h1 className="section_main__title">

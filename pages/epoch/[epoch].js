@@ -36,7 +36,7 @@ function Epoch({epoch}) {
   const {data: nextEpochData} = useQuery(['epoch', epoch], fetchEpoch)
 
   return (
-    <Layout>
+    <Layout title={`Epoch ${epochFmt(epoch)}`}>
       <section className="section">
         <h1>Epoch</h1>
 
