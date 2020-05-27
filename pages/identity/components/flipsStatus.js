@@ -1,8 +1,5 @@
 import {useQuery} from 'react-query'
-import {
-  getIdentityFlipStates,
-  getIdentityFlipQualifiedAnswers,
-} from '../../../shared/api'
+import {getIdentityFlipStates, getAddressInfo} from '../../../shared/api'
 import TooltipText from '../../../shared/components/tooltip'
 
 export default function FlipsStatus({address}) {
@@ -11,9 +8,8 @@ export default function FlipsStatus({address}) {
     (_, address) => getIdentityFlipStates(address)
   )
 
-  const {data: qualAnswers} = useQuery(
-    ['flipQualifiedAnswers', address],
-    (_, address) => getIdentityFlipQualifiedAnswers(address)
+  const {data: addressInfo} = useQuery(['balance', address], (_, address) =>
+    getAddressInfo(address)
   )
 
   const count = (src, status) => {
@@ -69,7 +65,7 @@ export default function FlipsStatus({address}) {
             </div>
             <div className="col-12 col-sm-4 bordered-col">
               <h3 className="info_block__accent">
-                {qualAnswers && count(qualAnswers, 'Inappropriate')}
+                {addressInfo && addressInfo.reportedFlipsCount}
               </h3>
               <TooltipText
                 className="control-label"
