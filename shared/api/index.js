@@ -319,12 +319,6 @@ export async function getIdentityFlipStates(address) {
   return getResponse(apiClient().get(`identity/${address}/flipStates`))
 }
 
-export async function getIdentityFlipQualifiedAnswers(address) {
-  return getResponse(
-    apiClient().get(`identity/${address}/flipQualifiedAnswers`)
-  )
-}
-
 export async function getIdentityEpochs(address, skip, limit) {
   return getResponse(
     apiClient().get(`identity/${address}/epochs`, {
