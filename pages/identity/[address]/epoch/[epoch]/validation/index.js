@@ -173,7 +173,7 @@ function AnswersData({address, epoch, identity}) {
       } else {
         result = 'Missed validation'
         if (identity.approved) {
-          shortInTime = 'No answers'
+          shortInTime = 'Missing'
         } else {
           shortInTime = 'Missing'
         }
