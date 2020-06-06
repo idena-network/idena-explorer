@@ -133,7 +133,8 @@ function Reward({epoch, address = ''}) {
       epoch - 1,
       rewardsSummary,
       rewardedInvites,
-      validationPenalty
+      validationPenalty,
+      identityInfo
     ),
     ...getCurrentEpochSavedInvites(epoch - 1, savedInvites, rewardsSummary),
     ...getPreviousEpochSavedInvites(
@@ -736,7 +737,8 @@ function getRewardedData(
   epoch,
   rewardsSummary,
   rewardedInvites,
-  validationPenalty
+  validationPenalty,
+  identityInfo
 ) {
   if (!rewardsSummary || !rewardedInvites) {
     return []
@@ -766,9 +768,13 @@ function getRewardedData(
         rewardCoef *= 6
       }
 
-      let invitationReward = rewardsSummary.invitationsShare * rewardCoef
-      let missingInvitationReward = 0
-      let reason = '-'
+      let invitationReward
+      let missingInvitationReward
+      let reason
+
+      invitationReward = rewardsSummary.invitationsShare * rewardCoef
+      missingInvitationReward = 0
+      reason = '-'
 
       if (isValidated && validationPenalty) {
         reason = 'Validation penalty'
@@ -778,6 +784,10 @@ function getRewardedData(
         reason = 'Invitee failed'
         missingInvitationReward = invitationReward
         invitationReward = 0
+      } else if (!isIdentityPassed(identityInfo.state)) {
+        missingInvitationReward = rewardsSummary.invitationsShare * rewardCoef
+        invitationReward = 0
+        reason = 'My validation failed'
       }
 
       return {
