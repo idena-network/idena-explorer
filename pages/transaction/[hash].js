@@ -6,7 +6,8 @@ import {PageLoading, PageError} from '../../shared/components/loading'
 import {dnaFmt, dateTimeFmt, epochFmt} from '../../shared/utils/utils'
 
 function Tx({hash}) {
-  const {data, error, status} = useQuery(hash, getTransaction)
+  const {data: txData, error, status} = useQuery(hash, getTransaction)
+  const {data: rawTxData} = useQuery(`${hash}/raw`, getTransaction)
 
   return (
     <Layout title={`Transaction ${hash}`}>
@@ -20,7 +21,8 @@ function Tx({hash}) {
       </section>
       {status === 'loading' && <PageLoading />}
       {error && status !== 'loading' && <PageError />}
-      {data && TxDetails(data)}
+      {txData && TxDetails(txData)}
+      {rawTxData && RawTxDetails(rawTxData)}
     </Layout>
   )
 }
@@ -128,6 +130,21 @@ function TxDetails(data) {
               <div className="control-label">Fee limit:</div>
               <div className="text_block">{data.maxFee}</div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function RawTxDetails(data) {
+  return (
+    <section className="section section_details">
+      <h3>Raw transaction</h3>
+      <div className="card">
+        <div className="row">
+          <div className="text_block" style={{wordBreak: 'break-all'}}>
+            {data}
           </div>
         </div>
       </div>
