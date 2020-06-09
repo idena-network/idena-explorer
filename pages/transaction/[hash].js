@@ -1,7 +1,7 @@
 import {useQuery} from 'react-query'
 import Link from 'next/link'
 import Layout from '../../shared/components/layout'
-import {getTransaction, getRawTransaction} from '../../shared/api'
+import {getTransaction} from '../../shared/api'
 import {PageLoading, PageError} from '../../shared/components/loading'
 import {dnaFmt, dateTimeFmt, epochFmt} from '../../shared/utils/utils'
 
