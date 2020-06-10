@@ -15,6 +15,23 @@ export function dnaFmt(amount, curency = 'DNA') {
   return `${Number(amount).toLocaleString()} ${curency}`
 }
 
+export function txTypeFmt(txType, data) {
+  if (txType == 'OnlineStatusTx')
+    return `Mining status ${data.BecomeOnline ? 'On' : 'Off'}`
+  if (txType == 'SubmitFlipTx') return `Submit flip`
+  if (txType == 'SendTx') return `Send`
+  if (txType === 'ActivationTx') return 'Activate invitation'
+  if (txType === 'InviteTx') return 'Issue invitation'
+  if (txType === 'KillInviteeTx') return 'Terminate invitation '
+  if (txType === 'KillTx') return 'Terminate tdentity'
+  if (txType === 'EvidenceTx') return 'Validation evidence'
+  if (txType === 'SubmitShortAnswersTx') return 'Short session answers'
+  if (txType === 'SubmitLongAnswersTx') return 'Long session answers'
+  if (txType === 'SubmitAnswersHashTx') return 'Short answers proof'
+  if (txType == 'DeleteFlipTx') return `Delete flip`
+  return txType
+}
+
 export function epochFmt(epoch) {
   const str = `${epoch}`
   const l = str.length
