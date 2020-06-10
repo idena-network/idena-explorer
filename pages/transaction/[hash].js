@@ -3,7 +3,12 @@ import Link from 'next/link'
 import Layout from '../../shared/components/layout'
 import {getTransaction} from '../../shared/api'
 import {PageLoading, PageError} from '../../shared/components/loading'
-import {dnaFmt, dateTimeFmt, epochFmt} from '../../shared/utils/utils'
+import {
+  dnaFmt,
+  dateTimeFmt,
+  epochFmt,
+  txTypeFmt,
+} from '../../shared/utils/utils'
 
 function Tx({hash}) {
   const {data: txData, error, status} = useQuery(hash, getTransaction)
@@ -96,7 +101,9 @@ function TxDetails(data) {
               <div className="text_block">{dateTimeFmt(data.timestamp)}</div>
               <hr />
               <div className="control-label">Type:</div>
-              <div className="text_block">{data.type}</div>
+              <div className="text_block">
+                {`${txTypeFmt(data.type, data.data)}`}
+              </div>
 
               <hr />
               <div className="control-label">To:</div>

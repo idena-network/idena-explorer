@@ -1,6 +1,11 @@
 import Link from 'next/link'
 import {useInfiniteQuery, useQuery} from 'react-query'
-import {dateTimeFmt, precise6, dnaFmt} from '../../../shared/utils/utils'
+import {
+  dateTimeFmt,
+  precise6,
+  dnaFmt,
+  txTypeFmt,
+} from '../../../shared/utils/utils'
 import {getTransactions, getTransactionsCount} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 
@@ -129,7 +134,7 @@ export default function Transactions({address, visible}) {
                     )}
                   </td>
                   <td>{dateTimeFmt(item.timestamp)}</td>
-                  <td>{item.type}</td>
+                  <td>{txTypeFmt(item.type, item.data)}</td>
                 </tr>
               ))
           )}

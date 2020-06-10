@@ -1,6 +1,11 @@
 import Link from 'next/link'
 import {useInfiniteQuery} from 'react-query'
-import {dateTimeFmt, precise6, dnaFmt} from '../../../shared/utils/utils'
+import {
+  dateTimeFmt,
+  precise6,
+  dnaFmt,
+  txTypeFmt,
+} from '../../../shared/utils/utils'
 import {getBlockTransactions} from '../../../shared/api'
 
 const LIMIT = 10
@@ -113,7 +118,7 @@ export default function Transactions({block}) {
                     )}
                   </td>
                   <td>{dateTimeFmt(item.timestamp)}</td>
-                  <td>{item.type}</td>
+                  <td>{txTypeFmt(item.type, item.data)}</td>
                 </tr>
               ))
           )}
