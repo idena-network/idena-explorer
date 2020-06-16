@@ -17,7 +17,9 @@ export function dnaFmt(amount, curency = 'DNA') {
 
 export function txTypeFmt(txType, data) {
   if (txType === 'OnlineStatusTx')
-    return `Mining status ${data.BecomeOnline ? 'On' : 'Off'}`
+    return `Mining status ${
+      data ? (data.BecomeOnline ? 'On' : 'Off') : 'switching'
+    }`
   if (txType === 'SubmitFlipTx') return `Submit flip`
   if (txType === 'SendTx') return `Send`
   if (txType === 'ActivationTx') return 'Activate invitation'
