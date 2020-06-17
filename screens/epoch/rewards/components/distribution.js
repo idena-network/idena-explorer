@@ -11,8 +11,8 @@ import {SkeletonRows} from '../../../../shared/components/skeleton'
 const LIMIT = 30
 
 export default function Distribution({epoch, visible}) {
-  const fetchRewards = (_, epoch, skip = 0) =>
-    getEpochIdentityRewards(epoch, skip, LIMIT)
+  const fetchRewards = (_, epoch, continuationToken = null) =>
+    getEpochIdentityRewards(epoch, LIMIT, continuationToken)
 
   const fetchRewardsCount = (_, epoch) => getEpochIdentityRewardsCount(epoch)
 
@@ -20,9 +20,9 @@ export default function Distribution({epoch, visible}) {
     epoch > 0 && visible && [`${epoch}/rewards`, epoch],
     fetchRewards,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )

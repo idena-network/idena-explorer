@@ -13,16 +13,17 @@ import TooltipText, {IconTooltip} from '../../../shared/components/tooltip'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 
 export default function Blocks({epoch, visible, limit = 30}) {
-  const fetchBlocks = (_, epoch, skip = 0) => getEpochBlocks(epoch, skip, limit)
+  const fetchBlocks = (_, epoch, continuationToken = null) =>
+    getEpochBlocks(epoch, limit, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     epoch > 0 && visible && `${epoch}/blocks`,
     [epoch],
     fetchBlocks,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === limit
-          ? allGroups.length * limit
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )

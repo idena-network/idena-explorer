@@ -11,8 +11,13 @@ import {SkeletonRows} from '../../../../shared/components/skeleton'
 const LIMIT = 30
 
 export default function Identities({epoch, visible, states, prevStates}) {
-  const fetchIdentities = (_, epoch, states, prevStates, skip = 0) =>
-    getEpochIdentities(epoch, skip, LIMIT, states, prevStates)
+  const fetchIdentities = (
+    _,
+    epoch,
+    states,
+    prevStates,
+    continuationToken = null
+  ) => getEpochIdentities(epoch, LIMIT, continuationToken, states, prevStates)
 
   const fetchEpochIdentitiesCount = (_, epoch, states, prevStates) =>
     getEpochIdentitiesCount(epoch, states, prevStates)
@@ -21,9 +26,9 @@ export default function Identities({epoch, visible, states, prevStates}) {
     epoch > 0 && visible && [`${epoch}/identities`, epoch, states, prevStates],
     fetchIdentities,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )

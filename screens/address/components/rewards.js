@@ -13,17 +13,17 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 const LIMIT = 30
 
 export default function Rewards({address, visible}) {
-  const fetchRewards = (_, address, skip = 0) =>
-    getRewards(address, skip, LIMIT)
+  const fetchRewards = (_, address, continuationToken = null) =>
+    getRewards(address, LIMIT, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     address && visible && `${address}/rewards`,
     [address],
     fetchRewards,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )

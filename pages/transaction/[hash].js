@@ -84,9 +84,11 @@ function TxDetails(data) {
               <div className="control-label">Amount:</div>
               <div className="text_block">
                 {dnaFmt(
-                  !data.amount && typeof data.transfer !== 'undefined'
-                    ? data.transfer
-                    : (!data.txReceipt || data.txReceipt.success) && data.amount
+                  (!data.txReceipt || data.txReceipt.success) &&
+                    data.amount * 1 +
+                      (data.data && typeof data.data.transfer !== 'undefined'
+                        ? data.data.transfer * 1
+                        : 0)
                 )}
               </div>
 

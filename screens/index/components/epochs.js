@@ -9,15 +9,16 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 const LIMIT = 10
 
 export default function EpochsTable({visible}) {
-  const fetchEpochs = (_, skip = 0) => getEpochsData(skip, LIMIT + 1)
+  const fetchEpochs = (_, continuationToken = null) =>
+    getEpochsData(LIMIT + 1, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `epochs`,
     fetchEpochs,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT + 1
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? parseInt(lastGroup.continuationToken, 10) + 1
           : false,
     }
   )

@@ -11,8 +11,8 @@ import {SkeletonRows} from '../../../../shared/components/skeleton'
 const LIMIT = 30
 
 export default function Penalty({epoch, visible}) {
-  const fetchBadAuthors = (_, epoch, skip = 0) =>
-    getEpochBadAuthors(epoch, skip, LIMIT)
+  const fetchBadAuthors = (_, epoch, continuationToken = null) =>
+    getEpochBadAuthors(epoch, LIMIT, continuationToken)
 
   const fetchBadAuthorsCount = (_, epoch) => getEpochBadAuthorsCount(epoch)
 
@@ -20,9 +20,9 @@ export default function Penalty({epoch, visible}) {
     epoch > 0 && visible && [`${epoch}/badAuthors`, epoch],
     fetchBadAuthors,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )

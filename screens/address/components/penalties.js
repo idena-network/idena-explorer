@@ -7,17 +7,17 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 const LIMIT = 30
 
 export default function Penalties({address, visible}) {
-  const fetchPenalties = (_, address, skip = 0) =>
-    getPenalties(address, skip, LIMIT)
+  const fetchPenalties = (_, address, continuationToken = null) =>
+    getPenalties(address, LIMIT, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     address && visible && `${address}/penalties`,
     [address],
     fetchPenalties,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
