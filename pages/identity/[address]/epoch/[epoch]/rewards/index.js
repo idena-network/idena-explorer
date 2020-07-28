@@ -785,9 +785,13 @@ function getRewardedData(
         missingInvitationReward = invitationReward
         invitationReward = 0
       } else if (!isIdentityPassed(identityInfo.state)) {
-        missingInvitationReward = rewardsSummary.invitationsShare * rewardCoef
+        missingInvitationReward = invitationReward
         invitationReward = 0
         reason = 'My validation failed'
+      } else if (!item.rewardType) {
+        missingInvitationReward = invitationReward
+        invitationReward = 0
+        reason = 'Another issuer'
       }
 
       return {
