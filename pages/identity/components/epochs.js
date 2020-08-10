@@ -68,7 +68,7 @@ export default function Epochs({address, visible}) {
             <th style={{width: 140}}>
               Validation
               <br />
-              reward, DNA
+              reward, iDNA
             </th>
             <th>
               Validation <br />

@@ -93,7 +93,7 @@ export default function Vested() {
             <th>Address</th>
             <th>
               Balance, <br />
-              DNA
+              iDNA
             </th>
             <th>Purpose</th>
             <th style={{width: 150}}>

@@ -36,7 +36,7 @@ export default function Penalties({address, visible}) {
             <th style={{width: 100}}>Epoch</th>
             <th>Block</th>
             <th>Timestamp</th>
-            <th>Penalty, DNA</th>
+            <th>Penalty, iDNA</th>
           </tr>
         </thead>
         <tbody>

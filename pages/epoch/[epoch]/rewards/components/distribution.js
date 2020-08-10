@@ -56,28 +56,28 @@ export default function Distribution({epoch, visible}) {
               <br />
               reward,
               <br />
-              DNA
+              iDNA
             </th>
             <th style={{width: 80}}>
               Flips
               <br />
               reward,
               <br />
-              DNA
+              iDNA
             </th>
             <th style={{width: 80}}>
               Invitation
               <br />
               reward,
               <br />
-              DNA
+              iDNA
             </th>
             <th style={{width: 80}}>
               Total
               <br />
               reward,
               <br />
-              DNA
+              iDNA
             </th>
           </tr>
         </thead>

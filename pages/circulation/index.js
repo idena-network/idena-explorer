@@ -5,7 +5,7 @@ import Vested from './components/vested'
 
 function Circulation() {
   return (
-    <Layout title="Circulating supply (DNA)">
+    <Layout title="Circulating supply (iDNA)">
       <section className="section section_info">
         <div className="row">
           <Coins />

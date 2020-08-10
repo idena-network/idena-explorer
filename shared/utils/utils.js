@@ -10,7 +10,7 @@ export function precise6(x) {
   return Math.round(x * 1000000) / 1000000
 }
 
-export function dnaFmt(amount, curency = 'DNA') {
+export function dnaFmt(amount, curency = 'iDNA') {
   if (!amount || amount === 0) return '-'
   return `${Number(amount).toLocaleString()} ${curency}`
 }

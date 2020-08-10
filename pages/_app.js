@@ -33,7 +33,7 @@ export default function MyApp({Component, pageProps}) {
         />
         <meta
           name="description"
-          content="Idena Explorer allows you to explore and search the Idena blockchain for addresses, identities, transactions, flips, blocks, invitations, epochs, mining rewards and validation results taking place on Idena (DNA)"
+          content="Idena Explorer allows you to explore and search the Idena blockchain for addresses, identities, transactions, flips, blocks, invitations, epochs, mining rewards and validation results taking place on Idena (iDNA)"
         />
 
         <link rel="shortcut icon" href="/favicon.ico" />

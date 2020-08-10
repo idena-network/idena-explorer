@@ -62,12 +62,12 @@ export default function Blocks({epoch, visible}) {
             <th>
               Minted,
               <br />
-              DNA
+              iDNA
             </th>
             <th>
               Burnt,
               <br />
-              DNA
+              iDNA
             </th>
           </tr>
         </thead>

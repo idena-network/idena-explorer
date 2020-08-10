@@ -504,12 +504,12 @@ function Reward({epoch, address = ''}) {
                         </th>
                         <th style={{width: 100}}>
                           Reward <br />
-                          paid, DNA
+                          paid, iDNA
                         </th>
                         <th style={{width: 100}}>
                           Missed
                           <br />
-                          reward, DNA
+                          reward, iDNA
                         </th>
                         <th style={{width: 100}}>Details</th>
                       </tr>
@@ -647,12 +647,12 @@ function Reward({epoch, address = ''}) {
 
                         <th style={{width: 100}}>
                           Reward <br />
-                          paid, DNA
+                          paid, iDNA
                         </th>
                         <th style={{width: 100}}>
                           Missed
                           <br />
-                          reward, DNA
+                          reward, iDNA
                         </th>
                         <th style={{width: 100}}>Details</th>
                       </tr>

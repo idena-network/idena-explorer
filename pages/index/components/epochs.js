@@ -82,16 +82,16 @@ export default function EpochsTable({visible}) {
             <th>
               Rewards
               <br />
-              paid, DNA
+              paid, iDNA
             </th>
             <th>
               <TooltipText tooltip="Including rewards paid">
                 Total mined,
                 <br />
-                DNA
+                iDNA
               </TooltipText>
             </th>
-            <th>Burnt, DNA</th>
+            <th>Burnt, iDNA</th>
           </tr>
         </thead>
         <tbody>
