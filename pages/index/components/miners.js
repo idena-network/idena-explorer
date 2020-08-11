@@ -44,7 +44,7 @@ export default function Miners({visible}) {
             <th style={{width: 150}}>Miner status</th>
             <th>
               <TooltipText tooltip="Mining penalty left">
-                Penalty, DNA
+                Penalty, iDNA
               </TooltipText>
             </th>
           </tr>

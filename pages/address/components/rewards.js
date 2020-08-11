@@ -41,9 +41,9 @@ export default function Rewards({address, visible}) {
           <tr>
             <th style={{width: 100}}>Epoch</th>
             <th>Reward type</th>
-            <th>Paid to wallet, DNA</th>
-            <th>Paid to stake, DNA</th>
-            <th>Total, DNA</th>
+            <th>Paid to wallet, iDNA</th>
+            <th>Paid to stake, iDNA</th>
+            <th>Total, iDNA</th>
           </tr>
         </thead>
         <tbody>

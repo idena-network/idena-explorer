@@ -148,7 +148,7 @@ function BlockDetails(data) {
 
               <hr />
               <div className="control-label">
-                <TooltipText tooltip="DNA per byte">Fee rate:</TooltipText>
+                <TooltipText tooltip="iDNA per byte">Fee rate:</TooltipText>
               </div>
               <div className="text_block">{data.feeRate}</div>
 
