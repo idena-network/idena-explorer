@@ -12,6 +12,7 @@ import {
   getIdentityRewardedInvitesByEpoch,
   getIdentitySavedInviteRewardsByEpoch,
   getIdentityAvailableInvitesByEpoch,
+  getIdentityReportRewardsByEpoch,
 } from '../../../../../../shared/api'
 import {
   epochFmt,
@@ -77,6 +78,11 @@ function Reward() {
     (_, address, epoch) => getIdentitySavedInviteRewardsByEpoch(address, epoch)
   )
 
+  const {data: reportRewards} = useQuery(
+    ['epoch/identity/reportRewards', address, epoch - 1],
+    (_, address, epoch) => getIdentityReportRewardsByEpoch(address, epoch)
+  )
+
   const getPenalizationReason = (reason) => {
     switch (reason) {
       case 'WrongWords':
@@ -110,7 +116,8 @@ function Reward() {
 
   const getValidationReward = () => getReward(identityRewards, 'Validation')
 
-  const getFlipsReward = () => getReward(identityRewards, 'Flips')
+  const getFlipsReward = () =>
+    getReward(identityRewards, 'Flips') + getReward(identityRewards, 'Reports')
 
   const getMissingValidationReward = () =>
     (identityInfo &&
@@ -485,6 +492,15 @@ function Reward() {
                       <h3>Invitations rewards</h3>
                     </NavLink>
                   </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#reports'}
+                      href="#reports"
+                    >
+                      <h3>Reports rewards</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
@@ -721,6 +737,36 @@ function Reward() {
                               {dnaFmt(item.missingInvitationReward, '')}
                             </td>
                             <td>{item.reason}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </TabPane>
+
+            <TabPane tabId="#reports">
+              <div className="card">
+                <div className="table-responsive">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Flip</th>
+
+                        <th style={{width: 100}}>
+                          Reward <br />
+                          paid, DNA
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reportRewards &&
+                        reportRewards.map((item, idx) => (
+                          <tr key={idx}>
+                            <td>{item.cid}</td>
+                            <td>
+                              {dnaFmt(item.balance * 1 + item.stake * 1, '')}
+                            </td>
                           </tr>
                         ))}
                     </tbody>

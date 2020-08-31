@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const BASE_API_URL = 'https://api.idena.org/api'
+// todo
+const BASE_API_URL = 'http://localhost:18888/api'
 
 function apiClient() {
   return axios.create({
@@ -282,6 +283,12 @@ export async function getIdentityAvailableInvitesByEpoch(address, epoch) {
 export async function getIdentitySavedInviteRewardsByEpoch(address, epoch) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/identity/${address}/savedInviteRewards`)
+  )
+}
+
+export async function getIdentityReportRewardsByEpoch(address, epoch) {
+  return getResponse(
+    apiClient().get(`epoch/${epoch}/identity/${address}/reportRewards`)
   )
 }
 
