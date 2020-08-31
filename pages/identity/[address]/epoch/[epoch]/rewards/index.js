@@ -784,7 +784,7 @@ function getRewardedData(
         reason = 'Invitee failed'
         missingInvitationReward = invitationReward
         invitationReward = 0
-      } else if (!isIdentityPassed(identityInfo.state)) {
+      } else if (identityInfo && !isIdentityPassed(identityInfo.state)) {
         missingInvitationReward = invitationReward
         invitationReward = 0
         reason = 'My validation failed'
