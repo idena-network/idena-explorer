@@ -1,5 +1,6 @@
 import {useQuery} from 'react-query'
 import Link from 'next/link'
+import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
 import {
   getFlip,
@@ -16,22 +17,27 @@ import {
 } from '../../shared/utils/utils'
 import TooltipText from '../../shared/components/tooltip'
 
-function Flip({cid}) {
-  const {data: flip} = useQuery(['flip', cid], (_, cid) => getFlip(cid))
+function Flip() {
+  const router = useRouter()
+  const cid = router.query.cid || ''
 
-  const {data: flipContent} = useQuery(['flipContent', cid], (_, cid) =>
+  const {data: flip} = useQuery(cid && ['flip', cid], (_, cid) => getFlip(cid))
+
+  const {data: flipContent} = useQuery(cid && ['flipContent', cid], (_, cid) =>
     getFlipContent(cid)
   )
 
-  const {data: adjacentFlips} = useQuery(['adjacentFlips', cid], (_, cid) =>
-    getAdjacentFlips(cid)
+  const {data: adjacentFlips} = useQuery(
+    cid && ['adjacentFlips', cid],
+    (_, cid) => getAdjacentFlips(cid)
   )
 
-  const {data: shortAnswers} = useQuery(['shortAnswers', cid], (_, cid) =>
-    getFlipShortAnswers(cid)
+  const {data: shortAnswers} = useQuery(
+    cid && ['shortAnswers', cid],
+    (_, cid) => getFlipShortAnswers(cid)
   )
 
-  const {data: longAnswers} = useQuery(['longAnswers', cid], (_, cid) =>
+  const {data: longAnswers} = useQuery(cid && ['longAnswers', cid], (_, cid) =>
     getFlipLongAnswers(cid)
   )
 
@@ -606,15 +612,11 @@ function getImagesPositions(flipContent) {
 
 function IdentityStatus({epoch, address}) {
   const {data} = useQuery(
-    ['identityByEpoch', epoch, address],
+    epoch && address && ['identityByEpoch', epoch, address],
     (_, epoch, address) => getIdentityByEpoch(address, epoch)
   )
 
   return <span>{data ? identityStatusFmt(data.prevState) : '-'}</span>
-}
-
-Flip.getInitialProps = function ({query}) {
-  return {cid: query.cid}
 }
 
 export default Flip

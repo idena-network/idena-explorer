@@ -1,7 +1,7 @@
 import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import Layout from '../../shared/components/layout'
-import Coins from './components/coins'
-import Vested from './components/vested'
+import Coins from '../../screens/circulation/components/coins'
+import Vested from '../../screens/circulation/components/vested'
 
 function Circulation() {
   return (

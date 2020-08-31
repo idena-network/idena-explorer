@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
+import {useRouter} from 'next/router'
 import Layout from '../../../../shared/components/layout'
 import {
   getEpoch,
@@ -11,22 +12,22 @@ import {
 } from '../../../../shared/api'
 import {epochFmt, dateFmt} from '../../../../shared/utils/utils'
 import {useHashChange, useHash} from '../../../../shared/utils/useHashChange'
-import Identities from './components/identities'
+import Identities from '../../../../screens/epoch/validation/components/identities'
 import TooltipText from '../../../../shared/components/tooltip'
-import Flips from './components/flips'
+import Flips from '../../../../screens/epoch/validation/components/flips'
 
 const DEFAULT_TAB = '#validated'
 
-function Validation({epoch}) {
+function Validation() {
+  const router = useRouter()
+  const epoch = parseInt(router.query.epoch || 0)
+
   const fetchEpoch = (_, epoch) => getEpoch(epoch)
 
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
 
-  // eslint-disable-next-line no-param-reassign
-  epoch = parseInt(epoch)
-
-  const {data: epochData} = useQuery(['epoch', epoch - 1], fetchEpoch)
+  const {data: epochData} = useQuery(epoch && ['epoch', epoch - 1], fetchEpoch)
 
   return (
     <Layout title={`Validation results for epoch ${epochFmt(epoch)}`}>
@@ -168,28 +169,28 @@ function Validation({epoch}) {
 
 function ValidationData({epoch}) {
   const {data: identitiesSummary} = useQuery(
-    ['epoch/identitiesSummary', epoch],
+    epoch && ['epoch/identitiesSummary', epoch],
     (_, epoch) => getEpochIdentitiesSummary(epoch)
   )
 
   const {data: flipStatesSummary} = useQuery(
-    ['epoch/flipStatesSummary', epoch],
+    epoch && ['epoch/flipStatesSummary', epoch],
     (_, epoch) => getEpochFlipStatesSummary(epoch)
   )
 
   const {data: flipWrongWordsSummary} = useQuery(
-    ['epoch/flipWrongWordsSummary', epoch],
+    epoch && ['epoch/flipWrongWordsSummary', epoch],
     (_, epoch) => getEpochFlipWrongWordsSummary(epoch)
   )
 
   const {data: failedCandidates} = useQuery(
-    ['epoch/identites/count', epoch, ['Undefined'], ['Candidate']],
+    epoch && ['epoch/identites/count', epoch, ['Undefined'], ['Candidate']],
     (_, epoch, states, prevStates) =>
       getEpochIdentitiesCount(epoch, states, prevStates)
   )
 
   const {data: failedIdentities} = useQuery(
-    [
+    epoch && [
       'epoch/identites/count',
       epoch,
       ['Undefined'],
@@ -323,10 +324,6 @@ function ValidationData({epoch}) {
       </div>
     </section>
   )
-}
-
-Validation.getInitialProps = function ({query}) {
-  return {epoch: query.epoch}
 }
 
 export default Validation

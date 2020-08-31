@@ -17,16 +17,16 @@ async function getResponse(request) {
 
 export async function getCurrentSession(onlyCheck) {
   return axios
-    .get('/auth/v1/session', {params: {onlyCheck}})
+    .get('/api/auth/session', {params: {onlyCheck}})
     .then((x) => x.data)
 }
 
 export async function logout() {
-  return axios.post('/auth/v1/logout').then((x) => x.data)
+  return axios.post('/api/auth/logout').then((x) => x.data)
 }
 
 export async function getAuthToken() {
-  return axios.get('/auth/v1/new-token').then((x) => x.data)
+  return axios.get('/api/auth/new-token').then((x) => x.data)
 }
 
 export async function search(value) {
