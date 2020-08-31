@@ -1,14 +1,18 @@
 import {useQuery} from 'react-query'
 import Link from 'next/link'
 import {NavItem, NavLink, TabContent, TabPane} from 'reactstrap'
+import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
 import {getBlock} from '../../shared/api'
 import {PageLoading, PageError} from '../../shared/components/loading'
 import {dateTimeFmt, epochFmt} from '../../shared/utils/utils'
-import Transactions from './components/transactions'
+import Transactions from '../../screens/block/components/transactions'
 import TooltipText from '../../shared/components/tooltip'
 
-function Block({block}) {
+function Block() {
+  const router = useRouter()
+  const {block} = router.query
+
   const {data, error, status} = useQuery(block, getBlock)
 
   return (
@@ -52,10 +56,6 @@ function Block({block}) {
       </section>
     </Layout>
   )
-}
-
-Block.getInitialProps = function ({query}) {
-  return {block: query.block}
 }
 
 export default Block

@@ -1,5 +1,6 @@
 import {useQuery} from 'react-query'
 import Link from 'next/link'
+import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
 import {getTransaction} from '../../shared/api'
 import {PageLoading, PageError} from '../../shared/components/loading'
@@ -10,9 +11,12 @@ import {
   txTypeFmt,
 } from '../../shared/utils/utils'
 
-function Tx({hash}) {
+function Tx() {
+  const router = useRouter()
+  const hash = router.query.hash || ''
+
   const {data: txData, error, status} = useQuery(hash, getTransaction)
-  const {data: rawTxData} = useQuery(`${hash}/raw`, getTransaction)
+  const {data: rawTxData} = useQuery(hash && `${hash}/raw`, getTransaction)
 
   return (
     <Layout title={`Transaction ${hash}`}>
@@ -30,10 +34,6 @@ function Tx({hash}) {
       {rawTxData && RawTxDetails(rawTxData)}
     </Layout>
   )
-}
-
-Tx.getInitialProps = function ({query}) {
-  return {hash: query.hash}
 }
 
 export default Tx

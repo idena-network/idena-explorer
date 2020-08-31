@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
+import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
 import {
   getIdentityAge,
@@ -14,34 +15,41 @@ import {
   dateTimeFmt,
   precise6,
 } from '../../shared/utils/utils'
-import FlipsStatus from './components/flipsStatus'
-import ValidationStatus from './components/validationStatus'
-import Epochs from './components/epochs'
-import Flips from './components/flips'
-import Invites from './components/invites'
+import FlipsStatus from '../../screens/identity/components/flipsStatus'
+import ValidationStatus from '../../screens/identity/components/validationStatus'
+import Epochs from '../../screens/identity/components/epochs'
+import Flips from '../../screens/identity/components/flips'
+import Invites from '../../screens/identity/components/invites'
 import {useHashChange, useHash} from '../../shared/utils/useHashChange'
 import TooltipText from '../../shared/components/tooltip'
 
 const DEFAULT_TAB = '#validations'
 
-function Identity({address = ''}) {
+function Identity() {
+  const router = useRouter()
+  const address = router.query.address || ''
+
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
 
-  const {data: addressInfo} = useQuery(['balance', address], (_, address) =>
-    getAddressInfo(address)
+  const {data: addressInfo} = useQuery(
+    address && ['balance', address],
+    (_, address) => getAddressInfo(address)
   )
 
-  const {data: identityInfo} = useQuery(['identity', address], (_, address) =>
-    getIdentity(address)
+  const {data: identityInfo} = useQuery(
+    address && ['identity', address],
+    (_, address) => getIdentity(address)
   )
 
-  const {data: onlineStatus} = useQuery(['online', address], (_, address) =>
-    getOnlineStatus(address)
+  const {data: onlineStatus} = useQuery(
+    address && ['online', address],
+    (_, address) => getOnlineStatus(address)
   )
 
-  const {data: identityAge} = useQuery(['age', address], (_, address) =>
-    getIdentityAge(address)
+  const {data: identityAge} = useQuery(
+    address && ['age', address],
+    (_, address) => getIdentityAge(address)
   )
 
   return (
@@ -241,10 +249,6 @@ function IdentityData({addressInfo, identityInfo, onlineStatus, identityAge}) {
       </section>
     </>
   )
-}
-
-Identity.getInitialProps = function ({query}) {
-  return {address: query.address}
 }
 
 export default Identity

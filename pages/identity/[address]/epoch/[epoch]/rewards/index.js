@@ -1,6 +1,7 @@
 import {useQuery} from 'react-query'
 import Link from 'next/link'
 import {TabContent, TabPane, NavItem, NavLink} from 'reactstrap'
+import {useRouter} from 'next/router'
 import Layout from '../../../../../../shared/components/layout'
 import {
   getEpochRewardsSummary,
@@ -28,50 +29,51 @@ import {
 
 const DEFAULT_TAB = '#flips'
 
-function Reward({epoch, address = ''}) {
+function Reward() {
+  const router = useRouter()
+  const address = router.query.address || ''
+  const epoch = parseInt(router.query.epoch || 0)
+
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
 
-  // eslint-disable-next-line no-param-reassign
-  epoch = parseInt(epoch)
-
   const {data: identityInfo} = useQuery(
-    ['epoch/identity', address, epoch - 1],
+    address && epoch && ['epoch/identity', address, epoch - 1],
     (_, address, epoch) => getIdentityByEpoch(address, epoch)
   )
 
   const {data: validationPenalty} = useQuery(
-    ['epoch/identity/authors/bad', address, epoch - 1],
+    address && epoch && ['epoch/identity/authors/bad', address, epoch - 1],
     (_, address, epoch) => getIdentityAuthorsBadByEpoch(address, epoch)
   )
 
   const {data: identityRewards} = useQuery(
-    ['epoch/identity/rewards', address, epoch - 1],
+    address && epoch && ['epoch/identity/rewards', address, epoch - 1],
     (_, address, epoch) => getIdentityRewardsByEpoch(address, epoch)
   )
 
   const {data: rewardsSummary} = useQuery(
-    ['epoch/rewardsSummary', epoch - 1],
+    address && epoch && ['epoch/rewardsSummary', epoch - 1],
     (_, epoch) => getEpochRewardsSummary(epoch)
   )
 
   const {data: rewardedFlips} = useQuery(
-    ['epoch/identity/rewardedFlips', address, epoch - 1],
+    address && epoch && ['epoch/identity/rewardedFlips', address, epoch - 1],
     (_, address, epoch) => getIdentityRewardedFlipsByEpoch(address, epoch)
   )
 
   const {data: rewardedInvites} = useQuery(
-    ['epoch/identity/rewardedInvites', address, epoch - 1],
+    address && epoch && ['epoch/identity/rewardedInvites', address, epoch - 1],
     (_, address, epoch) => getIdentityRewardedInvitesByEpoch(address, epoch)
   )
 
   const {data: availableInvites} = useQuery(
-    ['epoch/identity/availableInvites', address, epoch - 1],
+    address && epoch && ['epoch/identity/availableInvites', address, epoch - 1],
     (_, address, epoch) => getIdentityAvailableInvitesByEpoch(address, epoch)
   )
 
   const {data: savedInvites} = useQuery(
-    ['epoch/identity/savedInvites', address, epoch - 1],
+    address && epoch && ['epoch/identity/savedInvites', address, epoch - 1],
     (_, address, epoch) => getIdentitySavedInviteRewardsByEpoch(address, epoch)
   )
 
@@ -872,10 +874,6 @@ function getPreviousEpochSavedInvites(
     })
   }
   return res
-}
-
-Reward.getInitialProps = function ({query}) {
-  return {epoch: query.epoch, address: query.address}
 }
 
 export default Reward

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
+import {useRouter} from 'next/router'
 import Layout from '../../../../../../shared/components/layout'
 import {getIdentityByEpoch} from '../../../../../../shared/api'
 import {
@@ -10,8 +11,8 @@ import {
   isIdentityPassed,
 } from '../../../../../../shared/utils/utils'
 import TooltipText from '../../../../../../shared/components/tooltip'
-import ShortAnswers from './components/shortAnswers'
-import LongAnswers from './components/longAnswers'
+import ShortAnswers from '../../../../../../screens/identity/address/epoch/validation/components/shortAnswers'
+import LongAnswers from '../../../../../../screens/identity/address/epoch/validation/components/longAnswers'
 import {
   useHash,
   useHashChange,
@@ -19,15 +20,16 @@ import {
 
 const DEFAULT_TAB = '#shortAnswers'
 
-function Validation({address = '', epoch}) {
+function Validation() {
+  const router = useRouter()
+  const address = router.query.address || ''
+  const epoch = parseInt(router.query.epoch || 0)
+
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
 
-  // eslint-disable-next-line no-param-reassign
-  epoch = parseInt(epoch)
-
   const {data: identity} = useQuery(
-    ['epoch/identity', address, epoch - 1],
+    address && epoch && ['epoch/identity', address, epoch - 1],
     (_, address, epoch) => getIdentityByEpoch(address, epoch)
   )
 
@@ -199,7 +201,6 @@ function AnswersData({address, epoch, identity}) {
     }
   }
 
-  console.log(longInTime === 'In time')
   return (
     <>
       <section className="section section_details">
@@ -419,10 +420,6 @@ function AnswersData({address, epoch, identity}) {
       </section>
     </>
   )
-}
-
-Validation.getInitialProps = function ({query}) {
-  return {address: query.address, epoch: query.epoch}
 }
 
 export default Validation

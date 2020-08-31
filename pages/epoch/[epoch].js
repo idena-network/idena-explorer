@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
+import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
 import {
   getLastEpoch,
@@ -12,28 +13,28 @@ import {
   getEpochInvitesSummary,
 } from '../../shared/api'
 import {epochFmt, dateTimeFmt} from '../../shared/utils/utils'
-import Identities from './components/identities'
-import Invitations from './components/invitations'
-import Flips from './components/flips'
+import Identities from '../../screens/epoch/components/identities'
+import Invitations from '../../screens/epoch/components/invitations'
+import Flips from '../../screens/epoch/components/flips'
 import {useHashChange, useHash} from '../../shared/utils/useHashChange'
-import Blocks from './components/blocks'
-import Transactions from './components/transactions'
+import Blocks from '../../screens/epoch/components/blocks'
+import Transactions from '../../screens/epoch/components/transactions'
 import TooltipText from '../../shared/components/tooltip'
 
 const DEFAULT_TAB = '#identities'
 
-function Epoch({epoch}) {
+function Epoch() {
+  const router = useRouter()
+  const epoch = parseInt(router.query.epoch || 0)
+
   const fetchEpoch = (_, epoch) => getEpoch(epoch)
 
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
 
-  // eslint-disable-next-line no-param-reassign
-  epoch = parseInt(epoch)
-
   const {data: lastEpoch} = useQuery('last-epoch', getLastEpoch)
-  const {data: epochData} = useQuery(['epoch', epoch - 1], fetchEpoch)
-  const {data: nextEpochData} = useQuery(['epoch', epoch], fetchEpoch)
+  const {data: epochData} = useQuery(epoch && ['epoch', epoch - 1], fetchEpoch)
+  const {data: nextEpochData} = useQuery(epoch && ['epoch', epoch], fetchEpoch)
 
   return (
     <Layout title={`Epoch ${epochFmt(epoch)}`}>
@@ -230,26 +231,28 @@ function EpochDetails({epochData, nextEpochData, lastEpoch}) {
 }
 
 function EpochData({epoch}) {
-  const {data: txsCount} = useQuery(['epoch/txsCount', epoch], (_, epoch) =>
-    getEpochTransactionsCount(epoch)
+  const {data: txsCount} = useQuery(
+    epoch && ['epoch/txsCount', epoch],
+    (_, epoch) => getEpochTransactionsCount(epoch)
   )
 
   const {data: blocksCount} = useQuery(
-    ['epoch/blocksCount', epoch],
+    epoch && ['epoch/blocksCount', epoch],
     (_, epoch) => getEpochBlocksCount(epoch)
   )
 
-  const {data: flipsCount} = useQuery(['epoch/flipsCount', epoch], (_, epoch) =>
-    getEpochFlipsCount(epoch)
+  const {data: flipsCount} = useQuery(
+    epoch && ['epoch/flipsCount', epoch],
+    (_, epoch) => getEpochFlipsCount(epoch)
   )
 
   const {data: invitesSummary} = useQuery(
-    ['epoch/invitesSummary', epoch],
+    epoch && ['epoch/invitesSummary', epoch],
     (_, epoch) => getEpochInvitesSummary(epoch)
   )
 
   const {data: identitiesCount} = useQuery(
-    ['epoch/identites/count', epoch - 1],
+    epoch && ['epoch/identites/count', epoch - 1],
     (_, epoch) => getEpochIdentitiesCount(epoch)
   )
 
@@ -297,10 +300,6 @@ function EpochData({epoch}) {
       </div>
     </section>
   )
-}
-
-Epoch.getInitialProps = function ({query}) {
-  return {epoch: query.epoch}
 }
 
 export default Epoch

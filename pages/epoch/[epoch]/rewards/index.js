@@ -1,26 +1,26 @@
 import {useQuery} from 'react-query'
 import Link from 'next/link'
 import {TabContent, TabPane, NavItem, NavLink} from 'reactstrap'
+import {useRouter} from 'next/router'
 import Layout from '../../../../shared/components/layout'
 import {getEpoch, getEpochRewardsSummary} from '../../../../shared/api'
 import {epochFmt, dateFmt, dnaFmt} from '../../../../shared/utils/utils'
 import TooltipText from '../../../../shared/components/tooltip'
-import Distribution from './components/distribution'
+import Distribution from '../../../../screens/epoch/rewards/components/distribution'
 import {useHash, useHashChange} from '../../../../shared/utils/useHashChange'
-import Penalty from './components/penalty'
+import Penalty from '../../../../screens/epoch/rewards/components/penalty'
 
 const DEFAULT_TAB = '#distribution'
 
-function Rewards({epoch}) {
+function Rewards() {
+  const router = useRouter()
+  const epoch = parseInt(router.query.epoch || 0)
+
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
 
   const fetchEpoch = (_, epoch) => getEpoch(epoch)
-
-  // eslint-disable-next-line no-param-reassign
-  epoch = parseInt(epoch)
-
-  const {data: epochData} = useQuery(['epoch', epoch - 1], fetchEpoch)
+  const {data: epochData} = useQuery(epoch && ['epoch', epoch - 1], fetchEpoch)
 
   return (
     <Layout title={`Rewards paid for epoch ${epochFmt(epoch)}`}>
@@ -102,7 +102,7 @@ function Rewards({epoch}) {
 
 function RewardsData({epoch}) {
   const {data: rewardsSummary} = useQuery(
-    ['epoch/rewardsSummary', epoch],
+    epoch && ['epoch/rewardsSummary', epoch],
     (_, epoch) => getEpochRewardsSummary(epoch)
   )
 
@@ -181,10 +181,6 @@ function RewardsData({epoch}) {
       </div>
     </section>
   )
-}
-
-Rewards.getInitialProps = function ({query}) {
-  return {epoch: query.epoch}
 }
 
 export default Rewards

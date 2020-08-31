@@ -14,8 +14,8 @@ function Signin({baseUrl, callbackUrl, attempt}) {
 
   const generateDnaUrl = (token, baseUrl, callbackUrl) => {
     const callback = new URL(callbackUrl, baseUrl)
-    const startSession = new URL('/auth/v1/start-session', baseUrl)
-    const authenticate = new URL('/auth/v1/authenticate', baseUrl)
+    const startSession = new URL('/api/auth/session', baseUrl)
+    const authenticate = new URL('/api/auth/authenticate', baseUrl)
 
     const dnaUrl = `dna://signin/v1?callback_url=${encodeURIComponent(
       callback.href
@@ -109,7 +109,6 @@ Signin.getInitialProps = ({req, query}) => {
   let baseUrl
   if (req) {
     const protocol = req.headers['x-forwarded-proto'] || 'http'
-    baseUrl = `${req.protocol}://${req.get('host')}`
     baseUrl = `${protocol}://${req.headers.host}`
   } else {
     // Client side rendering

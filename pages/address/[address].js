@@ -1,27 +1,33 @@
 import Link from 'next/link'
 import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
+import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
 import {getEpochsCount, getIdentity, getAddressInfo} from '../../shared/api'
 import {dnaFmt, identityStatusFmt} from '../../shared/utils/utils'
-import Transactions from './components/transactions'
-import Rewards from './components/rewards'
-import Penalties from './components/penalties'
+import Transactions from '../../screens/address/components/transactions'
+import Rewards from '../../screens/address/components/rewards'
+import Penalties from '../../screens/address/components/penalties'
 import {useHash, useHashChange} from '../../shared/utils/useHashChange'
 import TooltipText from '../../shared/components/tooltip'
 
 const DEFAULT_TAB = '#transactions'
 
-function Address({address = ''}) {
+function Address() {
+  const router = useRouter()
+  const {address} = router.query
+
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
 
-  const {data: addressInfo} = useQuery(['balance', address], (_, address) =>
-    getAddressInfo(address)
+  const {data: addressInfo} = useQuery(
+    address && ['balance', address],
+    (_, address) => getAddressInfo(address)
   )
 
-  const {data: epochsCount} = useQuery(['epochs', address], (_, address) =>
-    getEpochsCount(address)
+  const {data: epochsCount} = useQuery(
+    address && ['epochs', address],
+    (_, address) => getEpochsCount(address)
   )
 
   const {data: identityInfo} = useQuery(
@@ -220,10 +226,6 @@ function AddressData({addressInfo, identityInfo}) {
       )}
     </>
   )
-}
-
-Address.getInitialProps = function ({query}) {
-  return {address: query.address}
 }
 
 export default Address
