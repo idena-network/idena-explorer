@@ -79,7 +79,7 @@ function Reward() {
   )
 
   const {data: reportRewards} = useQuery(
-    ['epoch/identity/reportRewards', address, epoch - 1],
+    address && epoch && ['epoch/identity/reportRewards', address, epoch - 1],
     (_, address, epoch) => getIdentityReportRewardsByEpoch(address, epoch)
   )
 
@@ -116,8 +116,9 @@ function Reward() {
 
   const getValidationReward = () => getReward(identityRewards, 'Validation')
 
-  const getFlipsReward = () =>
-    getReward(identityRewards, 'Flips') + getReward(identityRewards, 'Reports')
+  const getFlipsReward = () => getReward(identityRewards, 'Flips')
+
+  const getReportsReward = () => getReward(identityRewards, 'Reports')
 
   const getMissingValidationReward = () =>
     (identityInfo &&
@@ -167,6 +168,16 @@ function Reward() {
       (prev, cur) => prev + cur.missingInvitationReward,
       0
     )
+
+  const reportRewardsData = getReportRewardsData(
+    reportRewards,
+    rewardsSummary,
+    validationPenalty,
+    identityInfo
+  )
+
+  const getMissingReportsReward = () =>
+    reportRewardsData.reduce((prev, cur) => prev + cur.missingReward, 0)
 
   return (
     <Layout title={`Identity rewards ${address} for epoch ${epochFmt(epoch)}`}>
@@ -321,7 +332,8 @@ function Reward() {
                         {dnaFmt(
                           getValidationReward() +
                             getFlipsReward() +
-                            getInvitationsReward()
+                            getInvitationsReward() +
+                            getReportsReward()
                         )}
                       </span>
                     </h3>
@@ -357,7 +369,7 @@ function Reward() {
                   </div>
                   <div className="col-12 col-sm-4 bordered-col">
                     <h3 className="info_block__accent">
-                      {dnaFmt(getFlipsReward())}
+                      {dnaFmt(getFlipsReward() + getReportsReward())}
                     </h3>
                     <TooltipText
                       className="control-label"
@@ -401,7 +413,8 @@ function Reward() {
                           dnaFmt(
                             getMissingValidationReward() +
                               getMissingFlipsReward() +
-                              getMissingInvitationsReward()
+                              getMissingInvitationsReward() +
+                              getMissingReportsReward()
                           )) ||
                           '-'}
                       </span>
@@ -438,7 +451,9 @@ function Reward() {
                   </div>
                   <div className="col-12 col-sm-4 bordered-col">
                     <h3 className="info_block__accent" style={{color: 'red'}}>
-                      {dnaFmt(getMissingFlipsReward())}
+                      {dnaFmt(
+                        getMissingFlipsReward() + getMissingReportsReward()
+                      )}
                     </h3>
                     <TooltipText
                       className="control-label"
@@ -498,7 +513,7 @@ function Reward() {
                       active={hashReady && hash === '#reports'}
                       href="#reports"
                     >
-                      <h3>Reports rewards</h3>
+                      <h3>Flips qualification rewards</h3>
                     </NavLink>
                   </NavItem>
                 </ul>
@@ -619,7 +634,8 @@ function Reward() {
                               {dnaFmt(
                                 rewardsSummary &&
                                   item.rewarded &&
-                                  rewardsSummary.flipsShare,
+                                  rewardsSummary.flipsShare *
+                                    getFlipGradeRewardCoef(item.grade),
                                 ''
                               )}
                             </td>
@@ -752,21 +768,85 @@ function Reward() {
                     <thead>
                       <tr>
                         <th>Flip</th>
-
+                        <th>Author</th>
+                        <th>Keywords</th>
                         <th style={{width: 100}}>
                           Reward <br />
-                          paid, DNA
+                          paid, iDNA
                         </th>
+                        <th style={{width: 100}}>
+                          Missed <br />
+                          reward, iDNA
+                        </th>
+                        <th>Details</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {reportRewards &&
-                        reportRewards.map((item, idx) => (
+                      {reportRewardsData &&
+                        reportRewardsData.map((item, idx) => (
                           <tr key={idx}>
-                            <td>{item.cid}</td>
                             <td>
-                              {dnaFmt(item.balance * 1 + item.stake * 1, '')}
+                              <div className="user-pic">
+                                <img
+                                  src={
+                                    item.icon
+                                      ? iconToSrc(item.icon)
+                                      : '/static/images/flip_icn.png'
+                                  }
+                                  alt="pic"
+                                  width="44"
+                                  height="44"
+                                />
+                              </div>
+                              <div
+                                className="text_block text_block--ellipsis"
+                                style={{width: 200}}
+                              >
+                                <Link
+                                  href="/flip/[cid]"
+                                  as={`/flip/${item.cid}`}
+                                >
+                                  <a>{item.cid}</a>
+                                </Link>
+                              </div>
                             </td>
+                            <td>
+                              <div className="user-pic">
+                                <img
+                                  src={`https://robohash.org/${item.author.toLowerCase()}`}
+                                  alt="pic"
+                                  width="32"
+                                />
+                              </div>
+                              <div
+                                className="text_block text_block--ellipsis"
+                                style={{width: 100}}
+                              >
+                                <Link
+                                  href="/identity/[address]"
+                                  as={`/identity/${item.author}#flips`}
+                                >
+                                  <a>{item.author}</a>
+                                </Link>
+                              </div>
+                            </td>
+                            <td>
+                              {item.words ? (
+                                <>
+                                  <i className="icon icon--micro_fail" />
+                                  <span>
+                                    {`${item.words.word1.name}/${item.words.word2.name}`}
+                                  </span>
+                                </>
+                              ) : (
+                                '-'
+                              )}
+                            </td>
+                            <td>{dnaFmt(item.reward, '')}</td>
+                            <td style={{color: 'red'}}>
+                              {dnaFmt(item.missingReward, '')}
+                            </td>
+                            <td>{item.details}</td>
                           </tr>
                         ))}
                     </tbody>
@@ -920,6 +1000,49 @@ function getPreviousEpochSavedInvites(
     })
   }
   return res
+}
+
+function getReportRewardsData(
+  reportRewards,
+  rewardsSummary,
+  validationPenalty,
+  identityInfo
+) {
+  if (!reportRewards || !rewardsSummary || !identityInfo) {
+    return []
+  }
+  return reportRewards.map((item) => {
+    const reward = item.balance * 1 + item.stake * 1
+    let missingReward = 0
+    let details = '-'
+    if (!(reward && reward > 0)) {
+      missingReward = rewardsSummary.flipsShare / 5.0
+      if (validationPenalty) {
+        details = 'Validation penalty'
+      } else if (!isIdentityPassed(identityInfo.state)) {
+        details = 'My validation failed'
+      } else {
+        details = 'Did not report'
+      }
+    }
+
+    return {
+      cid: item.cid,
+      author: item.author,
+      icon: item.icon,
+      reward,
+      missingReward,
+      details,
+      words: item.words,
+    }
+  })
+}
+
+function getFlipGradeRewardCoef(grade) {
+  if (!grade || grade <= 1 || grade > 5) {
+    return 0
+  }
+  return 2 ** (grade - 2)
 }
 
 export default Reward

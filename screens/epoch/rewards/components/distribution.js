@@ -93,7 +93,9 @@ export default function Distribution({epoch, visible}) {
                     getReward(item.rewards, 'Invitations2') +
                     getReward(item.rewards, 'Invitations3')
 
-                  const flipsReward = getReward(item.rewards, 'Flips')
+                  const flipsReward =
+                    getReward(item.rewards, 'Flips') +
+                    getReward(item.rewards, 'Reports')
 
                   return (
                     <tr key={item.address}>

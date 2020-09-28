@@ -1,7 +1,6 @@
 import axios from 'axios'
 
-// todo
-const BASE_API_URL = 'http://localhost:18888/api'
+const BASE_API_URL = 'https://api.idena.org/api'
 
 function apiClient() {
   return axios.create({
