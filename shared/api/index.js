@@ -285,6 +285,12 @@ export async function getIdentitySavedInviteRewardsByEpoch(address, epoch) {
   )
 }
 
+export async function getIdentityReportRewardsByEpoch(address, epoch) {
+  return getResponse(
+    apiClient().get(`epoch/${epoch}/identity/${address}/reportRewards`)
+  )
+}
+
 export async function getIdentityShortAnswersByEpoch(address, epoch) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/identity/${address}/answers/short`)
