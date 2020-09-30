@@ -1021,6 +1021,8 @@ function getReportRewardsData(
         details = 'Validation penalty'
       } else if (!isIdentityPassed(identityInfo.state)) {
         details = 'My validation failed'
+      } else if (item.grade === 1) {
+        details = 'Flip with no reward'
       } else {
         details = 'Did not report'
       }
