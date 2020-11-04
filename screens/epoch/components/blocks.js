@@ -5,6 +5,7 @@ import {precise2, precise6, dateTimeFmt} from '../../../shared/utils/utils'
 import {getEpochBlocks, getEpochBlocksCount} from '../../../shared/api'
 import TooltipText, {IconTooltip} from '../../../shared/components/tooltip'
 import {SkeletonRows} from '../../../shared/components/skeleton'
+import {GoRepoForked} from 'react-icons/go'
 
 const LIMIT = 30
 
@@ -119,11 +120,16 @@ export default function Blocks({epoch, visible}) {
                     </td>
                     <td>{precise6(item.vrfProposerThreshold)}</td>
                     <td>
-                      {item.flags
-                        ? item.flags.map((flag) => (
-                            <BlockFlag key={flag} flag={flag} />
-                          ))
-                        : '-'}
+                      {item.flags &&
+                        item.flags.map((flag) => (
+                          <BlockFlag key={flag} flag={flag} />
+                        ))}
+                      {item.upgrade > 0 && (
+                        <BlockFlag key={'upgrade'} flag="HardForkUpdate" />
+                      )}
+                      {!item.flags &&
+                        (!item.upgrade || item.upgrade <= 0) &&
+                        '-'}
                     </td>
                     <td>{dateTimeFmt(item.timestamp)}</td>
                     <td>{item.fullSize}</td>
@@ -180,6 +186,13 @@ function BlockFlag({flag}) {
           placement="top"
         />
       )
+    case 'HardForkUpdate':
+      return (
+        <TooltipText tooltip="Hard fork update is activated" placement="top">
+          <GoRepoForked color="black" />
+        </TooltipText>
+      )
+
     case 'AfterLongSessionStarted':
       return (
         <IconTooltip
