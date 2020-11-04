@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import {useInfiniteQuery, useQuery} from 'react-query'
 import {Fragment} from 'react'
+import {GoRepoForked} from 'react-icons/go'
 import {precise2, precise6, dateTimeFmt} from '../../../shared/utils/utils'
 import {getEpochBlocks, getEpochBlocksCount} from '../../../shared/api'
 import TooltipText, {IconTooltip} from '../../../shared/components/tooltip'
 import {SkeletonRows} from '../../../shared/components/skeleton'
-import {GoRepoForked} from 'react-icons/go'
 
 const LIMIT = 30
 
@@ -125,7 +125,7 @@ export default function Blocks({epoch, visible}) {
                           <BlockFlag key={flag} flag={flag} />
                         ))}
                       {item.upgrade > 0 && (
-                        <BlockFlag key={'upgrade'} flag="HardForkUpdate" />
+                        <BlockFlag key="upgrade" flag="HardForkUpdate" />
                       )}
                       {!item.flags &&
                         (!item.upgrade || item.upgrade <= 0) &&
