@@ -22,17 +22,16 @@ function Home() {
     <Layout>
       <section className="section section_info">
         <div className="row">
-          <Supply />
           <Identities />
+          <Supply />
         </div>
       </section>
 
       <section className="section ">
         <div className="button-group">
-          <Link href="/circulation">
+          <Link href="/epoch/[epoch]" as={`/epoch/${data && data.epoch}`}>
             <a className="btn btn-secondary btn-small">
-              <i className="icon icon--coins" />
-              <span>Circulating supply</span>
+              <span>Current epoch data</span>
             </a>
           </Link>
 
@@ -42,7 +41,14 @@ function Home() {
           >
             <a className="btn btn-secondary btn-small">
               <i className="icon icon--report" />
-              <span>Validation results</span>
+              <span>Last validation results</span>
+            </a>
+          </Link>
+
+          <Link href="/circulation">
+            <a className="btn btn-secondary btn-small">
+              <i className="icon icon--coins" />
+              <span>Circulating supply</span>
             </a>
           </Link>
 
