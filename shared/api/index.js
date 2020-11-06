@@ -358,7 +358,7 @@ export async function getIdentityInvites(address, skip, limit) {
 }
 
 export async function getIdentityInvitesCount(address) {
-  return getResponse(apiClient().get(`identity/${address}/invites`))
+  return getResponse(apiClient().get(`identity/${address}/invites/Count`))
 }
 
 export async function getFlip(cid) {

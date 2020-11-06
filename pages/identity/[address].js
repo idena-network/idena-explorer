@@ -59,7 +59,7 @@ function Identity() {
           <div className="col-auto">
             <div className="section_main__image">
               <img
-                src={`https://robohash.org/${address.toLowerCase()}`}
+                src={`https://robohash.idena.io/${address.toLowerCase()}`}
                 alt="pic"
                 width="160"
               />

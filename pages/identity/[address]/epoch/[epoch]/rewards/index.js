@@ -186,7 +186,7 @@ function Reward() {
           <div className="col-auto">
             <div className="section_main__image">
               <img
-                src={`https://robohash.org/${address.toLowerCase()}`}
+                src={`https://robohash.idena.io/${address.toLowerCase()}`}
                 alt="pic"
                 width="160"
               />
@@ -727,7 +727,7 @@ function Reward() {
                                 <>
                                   <div className="user-pic">
                                     <img
-                                      src={`https://robohash.org/${item.activationAuthor.toLowerCase()}`}
+                                      src={`https://robohash.idena.io/${item.activationAuthor.toLowerCase()}`}
                                       alt="pic"
                                       width="32"
                                     />
@@ -813,7 +813,7 @@ function Reward() {
                             <td>
                               <div className="user-pic">
                                 <img
-                                  src={`https://robohash.org/${item.author.toLowerCase()}`}
+                                  src={`https://robohash.idena.io/${item.author.toLowerCase()}`}
                                   alt="pic"
                                   width="32"
                                 />

@@ -112,7 +112,7 @@ export default function Invites({address, visible}) {
                             <a>
                               <img
                                 className="user-pic"
-                                src={`https://robohash.org/${item.activationAuthor.toLowerCase()}`}
+                                src={`https://robohash.idena.io/${item.activationAuthor.toLowerCase()}`}
                                 alt="pic"
                                 width="32"
                               />

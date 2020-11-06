@@ -71,7 +71,7 @@ function TxDetails(data) {
                   <a>
                     <img
                       className="user-pic"
-                      src={`https://robohash.org/${data.from.toLowerCase()}`}
+                      src={`https://robohash.idena.io/${data.from.toLowerCase()}`}
                       alt="pic"
                       width="32"
                     />
@@ -117,7 +117,7 @@ function TxDetails(data) {
                     <a>
                       <img
                         className="user-pic"
-                        src={`https://robohash.org/${data.to.toLowerCase()}`}
+                        src={`https://robohash.idena.io/${data.to.toLowerCase()}`}
                         alt="pic"
                         width="32"
                       />

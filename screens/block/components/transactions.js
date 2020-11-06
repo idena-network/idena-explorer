@@ -61,7 +61,7 @@ export default function Transactions({block}) {
                   <td>
                     <div className="user-pic">
                       <img
-                        src={`https://robohash.org/${
+                        src={`https://robohash.idena.io/${
                           item.from && item.from.toLowerCase()
                         }`}
                         alt="pic"
@@ -85,7 +85,7 @@ export default function Transactions({block}) {
                       <>
                         <div className="user-pic">
                           <img
-                            src={`https://robohash.org/${item.to.toLowerCase()}`}
+                            src={`https://robohash.idena.io/${item.to.toLowerCase()}`}
                             alt="pic"
                             width="32"
                           />
