@@ -59,7 +59,7 @@ export default function Miners({visible}) {
                     <td>
                       <div className="user-pic">
                         <img
-                          src={`https://robohash.org/${item.address.toLowerCase()}`}
+                          src={`https://robohash.idena.io/${item.address.toLowerCase()}`}
                           alt="pic"
                           width="32"
                         />

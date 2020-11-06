@@ -93,7 +93,7 @@ function BlockDetails(data) {
                     <a>
                       <img
                         className="user-pic"
-                        src={`https://robohash.org/${data.proposer.toLowerCase()}`}
+                        src={`https://robohash.idena.io/${data.proposer.toLowerCase()}`}
                         alt="pic"
                         width="32"
                       />

@@ -94,7 +94,7 @@ export default function Blocks({epoch, visible}) {
                         <>
                           <div className="user-pic">
                             <img
-                              src={`https://robohash.org/${item.proposer.toLowerCase()}`}
+                              src={`https://robohash.idena.io/${item.proposer.toLowerCase()}`}
                               alt="pic"
                               width="32"
                             />

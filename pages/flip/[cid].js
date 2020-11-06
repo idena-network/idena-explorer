@@ -229,7 +229,7 @@ function Flip() {
                           alt="user-pic"
                           className="user-pic"
                           width="32"
-                          src={`https://robohash.org/${flip.author.toLowerCase()}`}
+                          src={`https://robohash.idena.io/${flip.author.toLowerCase()}`}
                         />
                         <span>{flip.author}</span>
                       </a>
@@ -437,7 +437,7 @@ function Flip() {
                           <td>
                             <div className="user-pic">
                               <img
-                                src={`https://robohash.org/${item.address.toLowerCase()}`}
+                                src={`https://robohash.idena.io/${item.address.toLowerCase()}`}
                                 alt="pic"
                                 width="32"
                               />
@@ -522,7 +522,7 @@ function Flip() {
                           <td>
                             <div className="user-pic">
                               <img
-                                src={`https://robohash.org/${item.address.toLowerCase()}`}
+                                src={`https://robohash.idena.io/${item.address.toLowerCase()}`}
                                 alt="pic"
                                 width="32"
                               />
