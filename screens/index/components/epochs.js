@@ -113,7 +113,6 @@ export default function EpochsTable({visible}) {
                     return null
                   }
                   const data = prepareEpochData(item, page[idx + 1])
-                  const s = idx === 0 ? {color: '#bbbbbb'} : {}
                   return (
                     <tr key={data.epoch}>
                       <td>
@@ -130,10 +129,10 @@ export default function EpochsTable({visible}) {
                           <a>{data.validatedCount}</a>
                         </Link>
                       </td>
-                      <td style={s}>{data.inviteCount}</td>
-                      <td style={s}>{data.flipCount}</td>
-                      <td style={s}>{data.txCount}</td>
-                      <td style={s}>{data.blockCount}</td>
+                      <td>{data.inviteCount}</td>
+                      <td>{data.flipCount}</td>
+                      <td>{data.txCount}</td>
+                      <td>{data.blockCount}</td>
 
                       <td>
                         <Link
@@ -144,8 +143,8 @@ export default function EpochsTable({visible}) {
                         </Link>
                       </td>
 
-                      <td style={s}>{dnaFmt(data.lastTotalMined, '')}</td>
-                      <td style={s}>{dnaFmt(data.burnt, '')}</td>
+                      <td>{dnaFmt(data.lastTotalMined, '')}</td>
+                      <td>{dnaFmt(data.burnt, '')}</td>
                     </tr>
                   )
                 })}
