@@ -101,6 +101,10 @@ export async function getLastEpoch() {
   return getResponse(apiClient().get('epoch/last'))
 }
 
+export async function getUpgradeVoting() {
+  return getResponse(apiClient().get('UpgradeVoting'))
+}
+
 export async function getEpoch(epoch) {
   return getResponse(apiClient().get(`epoch/${epoch}`))
 }
