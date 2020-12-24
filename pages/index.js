@@ -7,7 +7,7 @@ import Layout from '../shared/components/layout'
 import EpochsTable from '../screens/index/components/epochs'
 import TopAddress from '../screens/index/components/topaddress'
 import Miners from '../screens/index/components/miners'
-import {getLastEpoch} from '../shared/api'
+import {getLastEpoch, getUpgradeVoting} from '../shared/api'
 import {useHash, useHashChange} from '../shared/utils/useHashChange'
 
 const DEFAULT_TAB = '#epochs'
@@ -17,6 +17,10 @@ function Home() {
   useHashChange((hash) => setHash(hash))
 
   const {data} = useQuery('last-epoch', getLastEpoch)
+
+  const isHardForkData = useQuery('hard-fork', getUpgradeVoting)
+  const isHardFork =
+    isHardForkData && isHardForkData.data && isHardForkData.data.length > 0
 
   return (
     <Layout>
@@ -29,6 +33,14 @@ function Home() {
 
       <section className="section ">
         <div className="button-group">
+          {isHardFork && (
+            <Link href="/hardfork">
+              <a className="btn btn-secondary btn-small">
+                <span>Hard fork voting</span>
+              </a>
+            </Link>
+          )}
+
           <Link href="/epoch/[epoch]" as={`/epoch/${data && data.epoch}`}>
             <a className="btn btn-secondary btn-small">
               <span>Current epoch data</span>
