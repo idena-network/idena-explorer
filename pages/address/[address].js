@@ -3,7 +3,12 @@ import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
 import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
-import {getEpochsCount, getIdentity, getAddressInfo} from '../../shared/api'
+import {
+  getEpochsCount,
+  getIdentity,
+  getAddressInfo,
+  getContract,
+} from '../../shared/api'
 import {dnaFmt, identityStatusFmt} from '../../shared/utils/utils'
 import Transactions from '../../screens/address/components/transactions'
 import Rewards from '../../screens/address/components/rewards'
@@ -35,6 +40,11 @@ function Address() {
     (_, address) => getIdentity(address)
   )
 
+  const {data: contractInfo} = useQuery(
+    address && ['contract', address],
+    (_, address) => getContract(address)
+  )
+
   return (
     <Layout title={`Address ${address}`}>
       <section className="section">
@@ -46,7 +56,11 @@ function Address() {
         </div>
       </section>
 
-      <AddressData addressInfo={addressInfo} identityInfo={identityInfo} />
+      <AddressData
+        addressInfo={addressInfo}
+        identityInfo={identityInfo}
+        contractInfo={contractInfo}
+      />
 
       <section className="section section_tabs">
         <div className="tabs">
@@ -123,7 +137,7 @@ function Address() {
   )
 }
 
-function AddressData({addressInfo, identityInfo}) {
+function AddressData({addressInfo, identityInfo, contractInfo}) {
   return (
     <>
       <section className="section section_info">
@@ -218,6 +232,46 @@ function AddressData({addressInfo, identityInfo}) {
                   <div className="text_block">
                     {identityStatusFmt(identityInfo.state)}
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {contractInfo && (
+        <section className="section section_details">
+          <h3>Smart contract</h3>
+          <div className="card">
+            <div className="row">
+              <div className="col-12 col-sm-6">
+                <div className="section__group">
+                  <div className="control-label">Address:</div>
+                  <div
+                    className="text_block text_block--ellipsis"
+                    style={{width: '80%'}}
+                  >
+                    <Link
+                      href="/contract/[address]"
+                      as={`/contract/${contractInfo.address}`}
+                    >
+                      <a>
+                        <img
+                          alt="user-pic"
+                          className="user-pic"
+                          width="32"
+                          src={`https://robohash.org/${contractInfo.address.toLowerCase()}`}
+                        />
+                        <span>{contractInfo.address}</span>
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-sm-6">
+                <div className="section__group">
+                  <div className="control-label">Type:</div>
+                  <div className="text_block">{contractInfo.type}</div>
                 </div>
               </div>
             </div>

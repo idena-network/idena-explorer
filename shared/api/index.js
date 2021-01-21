@@ -10,8 +10,9 @@ function apiClient() {
 
 async function getResponse(request) {
   const {data} = await request
-  const {result, error} = data
+  const {result, continuationToken, error} = data
   if (error) throw error
+  if (continuationToken) result.continuationToken = continuationToken
   return result
 }
 
@@ -382,5 +383,21 @@ export async function getFlipShortAnswers(cid) {
 export async function getFlipLongAnswers(cid) {
   return getResponse(
     apiClient().get(`flip/${cid}/answers/long?skip=0&limit=100`)
+  )
+}
+
+export async function getContract(address) {
+  return getResponse(apiClient().get(`contract/${address}`))
+}
+
+export async function getContractBalanceUpdates(
+  address,
+  limit,
+  continuationToken
+) {
+  return getResponse(
+    apiClient().get(`contract/${address}/balanceUpdates`, {
+      params: {limit, continuationToken},
+    })
   )
 }
