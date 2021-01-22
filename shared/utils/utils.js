@@ -25,7 +25,7 @@ export function txTypeFmt(txType, data) {
   if (txType === 'ActivationTx') return 'Activate invitation'
   if (txType === 'InviteTx') return 'Issue invitation'
   if (txType === 'KillInviteeTx') return 'Terminate invitation '
-  if (txType === 'KillTx') return 'Terminate tdentity'
+  if (txType === 'KillTx') return 'Terminate identity'
   if (txType === 'EvidenceTx') return 'Validation evidence'
   if (txType === 'SubmitShortAnswersTx') return 'Short session answers'
   if (txType === 'SubmitLongAnswersTx') return 'Long session answers'

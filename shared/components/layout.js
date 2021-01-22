@@ -115,7 +115,7 @@ function Layout({children, title = '', signinLoading = false}) {
                       <div className="user-pic">
                         <img
                           className="user-avatar"
-                          src={`https://robohash.org/${session.address}`}
+                          src={`https://robohash.idena.io/${session.address}`}
                           alt="pic"
                           width="40"
                         />

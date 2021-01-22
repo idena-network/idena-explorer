@@ -218,7 +218,7 @@ function AddressData({addressInfo, identityInfo, contractInfo}) {
                           alt="user-pic"
                           className="user-pic"
                           width="32"
-                          src={`https://robohash.org/${identityInfo.address.toLowerCase()}`}
+                          src={`https://robohash.idena.io/${identityInfo.address.toLowerCase()}`}
                         />
                         <span>{identityInfo.address}</span>
                       </a>

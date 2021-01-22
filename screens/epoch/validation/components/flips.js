@@ -98,7 +98,7 @@ export default function Flips({epoch, visible}) {
                   <td>
                     <div className="user-pic">
                       <img
-                        src={`https://robohash.org/${item.author.toLowerCase()}`}
+                        src={`https://robohash.idena.io/${item.author.toLowerCase()}`}
                         alt="pic"
                         width="32"
                       />

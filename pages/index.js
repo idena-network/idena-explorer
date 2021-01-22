@@ -7,7 +7,7 @@ import Layout from '../shared/components/layout'
 import EpochsTable from '../screens/index/components/epochs'
 import TopAddress from '../screens/index/components/topaddress'
 import Miners from '../screens/index/components/miners'
-import {getLastEpoch} from '../shared/api'
+import {getLastEpoch, getUpgradeVoting} from '../shared/api'
 import {useHash, useHashChange} from '../shared/utils/useHashChange'
 
 const DEFAULT_TAB = '#epochs'
@@ -18,21 +18,32 @@ function Home() {
 
   const {data} = useQuery('last-epoch', getLastEpoch)
 
+  const isHardForkData = useQuery('hard-fork', getUpgradeVoting)
+  const isHardFork =
+    isHardForkData && isHardForkData.data && isHardForkData.data.length > 0
+
   return (
     <Layout>
       <section className="section section_info">
         <div className="row">
-          <Supply />
           <Identities />
+          <Supply />
         </div>
       </section>
 
       <section className="section ">
         <div className="button-group">
-          <Link href="/circulation">
+          {isHardFork && (
+            <Link href="/hardfork">
+              <a className="btn btn-secondary btn-small">
+                <span>Hard fork voting</span>
+              </a>
+            </Link>
+          )}
+
+          <Link href="/epoch/[epoch]" as={`/epoch/${data && data.epoch}`}>
             <a className="btn btn-secondary btn-small">
-              <i className="icon icon--coins" />
-              <span>Circulating supply</span>
+              <span>Current epoch data</span>
             </a>
           </Link>
 
@@ -42,7 +53,14 @@ function Home() {
           >
             <a className="btn btn-secondary btn-small">
               <i className="icon icon--report" />
-              <span>Validation results</span>
+              <span>Last validation results</span>
+            </a>
+          </Link>
+
+          <Link href="/circulation">
+            <a className="btn btn-secondary btn-small">
+              <i className="icon icon--coins" />
+              <span>Circulating supply</span>
             </a>
           </Link>
 

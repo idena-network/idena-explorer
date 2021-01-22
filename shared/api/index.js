@@ -102,6 +102,10 @@ export async function getLastEpoch() {
   return getResponse(apiClient().get('epoch/last'))
 }
 
+export async function getUpgradeVoting() {
+  return getResponse(apiClient().get('UpgradeVoting'))
+}
+
 export async function getEpoch(epoch) {
   return getResponse(apiClient().get(`epoch/${epoch}`))
 }
@@ -359,7 +363,7 @@ export async function getIdentityInvites(address, skip, limit) {
 }
 
 export async function getIdentityInvitesCount(address) {
-  return getResponse(apiClient().get(`identity/${address}/invites`))
+  return getResponse(apiClient().get(`identity/${address}/invites/Count`))
 }
 
 export async function getFlip(cid) {
