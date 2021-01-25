@@ -42,12 +42,24 @@ function Contract() {
               <h3 className="section_main__subtitle">{address}</h3>
             </div>
 
-            <Link href="/address/[address]" as={`/address/${address}`}>
-              <a className="btn btn-small btn-primary">
-                <i className="icon icon--coins" />
-                <span>Address details</span>
-              </a>
-            </Link>
+            <div className="button-group">
+              <Link href="/address/[address]" as={`/address/${address}`}>
+                <a className="btn btn-small btn-primary">
+                  <i className="icon icon--coins" />
+                  <span>Address details</span>
+                </a>
+              </Link>
+
+              {contractInfo && contractInfo.type === 'OracleVoting' && (
+                <a
+                  href={`dna://vote/v1?address=${address}`}
+                  className="btn btn-small btn-secondary"
+                >
+                  <i className="icon" />
+                  <span>Vote</span>
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </section>
