@@ -44,7 +44,7 @@ function Contract() {
 
             <div className="button-group">
               <Link href="/address/[address]" as={`/address/${address}`}>
-                <a className="btn btn-small btn-primary">
+                <a className="btn btn-small btn-secondary">
                   <i className="icon icon--coins" />
                   <span>Address details</span>
                 </a>
