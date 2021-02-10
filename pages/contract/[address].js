@@ -7,6 +7,7 @@ import {getAddressInfo, getContract} from '../../shared/api'
 import {dnaFmt, precise6} from '../../shared/utils/utils'
 import Transfers from '../../screens/contract/components/transfers'
 import VotingData from '../../screens/contract/components/voting'
+import TimeLockData from '../../screens/contract/components/timelock'
 
 function Contract() {
   const router = useRouter()
@@ -23,6 +24,7 @@ function Contract() {
   )
 
   const isVoting = contractInfo && contractInfo.type === 'OracleVoting'
+  const isTimeLock = contractInfo && contractInfo.type === 'TimeLock'
 
   return (
     <Layout title={`Smart contract ${address}`}>
@@ -69,6 +71,7 @@ function Contract() {
 
       <ContractData addressInfo={addressInfo} contractInfo={contractInfo} />
       {isVoting && <VotingData address={address} />}
+      {isTimeLock && <TimeLockData address={address} />}
 
       <section className="section section_tabs">
         <div className="tabs">
@@ -108,23 +111,6 @@ function ContractData({addressInfo, contractInfo}) {
           <div className="row">
             <div className="col-12 col-sm-4">
               <div className="section__group">
-                <div className="control-label">Type:</div>
-                <div className="text_block">
-                  {(contractInfo && contractInfo.type) || '-'}
-                </div>
-              </div>
-            </div>
-            <div className="col-12 col-sm-4">
-              <div className="section__group">
-                <div className="control-label">Balance:</div>
-                <div className="text_block">
-                  {(addressInfo && dnaFmt(precise6(addressInfo.balance))) ||
-                    '-'}
-                </div>
-              </div>
-            </div>
-            <div className="col-12 col-sm-4">
-              <div className="section__group">
                 <div className="control-label">Author:</div>
                 <div
                   className="text_block text_block--ellipsis"
@@ -148,6 +134,23 @@ function ContractData({addressInfo, contractInfo}) {
                   ) : (
                     '-'
                   )}
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-sm-4">
+              <div className="section__group">
+                <div className="control-label">Type:</div>
+                <div className="text_block">
+                  {(contractInfo && contractInfo.type) || '-'}
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-sm-4">
+              <div className="section__group">
+                <div className="control-label">Balance:</div>
+                <div className="text_block">
+                  {(addressInfo && dnaFmt(precise6(addressInfo.balance))) ||
+                    '-'}
                 </div>
               </div>
             </div>

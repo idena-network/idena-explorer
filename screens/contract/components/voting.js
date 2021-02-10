@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import {useQuery} from 'react-query'
 import {getOracleVotingContract} from '../../../shared/api'
 
