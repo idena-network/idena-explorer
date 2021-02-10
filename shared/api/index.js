@@ -405,3 +405,7 @@ export async function getContractBalanceUpdates(
     })
   )
 }
+
+export async function getOracleVotingContract(address) {
+  return getResponse(apiClient().get(`oracleVotingContract/${address}`))
+}

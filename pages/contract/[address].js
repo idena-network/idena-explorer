@@ -6,6 +6,7 @@ import Layout from '../../shared/components/layout'
 import {getAddressInfo, getContract} from '../../shared/api'
 import {dnaFmt, precise6} from '../../shared/utils/utils'
 import Transfers from '../../screens/contract/components/transfers'
+import VotingData from '../../screens/contract/components/voting'
 
 function Contract() {
   const router = useRouter()
@@ -20,6 +21,8 @@ function Contract() {
     address && ['contract', address],
     (_, address) => getContract(address)
   )
+
+  const isVoting = contractInfo && contractInfo.type === 'OracleVoting'
 
   return (
     <Layout title={`Smart contract ${address}`}>
@@ -65,6 +68,7 @@ function Contract() {
       </section>
 
       <ContractData addressInfo={addressInfo} contractInfo={contractInfo} />
+      {isVoting && <VotingData address={address} />}
 
       <section className="section section_tabs">
         <div className="tabs">
@@ -102,7 +106,7 @@ function ContractData({addressInfo, contractInfo}) {
         <h3>Details</h3>
         <div className="card">
           <div className="row">
-            <div className="col-12 col-sm-6">
+            <div className="col-12 col-sm-4">
               <div className="section__group">
                 <div className="control-label">Type:</div>
                 <div className="text_block">
@@ -110,12 +114,40 @@ function ContractData({addressInfo, contractInfo}) {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-sm-6">
+            <div className="col-12 col-sm-4">
               <div className="section__group">
                 <div className="control-label">Balance:</div>
                 <div className="text_block">
                   {(addressInfo && dnaFmt(precise6(addressInfo.balance))) ||
                     '-'}
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-sm-4">
+              <div className="section__group">
+                <div className="control-label">Author:</div>
+                <div
+                  className="text_block text_block--ellipsis"
+                  style={{width: '80%'}}
+                >
+                  {contractInfo ? (
+                    <Link
+                      href="/address/[address]"
+                      as={`/address/${contractInfo.author}`}
+                    >
+                      <a>
+                        <img
+                          alt="user-pic"
+                          className="user-pic"
+                          width="32"
+                          src={`https://robohash.idena.io/${contractInfo.author.toLowerCase()}`}
+                        />
+                        <span>{contractInfo.author}</span>
+                      </a>
+                    </Link>
+                  ) : (
+                    '-'
+                  )}
                 </div>
               </div>
             </div>
