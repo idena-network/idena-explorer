@@ -3,6 +3,7 @@ import {useInfiniteQuery} from 'react-query'
 import {precise6, dnaFmt, dateFmt, timeFmt} from '../../../shared/utils/utils'
 import {getContractBalanceUpdates} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
+import {WarningTooltip} from '../../../shared/components/tooltip'
 
 const LIMIT = 30
 
@@ -23,13 +24,15 @@ export default function Transfers({address}) {
   )
 
   const prepareTransferInfo = (item, contractAddress) => {
-    const contractMethodFmt = ({type, contractCallMethod}) => {
+    const contractMethodFmt = ({type, contractCallMethod, txReceipt}) => {
       if (!type) return ''
       if (type !== 'CallContract') {
         return type
       }
-      if (!contractCallMethod) return ''
-      return contractCallMethod
+      const method =
+        txReceipt && txReceipt.method ? txReceipt.method : contractCallMethod
+      if (!method) return ''
+      return method
     }
     const transferAmount = (item) => {
       if (!item) return 0
@@ -53,7 +56,9 @@ export default function Transfers({address}) {
     }
     const fee = txFee(item)
     amount = Math.abs(amount)
-    return {amount, method, from, to, fee}
+    const success = !item.txReceipt || item.txReceipt.success
+    const errorMsg = item.txReceipt ? item.txReceipt.errorMsg : ''
+    return {amount, method, from, to, fee, success, errorMsg}
   }
 
   return (
@@ -157,7 +162,16 @@ export default function Transfers({address}) {
                       <br />
                       {timeFmt(item.timestamp)}
                     </td>
-                    <td>{transferInfo.method}</td>
+                    <td>
+                      {!transferInfo.success && (
+                        <WarningTooltip
+                          tooltip={`Smart contract failed: ${transferInfo.errorMsg}`}
+                          placement="top"
+                          style={{marginRight: '5px'}}
+                        />
+                      )}
+                      {transferInfo.method}
+                    </td>
                   </tr>
                 )
               })

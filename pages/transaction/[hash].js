@@ -86,13 +86,27 @@ function TxDetails(data) {
                 {dnaFmt(
                   !data.amount && typeof data.transfer !== 'undefined'
                     ? data.transfer
-                    : data.amount
+                    : (!data.txReceipt || data.txReceipt.success) && data.amount
                 )}
               </div>
 
               <hr />
               <div className="control-label">Size, bytes:</div>
               <div className="text_block">{data.size}</div>
+              {data.txReceipt && (
+                <>
+                  <hr />
+                  <div className="control-label">Smart contract call:</div>
+                  <div
+                    className="text_block"
+                    style={{
+                      color: `${data.txReceipt.success ? 'inherit' : 'red'}`,
+                    }}
+                  >
+                    {data.txReceipt.success ? 'Success' : 'Error'}
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className="col-12 col-sm-6">
@@ -136,6 +150,13 @@ function TxDetails(data) {
               <hr />
               <div className="control-label">Fee limit:</div>
               <div className="text_block">{data.maxFee}</div>
+              {data.txReceipt && data.txReceipt.errorMsg && (
+                <>
+                  <hr />
+                  <div className="control-label">Error:</div>
+                  <div className="text_block">{data.txReceipt.errorMsg}</div>
+                </>
+              )}
             </div>
           </div>
         </div>

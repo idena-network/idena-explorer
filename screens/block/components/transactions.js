@@ -7,6 +7,7 @@ import {
   txTypeFmt,
 } from '../../../shared/utils/utils'
 import {getBlockTransactions} from '../../../shared/api'
+import { WarningTooltip } from '../../../shared/components/tooltip'
 
 const LIMIT = 10
 
@@ -112,13 +113,23 @@ export default function Transactions({block}) {
                         !(item.amount * 1) &&
                           typeof item.transfer !== 'undefined'
                           ? item.transfer
-                          : item.amount
+                          : (!item.txReceipt || item.txReceipt.success) &&
+                              item.amount
                       ),
                       ''
                     )}
                   </td>
                   <td>{dateTimeFmt(item.timestamp)}</td>
-                  <td>{txTypeFmt(item.type, item.data)}</td>
+                  <td>
+                    {item.txReceipt && !item.txReceipt.success && (
+                      <WarningTooltip
+                        tooltip={`Smart contract failed: ${item.txReceipt.errorMsg}`}
+                        placement="top"
+                        style={{marginRight: '5px'}}
+                      />
+                    )}
+                    {txTypeFmt(item.type, item.data)}
+                  </td>
                 </tr>
               ))
           )}
