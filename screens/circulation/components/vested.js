@@ -17,13 +17,13 @@ const vestedData = [
     descr: '',
   },
   {
-    address: '0x3A4fA594b3822649738bE2ab02CDF35Bf13a595A',
+    address: '0x3095aba0d34afec9b05674f9e195268bb643c392',
     name: 'Core team fund vested for 3 years',
     date: 'August 31, 2022',
     descr: '',
   },
   {
-    address: '0x9e64044F2f4719D04FfE1FFBE8D0d5B684ffFbBD',
+    address: '0x05de18d4c4a9bbe43a195a3856bcb9cdff973f9e',
     name: 'Core team fund vested for 5 years',
     date: 'August 31, 2024',
     descr: '',
