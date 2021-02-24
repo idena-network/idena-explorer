@@ -8,6 +8,13 @@ export default function TimeLockData({address}) {
     (_, address) => getTimeLockContract(address)
   )
 
+  function isInvalidTimestamp(str) {
+    if (!str) {
+      return false
+    }
+    return Number.isNaN(Date.parse(str))
+  }
+
   return (
     <section className="section section_details">
       <h3>TimeLock details</h3>
@@ -17,7 +24,10 @@ export default function TimeLockData({address}) {
             <div className="col-12 col-sm-12">
               <div className="control-label">Timestamp:</div>
               <div className="text_block">
-                {timeLockInfo && dateTimeFmt(timeLockInfo.timestamp)}
+                {timeLockInfo &&
+                  (isInvalidTimestamp(timeLockInfo.timestamp)
+                    ? timeLockInfo.timestamp
+                    : dateTimeFmt(timeLockInfo.timestamp))}
               </div>
             </div>
           </div>
