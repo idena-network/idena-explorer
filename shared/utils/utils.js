@@ -12,7 +12,16 @@ export function precise6(x) {
 
 export function dnaFmt(amount, curency = 'iDNA') {
   if (!amount || amount === 0) return '-'
-  return `${Number(amount).toLocaleString()} ${curency}`
+  return `${Number(amount)
+    .toLocaleString('en-US')
+    .replace(/,/g, ' ')} ${curency}`
+}
+
+export function usdFmt(amount, curency = '$') {
+  if (!amount || amount === 0) return '-'
+  return `${curency}${Number(amount)
+    .toLocaleString('en-US')
+    .replace(/,/g, ' ')}`
 }
 
 export function txTypeFmt(txType, data) {

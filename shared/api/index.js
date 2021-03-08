@@ -2,6 +2,14 @@ import axios from 'axios'
 
 const BASE_API_URL = 'https://api.idena.org/api'
 
+const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
+
+function apiCoingecko() {
+  return axios.create({
+    baseURL: COINGECKO_API_URL,
+  })
+}
+
 function apiClient() {
   return axios.create({
     baseURL: BASE_API_URL,
@@ -14,6 +22,21 @@ async function getResponse(request) {
   if (error) throw error
   if (continuationToken) result.continuationToken = continuationToken
   return result
+}
+
+export async function getCoingeckoData() {
+  const params = {
+    ids: 'idena',
+    vs_currencies: 'usd',
+    include_market_cap: true,
+    include_24hr_vol: true,
+    include_24hr_change: true,
+    include_last_updated_at: true,
+  }
+
+  const request = apiCoingecko().get('/simple/price', {params})
+  const {data} = await request
+  return data
 }
 
 export async function getCurrentSession(onlyCheck) {

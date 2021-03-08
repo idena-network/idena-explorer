@@ -13,6 +13,7 @@ import Link from 'next/link'
 import {Helmet} from 'react-helmet'
 import {search} from '../api'
 import {useSession} from '../utils/session-context'
+import TopHeader from './topheader'
 
 function Layout({children, title = '', signinLoading = false}) {
   const router = useRouter()
@@ -67,6 +68,7 @@ function Layout({children, title = '', signinLoading = false}) {
       <Helmet>
         <title>{title}</title>
       </Helmet>
+      <TopHeader />
       <header className="header">
         <div className="container">
           <div className="row justify-content-between align-items-center">
