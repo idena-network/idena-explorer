@@ -46,6 +46,7 @@ export default function TopHeader() {
     prevNodesCount: 0,
     epochDuration: 0,
     rewardsPaidCount: 0,
+    totalRewardsPaid: 0,
   })
 
   useEffect(() => {
@@ -54,10 +55,12 @@ export default function TopHeader() {
         identitiesSummary,
         {validationTime: prevValidationTime},
         rewardsPaidCount,
+        rewardsSummary,
       ] = await Promise.all([
         getEpochIdentitiesSummary(epoch - 1),
         getEpoch(epoch),
         getEpochIdentityRewardsCount(epoch),
+        getEpochRewardsSummary(epoch),
       ])
 
       const firstDate = new Date(prevValidationTime)
@@ -80,25 +83,20 @@ export default function TopHeader() {
         prevNodesCount,
         epochDuration,
         rewardsPaidCount,
+        totalRewardsPaid: rewardsSummary.total,
       })
     }
     if (epoch && validationTime) getData()
   }, [epoch, validationTime])
 
   const [rewardsData, setRewardsData] = useState({
-    totalRewardsPaid: 0,
     maxRewardPaid: 0,
     minRewardPaid: 0,
   })
 
   useEffect(() => {
     async function getData() {
-      const [
-        rewardsSummary,
-        maxRewardsPaid,
-        minRewardsPaid,
-      ] = await Promise.all([
-        getEpochRewardsSummary(epoch),
+      const [maxRewardsPaid, minRewardsPaid] = await Promise.all([
         getEpochIdentityRewards(epoch, 0, 2),
         getEpochIdentityRewards(epoch, epochData.rewardsPaidCount - 1, 1),
       ])
@@ -122,7 +120,6 @@ export default function TopHeader() {
         )
 
       setRewardsData({
-        totalRewardsPaid: rewardsSummary.total,
         maxRewardPaid,
         minRewardPaid,
       })
@@ -195,7 +192,7 @@ export default function TopHeader() {
             <Card
               name="Rewards paid"
               value={usdFmt(
-                Math.round(rewardsData.totalRewardsPaid * marketData.price)
+                Math.round(epochData.totalRewardsPaid * marketData.price)
               )}
               tooltip="Total rewards paid for last validation"
               href={`/epoch/${epoch}/rewards`}
