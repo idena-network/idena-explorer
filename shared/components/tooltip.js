@@ -20,6 +20,10 @@ export default function TooltipText({
         <Tooltip
           target={ref.current}
           placement={placement}
+          arrowClassName="toolTipArrow"
+          popperClassName="toolTipPopper"
+          innerClassName="toolTipInnerPopper"
+          offset="0 8px"
           isOpen={tooltipOpen}
           toggle={() => setTooltipOpen(!tooltipOpen)}
         >

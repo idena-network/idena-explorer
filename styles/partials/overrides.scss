@@ -617,10 +617,22 @@ p {
   [data-toggle='tooltip'] {
     border-bottom: 1px dotted $grey;
   }
+
+  a {
+    color: $grey;
+    border-bottom: 0;
+    &:hover {
+      color: $primary;
+    }
+  }
 }
 
 .control-label[data-toggle='tooltip'] {
   border-bottom: 1px dotted $grey;
+}
+
+.hide-border {
+  border-bottom: 0 !important;
 }
 
 .pager {
@@ -751,11 +763,24 @@ p {
   display: block;
 }
 
+.toolTipArrow:before {
+  border-bottom-color: #53565c !important;
+}
+
+.toolTipPopper {
+  opacity: 1 !important;
+}
+
+.toolTipInnerPopper {
+  background-color: #53565c !important;
+  border-radius: 8px !important;
+}
+
 .topheader {
   overflow: hidden;
   position: relative;
   border-radius: 12px;
-  margin: 6px;
+  margin: 6px 6px 12px 6px;
   height: 4.4rem;
 
   @media (#{$max_phones--big}) {
