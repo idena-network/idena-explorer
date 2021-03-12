@@ -7,6 +7,7 @@ import TooltipText from './tooltip'
 import {usdFmt, precise1, precise2} from '../utils/utils'
 
 import {
+  GOD_ADDRESS,
   getOnlineIdentitiesCount,
   getCoingeckoData,
   getOnlineMinersCount,
@@ -102,7 +103,9 @@ export default function TopHeader() {
       ])
 
       const maxRewardPaidIdentity = maxRewardsPaid.find(
-        (item) => item.state !== 'Undefined'
+        (item) =>
+          item.address &&
+          item.address.toLowerCase() !== GOD_ADDRESS.toLowerCase()
       )
       const maxRewardPaid =
         maxRewardPaidIdentity &&
