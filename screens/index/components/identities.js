@@ -69,7 +69,7 @@ export default function Identities({epoch}) {
             lineHeight: '3px',
           }}
         >
-          <p className="label">{`Size: ${payload[0].value}`}</p>
+          <p className="label">{`Size: ${payload[0] && payload[0].value}`}</p>
           <p className="label">{`Epoch: ${epochInfo.epoch}`}</p>
         </div>
       )

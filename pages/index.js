@@ -7,10 +7,13 @@ import Layout from '../shared/components/layout'
 import EpochsTable from '../screens/index/components/epochs'
 import TopAddress from '../screens/index/components/topaddress'
 import Miners from '../screens/index/components/miners'
+import Mempool from '../screens/index/components/mempool'
+import Blocks from '../screens/epoch/components/blocks'
+import Transactions from '../screens/epoch/components/transactions'
 import {getLastEpoch, getUpgradeVoting} from '../shared/api'
 import {useHash, useHashChange} from '../shared/utils/useHashChange'
 
-const DEFAULT_TAB = '#epochs'
+const DEFAULT_TAB = '#transactions'
 
 function Home() {
   const {hash, setHash, hashReady} = useHash()
@@ -72,6 +75,24 @@ function Home() {
                       }
                       href={DEFAULT_TAB}
                     >
+                      <h3>Transactions</h3>
+                    </NavLink>
+                  </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#blocks'}
+                      href="#blocks"
+                    >
+                      <h3>Blocks</h3>
+                    </NavLink>
+                  </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#epochs'}
+                      href="#epochs"
+                    >
                       <h3>Epochs</h3>
                     </NavLink>
                   </NavItem>
@@ -93,6 +114,15 @@ function Home() {
                       <h3>Online miners</h3>
                     </NavLink>
                   </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#mempool'}
+                      href="#mempool"
+                    >
+                      <h3>Mempool</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
@@ -101,19 +131,48 @@ function Home() {
           <TabContent activeTab={hashReady ? hash || DEFAULT_TAB : ''}>
             <TabPane tabId={DEFAULT_TAB}>
               <div className="card">
-                <EpochsTable
+                <Transactions
+                  epoch={data && data.epoch}
+                  limit={10}
                   visible={hashReady && (hash === DEFAULT_TAB || hash === '')}
                 />
               </div>
             </TabPane>
+
+            <TabPane tabId="#blocks">
+              <div className="card">
+                <Blocks
+                  epoch={data && data.epoch}
+                  limit={10}
+                  visible={hashReady && hash === '#blocks'}
+                />
+              </div>
+            </TabPane>
+
+            <TabPane tabId="#epochs">
+              <div className="card">
+                <EpochsTable visible={hashReady && hash === '#epochs'} />
+              </div>
+            </TabPane>
+
             <TabPane tabId="#topaddress">
               <div className="card">
                 <TopAddress visible={hashReady && hash === '#topaddress'} />
               </div>
             </TabPane>
+
             <TabPane tabId="#miners">
               <div className="card">
                 <Miners visible={hashReady && hash === '#miners'} />
+              </div>
+            </TabPane>
+            <TabPane tabId="#mempool">
+              <div className="card">
+                <Mempool
+                  epoch={50}
+                  limit={10}
+                  visible={hashReady && hash === '#miners'}
+                />
               </div>
             </TabPane>
           </TabContent>
