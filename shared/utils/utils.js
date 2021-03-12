@@ -10,18 +10,14 @@ export function precise6(x) {
   return Math.round(x * 1000000) / 1000000
 }
 
-export function dnaFmt(amount, curency = 'iDNA') {
+export function dnaFmt(amount, curency = ' iDNA') {
   if (!amount || amount === 0) return '-'
-  return `${Number(amount)
-    .toLocaleString('en-US')
-    .replace(/,/g, ' ')} ${curency}`
+  return `${Number(amount).toLocaleString()}${curency}`
 }
 
 export function usdFmt(amount, curency = '$') {
   if (!amount || amount === 0) return '-'
-  return `${curency}${Number(amount)
-    .toLocaleString('en-US')
-    .replace(/,/g, ' ')}`
+  return `${curency}${Number(amount).toLocaleString()}`
 }
 
 export function txTypeFmt(txType, data) {

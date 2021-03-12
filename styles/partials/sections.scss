@@ -101,6 +101,13 @@
     margin-bottom: rem(12px);
     font-weight: $font-weight-medium;
   }
+
+  &__link {
+    &:hover {
+      color: $primary;
+      cursor: pointer;
+    }
+  }
 }
 
 .text_block {

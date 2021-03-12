@@ -30,6 +30,7 @@
     "react-icons": "^3.11.0",
     "react-query": "^1.2.9",
     "reactstrap": "^8.4.1",
+    "recharts": "^2.0.8",
     "sass-rem": "^2.0.1",
     "uuid": "^8.0.0"
   },

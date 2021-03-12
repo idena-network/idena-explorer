@@ -26,7 +26,7 @@ function Home() {
     <Layout>
       <section className="section section_info">
         <div className="row">
-          <Identities />
+          <Identities epoch={data && data.epoch} />
           <Supply />
         </div>
       </section>
@@ -56,23 +56,6 @@ function Home() {
               <span>Last validation results</span>
             </a>
           </Link>
-
-          <Link href="/circulation">
-            <a className="btn btn-secondary btn-small">
-              <i className="icon icon--coins" />
-              <span>Circulating supply</span>
-            </a>
-          </Link>
-
-          <a
-            className="btn btn-secondary btn-small"
-            href="https://idena.today"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <i className="icon icon--timer" />
-            <span>More stats</span>
-          </a>
         </div>
       </section>
 

@@ -1,6 +1,7 @@
+import Link from 'next/link'
 import {useEffect, useState} from 'react'
 import {getCirculatingSupply, getTotalCoins} from '../../../shared/api'
-import {precise2, dnaFmt} from '../../../shared/utils/utils'
+import {precise1, dnaFmt} from '../../../shared/utils/utils'
 import TooltipText from '../../../shared/components/tooltip'
 
 const initialState = {
@@ -20,43 +21,41 @@ export default function Supply() {
       ])
       setState({
         totalSupply: dnaFmt(
-          precise2(
-            parseFloat(totalCoins.totalBalance) +
-              parseFloat(totalCoins.totalStake)
-          )
+          precise1(
+            (parseFloat(totalCoins.totalBalance) +
+              parseFloat(totalCoins.totalStake)) /
+              1000000
+          ),
+          'M'
         ),
-        totalBurnt: dnaFmt(precise2(totalCoins.burnt)),
-        circulatingSupply: dnaFmt(precise2(supply)),
+        totalBurnt: dnaFmt(precise1(totalCoins.burnt / 1000000), 'M iDNA'),
+        circulatingSupply: dnaFmt(Math.round(supply)),
       })
     }
     getData()
   }, [])
 
   return (
-    <div className="col-12 col-sm-9">
-      <h1>Coins supply</h1>
+    <div className="col-12 col-sm-6">
+      <h1>Coins</h1>
       <div className="card">
         <div className="info_block">
           <div className="row">
-            <div className="col-12 col-sm-4 bordered-col">
-              <h3 className="info_block__accent">{state.totalSupply}</h3>
-              <TooltipText
-                className="control-label"
-                data-toggle="tooltip"
-                tooltip="Total coins available (including staked coins)"
-              >
-                Total supply
-              </TooltipText>
-            </div>
-            <div className="col-12 col-sm-4 bordered-col">
-              <h3 className="info_block__accent">{state.circulatingSupply}</h3>
-              <TooltipText
-                tooltip="Total supply minus by vested and staked coins"
-                className="control-label"
-                data-toggle="tooltip"
-              >
-                Circulating supply
-              </TooltipText>
+            <div className="col-12 col-sm-8 bordered-col">
+              <Link href="/circulation">
+                <div className="info_block__link">
+                  <h3 className="info_block__accent">
+                    {state.circulatingSupply}
+                  </h3>
+                  <TooltipText
+                    tooltip="Click to see details about total / cirtulating supply"
+                    className="control-label"
+                    data-toggle="tooltip"
+                  >
+                    Total / circulating supply
+                  </TooltipText>
+                </div>
+              </Link>
             </div>
             <div className="col-12 col-sm-4 bordered-col">
               <h3 className="info_block__accent">{state.totalBurnt}</h3>

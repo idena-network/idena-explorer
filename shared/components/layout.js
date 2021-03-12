@@ -76,9 +76,9 @@ function Layout({children, title = '', signinLoading = false}) {
               <div className="header_logo">
                 <a className="" href="/">
                   <img
-                    src="/static/images/idena-logo.svg"
+                    src="/static/images/idena_black.svg"
                     alt="Idena"
-                    width="40px"
+                    width="44px"
                   />
                 </a>
               </div>
