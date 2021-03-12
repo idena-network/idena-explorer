@@ -93,6 +93,7 @@ export default function Identities({epoch}) {
                       dataKey="network"
                       stroke="#578fff"
                       fill="#578fffaa"
+                      strokeWidth={2}
                       activeDot={{r: 3}}
                       dot={{r: 0}}
                     />

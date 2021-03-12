@@ -52,7 +52,7 @@ export default function Supply() {
                     className="control-label"
                     data-toggle="tooltip"
                   >
-                    Total / circulating supply
+                    Circulating supply
                   </TooltipText>
                 </div>
               </Link>
