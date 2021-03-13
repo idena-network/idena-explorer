@@ -438,3 +438,11 @@ export async function getTimeLockContract(address) {
 export async function getOracleVotingContract(address) {
   return getResponse(apiClient().get(`oracleVotingContract/${address}`))
 }
+
+export async function getMempoolTxs(limit) {
+  return getResponse(
+    apiClient().get(`Mempool/Txs`, {
+      params: {limit},
+    })
+  )
+}

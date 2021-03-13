@@ -2,15 +2,18 @@ import Link from 'next/link'
 import {useInfiniteQuery, useQuery} from 'react-query'
 import {Fragment} from 'react'
 import {GoRepoForked} from 'react-icons/go'
-import {precise2, precise6, dateTimeFmt} from '../../../shared/utils/utils'
+import {
+  precise2,
+  precise6,
+  epochFmt,
+  timeSince,
+} from '../../../shared/utils/utils'
 import {getEpochBlocks, getEpochBlocksCount} from '../../../shared/api'
 import TooltipText, {IconTooltip} from '../../../shared/components/tooltip'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 30
-
-export default function Blocks({epoch, visible}) {
-  const fetchBlocks = (_, epoch, skip = 0) => getEpochBlocks(epoch, skip, LIMIT)
+export default function Blocks({epoch, visible, limit = 30}) {
+  const fetchBlocks = (_, epoch, skip = 0) => getEpochBlocks(epoch, skip, limit)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     epoch > 0 && visible && `${epoch}/blocks`,
@@ -18,8 +21,8 @@ export default function Blocks({epoch, visible}) {
     fetchBlocks,
     {
       getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+        lastGroup && lastGroup.length === limit
+          ? allGroups.length * limit
           : false,
     }
   )
@@ -35,6 +38,7 @@ export default function Blocks({epoch, visible}) {
         <thead>
           <tr>
             <th>Block</th>
+            <th>Timestamp</th>
             <th>Block issuer</th>
             <th>
               <TooltipText tooltip="Block issuer verifiable random score">
@@ -51,7 +55,6 @@ export default function Blocks({epoch, visible}) {
               </TooltipText>
             </th>
             <th>Flags</th>
-            <th>Created</th>
             <th>
               Size,
               <br />
@@ -89,6 +92,7 @@ export default function Blocks({epoch, visible}) {
                         </Link>
                       </div>
                     </td>
+                    <td>{timeSince(item.timestamp)}</td>
                     <td>
                       {item.proposer ? (
                         <>
@@ -131,7 +135,6 @@ export default function Blocks({epoch, visible}) {
                         (!item.upgrade || item.upgrade <= 0) &&
                         '-'}
                     </td>
-                    <td>{dateTimeFmt(item.timestamp)}</td>
                     <td>{item.fullSize}</td>
                     <td>{item.txCount || '-'}</td>
                     <td>{precise2(item.coins.minted)}</td>
@@ -151,9 +154,9 @@ export default function Blocks({epoch, visible}) {
           className="btn btn-small"
           onClick={() => fetchMore()}
         >
-          Show more (
+          Show more blocks (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
-          {blocksCount})
+          {blocksCount}) in epoch {epochFmt(epoch)}
         </button>
       </div>
     </div>

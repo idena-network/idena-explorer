@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import {useInfiniteQuery, useQuery} from 'react-query'
 import {
-  dateTimeFmt,
+  timeSince,
   precise6,
   dnaFmt,
+  epochFmt,
   txTypeFmt,
 } from '../../../shared/utils/utils'
 import {
@@ -13,11 +14,9 @@ import {
 import {SkeletonRows} from '../../../shared/components/skeleton'
 import {WarningTooltip} from '../../../shared/components/tooltip'
 
-const LIMIT = 30
-
-export default function Transactions({epoch, visible}) {
+export default function Transactions({epoch, visible, limit = 30}) {
   const fetchTransactions = (_, epoch, skip = 0) =>
-    getEpochTransactions(epoch, skip, LIMIT)
+    getEpochTransactions(epoch, skip, limit)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     epoch > 0 && `${epoch}/transactions`,
@@ -25,8 +24,8 @@ export default function Transactions({epoch, visible}) {
     fetchTransactions,
     {
       getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+        lastGroup && lastGroup.length === limit
+          ? allGroups.length * limit
           : false,
     }
   )
@@ -42,10 +41,10 @@ export default function Transactions({epoch, visible}) {
         <thead>
           <tr>
             <th>Transaction</th>
+            <th style={{width: 100}}>Timestamp</th>
             <th>From</th>
             <th>To</th>
             <th>Amount</th>
-            <th style={{width: 100}}>Timestamp</th>
             <th style={{width: 100}}>Type</th>
           </tr>
         </thead>
@@ -69,6 +68,7 @@ export default function Transactions({epoch, visible}) {
                       </Link>
                     </div>
                   </td>
+                  <td>{timeSince(item.timestamp)}</td>
                   <td>
                     <div className="user-pic">
                       <img
@@ -129,7 +129,6 @@ export default function Transactions({epoch, visible}) {
                       ''
                     )}
                   </td>
-                  <td>{dateTimeFmt(item.timestamp)}</td>
                   <td>
                     {item.txReceipt && !item.txReceipt.success && (
                       <WarningTooltip
@@ -154,9 +153,9 @@ export default function Transactions({epoch, visible}) {
           className="btn btn-small"
           onClick={() => fetchMore()}
         >
-          Show more (
+          Show more txs (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
-          {txsCount})
+          {txsCount}) in epoch {epochFmt(epoch)}
         </button>
       </div>
     </div>
