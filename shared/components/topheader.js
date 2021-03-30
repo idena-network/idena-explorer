@@ -2,12 +2,10 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import {useEffect, useState} from 'react'
-import Link from 'next/link'
 import TooltipText from './tooltip'
 import {usdFmt, precise1, precise2} from '../utils/utils'
 
 import {
-  GOD_ADDRESS,
   getOnlineIdentitiesCount,
   getCoingeckoData,
   getOnlineMinersCount,
@@ -15,8 +13,7 @@ import {
   getLastEpoch,
   getEpoch,
   getEpochIdentitiesSummary,
-  getEpochIdentityRewardsCount,
-  getEpochIdentityRewards,
+  getEpochRewardBounds,
 } from '../api'
 
 export default function TopHeader() {
@@ -46,7 +43,6 @@ export default function TopHeader() {
   const [epochData, setEpochData] = useState({
     prevNodesCount: 0,
     epochDuration: 0,
-    rewardsPaidCount: 0,
     totalRewardsPaid: 0,
   })
 
@@ -55,12 +51,10 @@ export default function TopHeader() {
       const [
         identitiesSummary,
         {validationTime: prevValidationTime},
-        rewardsPaidCount,
         rewardsSummary,
       ] = await Promise.all([
         getEpochIdentitiesSummary(epoch - 1),
         getEpoch(epoch),
-        getEpochIdentityRewardsCount(epoch),
         getEpochRewardsSummary(epoch),
       ])
 
@@ -83,7 +77,6 @@ export default function TopHeader() {
       setEpochData({
         prevNodesCount,
         epochDuration,
-        rewardsPaidCount,
         totalRewardsPaid: rewardsSummary.total,
       })
     }
@@ -97,28 +90,19 @@ export default function TopHeader() {
 
   useEffect(() => {
     async function getData() {
-      const [maxRewardsPaid, minRewardsPaid] = await Promise.all([
-        getEpochIdentityRewards(epoch, 0, 2),
-        getEpochIdentityRewards(epoch, epochData.rewardsPaidCount - 1, 1),
-      ])
-
-      const maxRewardPaidIdentity = maxRewardsPaid.find(
-        (item) =>
-          item.address &&
-          item.address.toLowerCase() !== GOD_ADDRESS.toLowerCase()
-      )
-      const maxRewardPaid =
-        maxRewardPaidIdentity &&
-        maxRewardPaidIdentity.rewards.reduce(
-          (total, item) => total + item.balance * 1 + item.stake * 1,
-          0
-        )
-
-      const minRewardPaidIdentity = minRewardsPaid[0]
+      const rewardBounds = await getEpochRewardBounds(epoch)
       const minRewardPaid =
-        minRewardPaidIdentity &&
-        minRewardPaidIdentity.rewards.reduce(
-          (total, item) => total + item.balance * 1 + item.stake * 1,
+        rewardBounds &&
+        rewardBounds.reduce(
+          (min, item) =>
+            min <= item.min.amount * 1 ? min : item.min.amount * 1,
+          rewardBounds && rewardBounds[0] ? rewardBounds[0].min.amount : 0
+        )
+      const maxRewardPaid =
+        rewardBounds &&
+        rewardBounds.reduce(
+          (max, item) =>
+            max >= item.max.amount * 1 ? max : item.max.amount * 1,
           0
         )
 
@@ -127,7 +111,7 @@ export default function TopHeader() {
         minRewardPaid,
       })
     }
-    if (epoch && epochData.rewardsPaidCount) getData()
+    if (epoch) getData()
   }, [epoch, epochData])
 
   useEffect(() => {
