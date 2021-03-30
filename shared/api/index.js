@@ -4,8 +4,6 @@ const BASE_API_URL = 'https://api.idena.org/api'
 
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 
-export const GOD_ADDRESS = '0xcbb98843270812eece07bfb82d26b4881a33aa91'
-
 function apiCoingecko() {
   return axios.create({
     baseURL: COINGECKO_API_URL,
@@ -223,6 +221,10 @@ export async function getEpochFlipStatesSummary(epoch) {
 
 export async function getEpochRewardsSummary(epoch) {
   return getResponse(apiClient().get(`epoch/${epoch}/rewardsSummary`))
+}
+
+export async function getEpochRewardBounds(epoch) {
+  return getResponse(apiClient().get(`epoch/${epoch}/rewardBounds`))
 }
 
 export async function getEpochIdentityRewards(epoch, skip, limit) {
