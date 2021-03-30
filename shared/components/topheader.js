@@ -174,7 +174,7 @@ export default function TopHeader() {
                   : '-'
               }
               tooltip="Last validation rewards paid per user"
-              href={`/epoch/${epoch}/rewards`}
+              href={`/epoch/${epoch + 1}/rewards`}
             />
             <Card
               name="Rewards paid"
@@ -182,7 +182,7 @@ export default function TopHeader() {
                 Math.round(epochData.totalRewardsPaid * marketData.price)
               )}
               tooltip="Total rewards paid for last validation"
-              href={`/epoch/${epoch}/rewards`}
+              href={`/epoch/${epoch + 1}/rewards`}
             />
             <Card
               name="Market cap"
