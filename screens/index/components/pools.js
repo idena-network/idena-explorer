@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import {useInfiniteQuery} from 'react-query'
-import {getPools} from '../../../shared/api'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {getPools, getPoolsCount} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 
 const LIMIT = 30
@@ -19,6 +19,8 @@ export default function Pools({visible}) {
           : false,
     }
   )
+
+  const {data: poolsCount} = useQuery(visible && 'poolsCount', getPoolsCount)
 
   return (
     <div className="table-responsive">
@@ -65,7 +67,9 @@ export default function Pools({visible}) {
           className="btn btn-small"
           onClick={() => fetchMore()}
         >
-          Show more
+          Show more (
+          {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
+          {poolsCount})
         </button>
       </div>
     </div>
