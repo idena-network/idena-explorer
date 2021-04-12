@@ -8,6 +8,7 @@ import {
   getIdentity,
   getAddressInfo,
   getContract,
+  getPool,
 } from '../../shared/api'
 import {dnaFmt, identityStatusFmt} from '../../shared/utils/utils'
 import Transactions from '../../screens/address/components/transactions'
@@ -45,6 +46,11 @@ function Address() {
     (_, address) => getContract(address)
   )
 
+  const {data: poolInfo} = useQuery(
+    address && ['pool', address],
+    (_, address) => getPool(address)
+  )
+
   return (
     <Layout title={`Address ${address}`}>
       <section className="section">
@@ -60,6 +66,7 @@ function Address() {
         addressInfo={addressInfo}
         identityInfo={identityInfo}
         contractInfo={contractInfo}
+        poolInfo={poolInfo}
       />
 
       <section className="section section_tabs">
@@ -137,7 +144,7 @@ function Address() {
   )
 }
 
-function AddressData({addressInfo, identityInfo, contractInfo}) {
+function AddressData({addressInfo, identityInfo, contractInfo, poolInfo}) {
   return (
     <>
       <section className="section section_info">
@@ -272,6 +279,46 @@ function AddressData({addressInfo, identityInfo, contractInfo}) {
                 <div className="section__group">
                   <div className="control-label">Type:</div>
                   <div className="text_block">{contractInfo.type}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {poolInfo && (
+        <section className="section section_details">
+          <h3>Pool</h3>
+          <div className="card">
+            <div className="row">
+              <div className="col-12 col-sm-6">
+                <div className="section__group">
+                  <div className="control-label">Address:</div>
+                  <div
+                    className="text_block text_block--ellipsis"
+                    style={{width: '80%'}}
+                  >
+                    <Link
+                      href="/pool/[address]"
+                      as={`/pool/${poolInfo.address}`}
+                    >
+                      <a>
+                        <img
+                          alt="user-pic"
+                          className="user-pic"
+                          width="32"
+                          src={`https://robohash.org/${poolInfo.address.toLowerCase()}`}
+                        />
+                        <span>{poolInfo.address}</span>
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-sm-6">
+                <div className="section__group">
+                  <div className="control-label">Size:</div>
+                  <div className="text_block">{poolInfo.size}</div>
                 </div>
               </div>
             </div>
