@@ -12,6 +12,7 @@ import Blocks from '../screens/epoch/components/blocks'
 import Transactions from '../screens/epoch/components/transactions'
 import {getLastEpoch, getUpgradeVoting} from '../shared/api'
 import {useHash, useHashChange} from '../shared/utils/useHashChange'
+import Pools from '../screens/index/components/pools'
 
 const DEFAULT_TAB = '#transactions'
 
@@ -117,6 +118,15 @@ function Home() {
 
                   <NavItem>
                     <NavLink
+                      active={hashReady && hash === '#pools'}
+                      href="#pools"
+                    >
+                      <h3>Pools</h3>
+                    </NavLink>
+                  </NavItem>
+
+                  <NavItem>
+                    <NavLink
                       active={hashReady && hash === '#mempool'}
                       href="#mempool"
                     >
@@ -166,12 +176,19 @@ function Home() {
                 <Miners visible={hashReady && hash === '#miners'} />
               </div>
             </TabPane>
+
+            <TabPane tabId="#pools">
+              <div className="card">
+                <Pools visible={hashReady && hash === '#pools'} />
+              </div>
+            </TabPane>
+
             <TabPane tabId="#mempool">
               <div className="card">
                 <Mempool
                   epoch={50}
                   limit={10}
-                  visible={hashReady && hash === '#miners'}
+                  visible={hashReady && hash === '#mempool'}
                 />
               </div>
             </TabPane>

@@ -448,3 +448,27 @@ export async function getMempoolTxs(limit) {
     })
   )
 }
+
+export async function getPoolsCount() {
+  return getResponse(apiClient().get(`pools/count`))
+}
+
+export async function getPools(limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`pools`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
+export async function getPool(address) {
+  return getResponse(apiClient().get(`pool/${address}`))
+}
+
+export async function getPoolDelegators(address, limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`pool/${address}/delegators`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
