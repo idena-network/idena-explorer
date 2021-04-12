@@ -37,14 +37,15 @@ export default function Identities({epoch}) {
 
   useEffect(() => {
     async function getData() {
-      const epochData = await getEpochsData(1, 50)
-      const nextChartData = epochData.reverse().map((item) => {
-        return {
+      const epochData = await getEpochsData(51)
+      const nextChartData = epochData
+        .reverse()
+        .map((item) => ({
           epoch: item.epoch + 1,
           date: item.validationTime,
           network: item.validatedCount,
-        }
-      })
+        }))
+        .splice(0, epochData.length - 1)
       setChartData(nextChartData)
     }
     getData()

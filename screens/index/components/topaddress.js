@@ -7,15 +7,16 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 const LIMIT = 30
 
 export default function TopAddress({visible}) {
-  const fetchBalances = (_, skip = 0) => getBalances(skip, LIMIT)
+  const fetchBalances = (_, continuationToken = null) =>
+    getBalances(LIMIT, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && 'topaddress',
     fetchBalances,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )

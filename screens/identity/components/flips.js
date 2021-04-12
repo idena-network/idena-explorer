@@ -17,8 +17,8 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 const LIMIT = 10
 
 export default function Flips({address, visible}) {
-  const fetchFlips = (_, address, skip = 0) =>
-    getAddressFlips(address, skip, LIMIT)
+  const fetchFlips = (_, address, continuationToken = null) =>
+    getAddressFlips(address, LIMIT, continuationToken)
 
   const {data: lastEpoch} = useQuery(address && visible && 'lastEpoch', () =>
     getLastEpoch()
@@ -29,9 +29,9 @@ export default function Flips({address, visible}) {
     [address],
     fetchFlips,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )

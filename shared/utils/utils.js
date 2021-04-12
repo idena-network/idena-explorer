@@ -23,7 +23,7 @@ export function usdFmt(amount, curency = '$') {
 export function txTypeFmt(txType, data) {
   if (txType === 'OnlineStatusTx')
     return `Mining status ${
-      data ? (data.BecomeOnline ? 'On' : 'Off') : 'switching'
+      data ? (data.becomeOnline ? 'On' : 'Off') : 'switching'
     }`
   if (txType === 'SubmitFlipTx') return `Submit flip`
   if (txType === 'SendTx') return `Send`

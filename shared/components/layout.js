@@ -37,21 +37,21 @@ function Layout({children, title = '', signinLoading = false}) {
       } else {
         for (let i = 0; i < result.length; i += 1) {
           const item = result[i]
-          switch (item.Name) {
+          switch (item.name) {
             case 'Address': {
-              Router.push(`/address/${item.Value}`)
+              Router.push(`/address/${item.value}`)
               return
             }
             case 'Block': {
-              Router.push(`/block/${item.Value}`)
+              Router.push(`/block/${item.value}`)
               return
             }
             case 'Flip': {
-              Router.push(`/flip/${item.Value}`)
+              Router.push(`/flip/${item.value}`)
               return
             }
             case 'Transaction': {
-              Router.push(`/transaction/${item.Value}`)
+              Router.push(`/transaction/${item.value}`)
               return
             }
             default:

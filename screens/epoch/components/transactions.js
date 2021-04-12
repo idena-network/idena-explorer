@@ -15,17 +15,17 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 import {WarningTooltip} from '../../../shared/components/tooltip'
 
 export default function Transactions({epoch, visible, limit = 30}) {
-  const fetchTransactions = (_, epoch, skip = 0) =>
-    getEpochTransactions(epoch, skip, limit)
+  const fetchTransactions = (_, epoch, continuationToken = null) =>
+    getEpochTransactions(epoch, limit, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     epoch > 0 && `${epoch}/transactions`,
     [epoch],
     fetchTransactions,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === limit
-          ? allGroups.length * limit
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
@@ -119,13 +119,14 @@ export default function Transactions({epoch, visible, limit = 30}) {
                   </td>
                   <td>
                     {dnaFmt(
-                      precise6(
-                        !(item.amount * 1) &&
-                          typeof item.transfer !== 'undefined'
-                          ? item.transfer
-                          : (!item.txReceipt || item.txReceipt.success) &&
-                              item.amount
-                      ),
+                      (!item.txReceipt || item.txReceipt.success) &&
+                        precise6(
+                          !(item.amount * 1) &&
+                            typeof item.transfer !== 'undefined'
+                            ? item.transfer
+                            : (!item.txReceipt || item.txReceipt.success) &&
+                                item.amount
+                        ),
                       ''
                     )}
                   </td>

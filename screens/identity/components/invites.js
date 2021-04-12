@@ -8,17 +8,17 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 const LIMIT = 10
 
 export default function Invites({address, visible}) {
-  const fetchInvites = (_, address, skip = 0) =>
-    getIdentityInvites(address, skip, LIMIT)
+  const fetchInvites = (_, address, continuationToken = null) =>
+    getIdentityInvites(address, LIMIT, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     address && visible && `${address}/invites`,
     [address],
     fetchInvites,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
