@@ -9,8 +9,9 @@ import TooltipText from '../../../../shared/components/tooltip'
 import Distribution from '../../../../screens/epoch/rewards/components/distribution'
 import {useHash, useHashChange} from '../../../../shared/utils/useHashChange'
 import Penalty from '../../../../screens/epoch/rewards/components/penalty'
+import Ages from '../../../../screens/epoch/rewards/components/ages'
 
-const DEFAULT_TAB = '#distribution'
+const DEFAULT_TAB = '#ages'
 
 function Rewards() {
   const router = useRouter()
@@ -53,12 +54,19 @@ function Rewards() {
                 <ul className="nav nav-tabs" role="tablist">
                   <NavItem>
                     <NavLink
-                      active={
-                        hashReady && (hash === DEFAULT_TAB || hash === '')
-                      }
-                      href={DEFAULT_TAB}
+                      active={hashReady && (hash === '#ages' || hash === '')}
+                      href="#ages"
                     >
                       <h3>Rewards distribution</h3>
+                    </NavLink>
+                  </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#distribution'}
+                      href="#distribution"
+                    >
+                      <h3>Rewarded identities</h3>
                     </NavLink>
                   </NavItem>
 
@@ -76,11 +84,22 @@ function Rewards() {
           </div>
 
           <TabContent activeTab={hashReady ? hash || DEFAULT_TAB : ''}>
-            <TabPane tabId={DEFAULT_TAB}>
+            <TabPane tabId="#ages">
+              <div className="card">
+                <Ages
+                  epoch={epoch - 1}
+                  visible={hashReady && hash === '#ages'}
+                />
+              </div>
+            </TabPane>
+
+            <TabPane tabId="#distribution">
               <div className="card">
                 <Distribution
                   epoch={epoch - 1}
-                  visible={hashReady && (hash === DEFAULT_TAB || hash === '')}
+                  visible={
+                    hashReady && (hash === '#distribution' || hash === '')
+                  }
                 />
               </div>
             </TabPane>
