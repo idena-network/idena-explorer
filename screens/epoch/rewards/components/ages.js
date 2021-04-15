@@ -33,8 +33,6 @@ export default function Ages({epoch, visible}) {
   useEffect(() => {
     async function getData() {
       const rewardBounds = await getEpochRewardBounds(epoch)
-      console.log('rewardBounds=', rewardBounds)
-
       setData(rewardBounds)
     }
     if (epoch > 0) getData()
