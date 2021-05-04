@@ -106,17 +106,16 @@ function Address() {
                           <h3>Mining penalty</h3>
                         </NavLink>
                       </NavItem>
-
-                      <NavItem>
-                        <NavLink
-                          active={hashReady && hash === '#history'}
-                          href="#history"
-                        >
-                          <h3>Balance history</h3>
-                        </NavLink>
-                      </NavItem>
                     </>
                   )}
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#history'}
+                      href="#history"
+                    >
+                      <h3>Balance history</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
