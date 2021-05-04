@@ -61,7 +61,7 @@ export default function BalanceHistory({address, visible}) {
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={3} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={5} />)}
           {data.map(
             (page) =>
               page &&
