@@ -31,6 +31,8 @@ export default function BalanceHistory({address, visible}) {
     if (reason === 'Penalty') return 'Mining penalty'
     if (reason === 'EpochPenaltyReset') return 'New epoch'
     if (reason === 'EmbeddedContract') return 'Smart contract'
+    if (reason === 'DustClearing') return 'Clean small balance'
+    if (reason === 'Initial') return 'Initial balance'
     return reason
   }
 
