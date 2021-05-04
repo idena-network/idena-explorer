@@ -275,6 +275,14 @@ export async function getBalances(limit, continuationToken) {
   )
 }
 
+export async function getBalanceChanges(address, limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`address/${address}/balance/changes`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
 export async function getOnlineIdentities(limit, continuationToken) {
   return getResponse(
     apiClient().get('onlineidentities', {

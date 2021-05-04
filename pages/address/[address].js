@@ -14,6 +14,7 @@ import {dnaFmt, identityStatusFmt} from '../../shared/utils/utils'
 import Transactions from '../../screens/address/components/transactions'
 import Rewards from '../../screens/address/components/rewards'
 import Penalties from '../../screens/address/components/penalties'
+import BalanceHistory from '../../screens/address/components/balances'
 import {useHash, useHashChange} from '../../shared/utils/useHashChange'
 import TooltipText from '../../shared/components/tooltip'
 
@@ -105,6 +106,15 @@ function Address() {
                           <h3>Mining penalty</h3>
                         </NavLink>
                       </NavItem>
+
+                      <NavItem>
+                        <NavLink
+                          active={hashReady && hash === '#history'}
+                          href="#history"
+                        >
+                          <h3>Balance history</h3>
+                        </NavLink>
+                      </NavItem>
                     </>
                   )}
                 </ul>
@@ -134,6 +144,14 @@ function Address() {
                 <Penalties
                   address={address}
                   visible={hashReady && hash === '#penalty'}
+                />
+              </div>
+            </TabPane>
+            <TabPane tabId="#history">
+              <div className="card">
+                <BalanceHistory
+                  address={address}
+                  visible={hashReady && hash === '#history'}
                 />
               </div>
             </TabPane>
