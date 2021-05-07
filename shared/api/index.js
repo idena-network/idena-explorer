@@ -261,6 +261,26 @@ export async function getEpochsDataCount() {
   return getResponse(apiClient().get('epochs/count'))
 }
 
+export async function getHardForkVotingHistory(upgrade) {
+  return getResponse(apiClient().get(`upgrade/${upgrade}/votinghistory`))
+}
+
+export async function getUpgradeVotings(limit) {
+  return getResponse(apiClient().get('UpgradeVotings', {params: {limit}}))
+}
+
+export async function getUpgradeData(upgrade) {
+  return getResponse(apiClient().get(`upgrade/${upgrade}`))
+}
+
+export async function getValidatorsCount() {
+  return getResponse(apiClient().get('validators/count'))
+}
+
+export async function getOnlineValidatorsCount() {
+  return getResponse(apiClient().get('onlineValidators/count'))
+}
+
 export async function getOnlineMinersCount() {
   return getResponse(apiClient().get('onlineminers/count'))
 }
