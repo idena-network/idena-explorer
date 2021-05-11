@@ -17,7 +17,6 @@ export default function HardForkHistory({upgrade = 0, votesRequired = 0}) {
 
   useEffect(() => {
     async function getData() {
-      console.log('upgrade=', upgrade, votesRequired)
       const result = await getHardForkVotingHistory(upgrade)
       const data =
         result &&
@@ -28,7 +27,7 @@ export default function HardForkHistory({upgrade = 0, votesRequired = 0}) {
       setChartData(data)
     }
     getData()
-  }, [])
+  }, [upgrade])
 
   function CustomTooltip({payload, label, active}) {
     if (active) {
@@ -64,7 +63,7 @@ export default function HardForkHistory({upgrade = 0, votesRequired = 0}) {
             </linearGradient>
           </defs>
           <Area
-            type="monotone"
+            type="stepAfter"
             dataKey="votes"
             stroke="#578fff"
             fillOpacity={1}
