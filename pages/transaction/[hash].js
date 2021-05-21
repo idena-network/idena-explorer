@@ -159,6 +159,32 @@ function TxDetails(data) {
                   <div className="text_block">{data.txReceipt.errorMsg}</div>
                 </>
               )}
+              {data.txReceipt && data.txReceipt.contractAddress && (
+                <>
+                  <hr />
+                  <div className="control-label">Contract:</div>
+
+                  <div
+                    className="text_block text_block--ellipsis"
+                    style={{width: '80%'}}
+                  >
+                    <Link
+                      href="/contract/[address]"
+                      as={`/contract/${data.txReceipt.contractAddress}`}
+                    >
+                      <a>
+                        <img
+                          className="user-pic"
+                          src={`https://robohash.idena.io/${data.txReceipt.contractAddress.toLowerCase()}`}
+                          alt="pic"
+                          width="32"
+                        />
+                        <span>{data.txReceipt.contractAddress}</span>
+                      </a>
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
