@@ -28,7 +28,9 @@ export default function VotingData({address}) {
                 <div className="text_block">{(fact && fact.title) || '-'}</div>
                 <hr />
                 <div className="control-label">Description:</div>
-                <div className="text_block">{(fact && fact.desc) || '-'}</div>
+                <div className="text_block" style={{whiteSpace: 'pre-line'}}>
+                  {(fact && fact.desc) || '-'}
+                </div>
                 <hr />
               </div>
               <div className="col-12 col-sm-3">
