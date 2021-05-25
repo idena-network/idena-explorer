@@ -465,6 +465,10 @@ export async function getTimeLockContract(address) {
   return getResponse(apiClient().get(`timeLockContract/${address}`))
 }
 
+export async function getOracleLockContract(address) {
+  return getResponse(apiClient().get(`oracleLockContract/${address}`))
+}
+
 export async function getOracleVotingContract(address) {
   return getResponse(apiClient().get(`oracleVotingContract/${address}`))
 }
