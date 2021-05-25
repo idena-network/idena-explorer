@@ -1,6 +1,6 @@
 import {useQuery} from 'react-query'
 import {getOracleVotingContract} from '../../../shared/api'
-import {hexToObject} from '../../../shared/utils/utils'
+import {dnaFmt, hexToObject} from '../../../shared/utils/utils'
 
 export default function VotingData({address}) {
   const {data: votingInfo} = useQuery(
@@ -29,33 +29,51 @@ export default function VotingData({address}) {
                 <div className="text_block">{(fact && fact.title) || '-'}</div>
                 <hr />
                 <div className="control-label">Description:</div>
-                <div className="text_block" style={{whiteSpace: 'pre-line'}}>
+                <div
+                  className="text_block text_block--ellipsis"
+                  style={{whiteSpace: 'pre-line', width: '100%'}}
+                >
                   {(fact && fact.desc) || '-'}
                 </div>
                 <hr />
               </div>
-              <div className="col-12 col-sm-3">
+              <div className="col-12 col-sm-4">
                 <div className="control-label">Committee size:</div>
                 <div className="text_block">
                   {(votingInfo && votingInfo.committeeSize) || '-'}
                 </div>
               </div>
-              <div className="col-12 col-sm-3">
+              <div className="col-12 col-sm-4">
                 <div className="control-label">Quorum required:</div>
                 <div className="text_block">
-                  {(votingInfo && votingInfo.quorum) || '-'}
+                  {(votingInfo && votingInfo.quorum) || '-'}%
                 </div>
               </div>
-              <div className="col-12 col-sm-3">
+              <div className="col-12 col-sm-4">
+                <div className="control-label">Winner threshold:</div>
+                <div className="text_block">
+                  {(votingInfo && votingInfo.winnerThreshold) || '-'}%
+                </div>
+              </div>
+              <div className="col-12">
+                <hr />
+              </div>
+              <div className="col-12 col-sm-4">
                 <div className="control-label">Secret votes:</div>
                 <div className="text_block">
                   {(votingInfo && votingInfo.voteProofsCount) || '-'}
                 </div>
               </div>
-              <div className="col-12 col-sm-3">
+              <div className="col-12 col-sm-4">
                 <div className="control-label">Votes:</div>
                 <div className="text_block">
                   {(votingInfo && votingInfo.votesCount) || '-'}
+                </div>
+              </div>
+              <div className="col-12 col-sm-4">
+                <div className="control-label">Voting deposit:</div>
+                <div className="text_block">
+                  {votingInfo && dnaFmt(votingInfo.minPayment, '')} iDNA
                 </div>
               </div>
             </div>
@@ -80,7 +98,7 @@ export default function VotingData({address}) {
                     {fact &&
                       fact.options &&
                       fact.options.map((item) => (
-                        <tr>
+                        <tr key={item.id}>
                           <td>{item.value}</td>
                           <td>
                             {optionVotes(item.id, votingInfo.votes) || '-'}
