@@ -132,3 +132,13 @@ export function iconToSrc(icon) {
 export function isIdentityPassed(state) {
   return state === 'Newbie' || state === 'Verified' || state === 'Human'
 }
+
+export function hexToObject(hex) {
+  try {
+    return JSON.parse(
+      new TextDecoder().decode(Buffer.from(hex.substring(2), 'hex'))
+    )
+  } catch {
+    return {}
+  }
+}

@@ -1,5 +1,6 @@
 import {useQuery} from 'react-query'
 import {getOracleVotingContract} from '../../../shared/api'
+import {hexToObject} from '../../../shared/utils/utils'
 
 export default function VotingData({address}) {
   const {data: votingInfo} = useQuery(
@@ -95,16 +96,6 @@ export default function VotingData({address}) {
       </section>
     </>
   )
-}
-
-function hexToObject(hex) {
-  try {
-    return JSON.parse(
-      new TextDecoder().decode(Buffer.from(hex.substring(2), 'hex'))
-    )
-  } catch {
-    return {}
-  }
 }
 
 function optionVotes(option, votes) {
