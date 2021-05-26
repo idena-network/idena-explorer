@@ -69,7 +69,7 @@ export function identityStatusFmt(s) {
   return s
 }
 
-export function timeSince(str) {
+export function timeSince(str, addBreak = false) {
   const timeStamp = new Date(str)
   const now = new Date()
   const secondsPast = Math.round((now.getTime() - timeStamp) / 1000)
@@ -81,7 +81,7 @@ export function timeSince(str) {
   }
 
   if (secondsPast > 300) {
-    return dateTimeFmt(str)
+    return addBreak ? [dateFmt(str), <br />, timeFmt(str)] : dateTimeFmt(str)
   }
 }
 

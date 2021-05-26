@@ -93,7 +93,7 @@ export default function Blocks({epoch, visible, limit = 30}) {
                         </Link>
                       </div>
                     </td>
-                    <td>{timeSince(item.timestamp)}</td>
+                    <td>{timeSince(item.timestamp, true)}</td>
                     <td>
                       {item.proposer ? (
                         <>
