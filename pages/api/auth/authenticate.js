@@ -4,6 +4,11 @@ import {FAUNA_IDX_NAME} from '../../../shared/utils/constants'
 import {checkSignature} from '../../../shared/utils/ether'
 
 export default async (req, res) => {
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+
   const {token, signature} = req.body
 
   const result = await serverClient.query(

@@ -79,6 +79,10 @@ async function newSession(req, res) {
 }
 
 export default async (req, res) => {
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
   if (req.method === 'GET') {
     return getSession(req, res)
   }
