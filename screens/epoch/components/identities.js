@@ -9,8 +9,8 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 const LIMIT = 30
 
 export default function Identities({epoch, visible}) {
-  const fetchIdentities = (_, epoch, skip = 0) =>
-    getEpochIdentities(epoch, skip, LIMIT)
+  const fetchIdentities = (_, epoch, continuationToken = null) =>
+    getEpochIdentities(epoch, LIMIT, continuationToken)
   const fetchEpochIdentitiesCount = (_, epoch) => getEpochIdentitiesCount(epoch)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
@@ -18,9 +18,9 @@ export default function Identities({epoch, visible}) {
     [epoch],
     fetchIdentities,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
@@ -57,7 +57,7 @@ export default function Identities({epoch, visible}) {
                     <td>
                       <div className="user-pic">
                         <img
-                          src={`https://robohash.org/${item.address.toLowerCase()}`}
+                          src={`https://robohash.idena.io/${item.address.toLowerCase()}`}
                           alt="pic"
                           width="32"
                         />

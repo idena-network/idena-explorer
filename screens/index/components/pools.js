@@ -1,18 +1,17 @@
 import Link from 'next/link'
-import {useInfiniteQuery} from 'react-query'
-import {precise2, dnaFmt} from '../../../shared/utils/utils'
-import {getBalances} from '../../../shared/api'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {getPools, getPoolsCount} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 
 const LIMIT = 30
 
-export default function TopAddress({visible}) {
-  const fetchBalances = (_, continuationToken = null) =>
-    getBalances(LIMIT, continuationToken)
+export default function Pools({visible}) {
+  const fetchPools = (_, continuationToken = null) =>
+    getPools(LIMIT, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
-    visible && 'topaddress',
-    fetchBalances,
+    visible && 'pools',
+    fetchPools,
     {
       getFetchMore: (lastGroup) =>
         lastGroup && lastGroup.continuationToken
@@ -21,14 +20,15 @@ export default function TopAddress({visible}) {
     }
   )
 
+  const {data: poolsCount} = useQuery(visible && 'poolsCount', getPoolsCount)
+
   return (
     <div className="table-responsive">
       <table className="table">
         <thead>
           <tr>
             <th>Address</th>
-            <th>Balance</th>
-            <th>Stake</th>
+            <th>Size</th>
           </tr>
         </thead>
         <tbody>
@@ -47,16 +47,12 @@ export default function TopAddress({visible}) {
                       />
                     </div>
                     <div className="text_block text_block--ellipsis">
-                      <Link
-                        href="/address/[address]"
-                        as={`/address/${item.address}`}
-                      >
+                      <Link href="/pool/[address]" as={`/pool/${item.address}`}>
                         <a>{item.address}</a>
                       </Link>
                     </div>
                   </td>
-                  <td>{dnaFmt(precise2(item.balance), '')}</td>
-                  <td>{dnaFmt(precise2(item.stake), '')}</td>
+                  <td>{item.size}</td>
                 </tr>
               ))
           )}
@@ -71,7 +67,9 @@ export default function TopAddress({visible}) {
           className="btn btn-small"
           onClick={() => fetchMore()}
         >
-          Show more
+          Show more (
+          {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
+          {poolsCount})
         </button>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import {useInfiniteQuery, useQuery} from 'react-query'
 import {
-  dateTimeFmt,
+  timeSince,
   precise6,
   dnaFmt,
+  epochFmt,
   txTypeFmt,
 } from '../../../shared/utils/utils'
 import {
@@ -11,21 +12,20 @@ import {
   getEpochTransactionsCount,
 } from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
+import {WarningTooltip} from '../../../shared/components/tooltip'
 
-const LIMIT = 30
-
-export default function Transactions({epoch, visible}) {
-  const fetchTransactions = (_, epoch, skip = 0) =>
-    getEpochTransactions(epoch, skip, LIMIT)
+export default function Transactions({epoch, visible, limit = 30}) {
+  const fetchTransactions = (_, epoch, continuationToken = null) =>
+    getEpochTransactions(epoch, limit, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     epoch > 0 && `${epoch}/transactions`,
     [epoch],
     fetchTransactions,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
@@ -41,10 +41,10 @@ export default function Transactions({epoch, visible}) {
         <thead>
           <tr>
             <th>Transaction</th>
+            <th style={{width: 100}}>Timestamp</th>
             <th>From</th>
             <th>To</th>
             <th>Amount</th>
-            <th style={{width: 100}}>Timestamp</th>
             <th style={{width: 100}}>Type</th>
           </tr>
         </thead>
@@ -68,10 +68,11 @@ export default function Transactions({epoch, visible}) {
                       </Link>
                     </div>
                   </td>
+                  <td>{timeSince(item.timestamp)}</td>
                   <td>
                     <div className="user-pic">
                       <img
-                        src={`https://robohash.org/${
+                        src={`https://robohash.idena.io/${
                           item.from && item.from.toLowerCase()
                         }`}
                         alt="pic"
@@ -95,7 +96,7 @@ export default function Transactions({epoch, visible}) {
                       <>
                         <div className="user-pic">
                           <img
-                            src={`https://robohash.org/${item.to.toLowerCase()}`}
+                            src={`https://robohash.idena.io/${item.to.toLowerCase()}`}
                             alt="pic"
                             width="32"
                           />
@@ -118,17 +119,27 @@ export default function Transactions({epoch, visible}) {
                   </td>
                   <td>
                     {dnaFmt(
-                      precise6(
-                        !(item.amount * 1) &&
-                          typeof item.transfer !== 'undefined'
-                          ? item.transfer
-                          : item.amount
-                      ),
+                      (!item.txReceipt || item.txReceipt.success) &&
+                        precise6(
+                          !(item.amount * 1) &&
+                            typeof item.transfer !== 'undefined'
+                            ? item.transfer
+                            : (!item.txReceipt || item.txReceipt.success) &&
+                                item.amount
+                        ),
                       ''
                     )}
                   </td>
-                  <td>{dateTimeFmt(item.timestamp)}</td>
-                  <td>{txTypeFmt(item.type, item.data)}</td>
+                  <td>
+                    {item.txReceipt && !item.txReceipt.success && (
+                      <WarningTooltip
+                        tooltip={`Smart contract failed: ${item.txReceipt.errorMsg}`}
+                        placement="top"
+                        style={{marginRight: '5px'}}
+                      />
+                    )}
+                    {txTypeFmt(item.type, item.data)}
+                  </td>
                 </tr>
               ))
           )}
@@ -143,9 +154,9 @@ export default function Transactions({epoch, visible}) {
           className="btn btn-small"
           onClick={() => fetchMore()}
         >
-          Show more (
+          Show more txs (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
-          {txsCount})
+          {txsCount}) in epoch {epochFmt(epoch)}
         </button>
       </div>
     </div>

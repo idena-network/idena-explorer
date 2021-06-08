@@ -71,7 +71,7 @@ function TxDetails(data) {
                   <a>
                     <img
                       className="user-pic"
-                      src={`https://robohash.org/${data.from.toLowerCase()}`}
+                      src={`https://robohash.idena.io/${data.from.toLowerCase()}`}
                       alt="pic"
                       width="32"
                     />
@@ -84,15 +84,31 @@ function TxDetails(data) {
               <div className="control-label">Amount:</div>
               <div className="text_block">
                 {dnaFmt(
-                  !data.amount && typeof data.transfer !== 'undefined'
-                    ? data.transfer
-                    : data.amount
+                  (!data.txReceipt || data.txReceipt.success) &&
+                    data.amount * 1 +
+                      (data.data && typeof data.data.transfer !== 'undefined'
+                        ? data.data.transfer * 1
+                        : 0)
                 )}
               </div>
 
               <hr />
               <div className="control-label">Size, bytes:</div>
               <div className="text_block">{data.size}</div>
+              {data.txReceipt && (
+                <>
+                  <hr />
+                  <div className="control-label">Smart contract call:</div>
+                  <div
+                    className="text_block"
+                    style={{
+                      color: `${data.txReceipt.success ? 'inherit' : 'red'}`,
+                    }}
+                  >
+                    {data.txReceipt.success ? 'Success' : 'Error'}
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className="col-12 col-sm-6">
@@ -117,7 +133,7 @@ function TxDetails(data) {
                     <a>
                       <img
                         className="user-pic"
-                        src={`https://robohash.org/${data.to.toLowerCase()}`}
+                        src={`https://robohash.idena.io/${data.to.toLowerCase()}`}
                         alt="pic"
                         width="32"
                       />
@@ -136,6 +152,39 @@ function TxDetails(data) {
               <hr />
               <div className="control-label">Fee limit:</div>
               <div className="text_block">{data.maxFee}</div>
+              {data.txReceipt && data.txReceipt.errorMsg && (
+                <>
+                  <hr />
+                  <div className="control-label">Error:</div>
+                  <div className="text_block">{data.txReceipt.errorMsg}</div>
+                </>
+              )}
+              {data.txReceipt && data.txReceipt.contractAddress && (
+                <>
+                  <hr />
+                  <div className="control-label">Contract:</div>
+
+                  <div
+                    className="text_block text_block--ellipsis"
+                    style={{width: '80%'}}
+                  >
+                    <Link
+                      href="/contract/[address]"
+                      as={`/contract/${data.txReceipt.contractAddress}`}
+                    >
+                      <a>
+                        <img
+                          className="user-pic"
+                          src={`https://robohash.idena.io/${data.txReceipt.contractAddress.toLowerCase()}`}
+                          alt="pic"
+                          width="32"
+                        />
+                        <span>{data.txReceipt.contractAddress}</span>
+                      </a>
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

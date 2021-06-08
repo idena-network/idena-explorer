@@ -8,8 +8,8 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 const LIMIT = 30
 
 export default function Invitations({epoch, visible}) {
-  const fetchInvitations = (_, epoch, skip = 0) =>
-    getEpochInvitations(epoch, skip, LIMIT)
+  const fetchInvitations = (_, epoch, continuationToken = null) =>
+    getEpochInvitations(epoch, LIMIT, continuationToken)
 
   const {data: invitesSummary} = useQuery(
     epoch > 0 && visible && ['epoch/invitesSummary', epoch],
@@ -21,9 +21,9 @@ export default function Invitations({epoch, visible}) {
     [epoch],
     fetchInvitations,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
@@ -76,7 +76,7 @@ export default function Invitations({epoch, visible}) {
                     <td>
                       <div className="user-pic">
                         <img
-                          src={`https://robohash.org/${item.author.toLowerCase()}`}
+                          src={`https://robohash.idena.io/${item.author.toLowerCase()}`}
                           alt="pic"
                           width="32"
                         />
@@ -115,7 +115,7 @@ export default function Invitations({epoch, visible}) {
                         <>
                           <div className="user-pic">
                             <img
-                              src={`https://robohash.org/${item.activationAuthor.toLowerCase()}`}
+                              src={`https://robohash.idena.io/${item.activationAuthor.toLowerCase()}`}
                               alt="pic"
                               width="32"
                             />

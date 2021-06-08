@@ -7,10 +7,14 @@ import Layout from '../shared/components/layout'
 import EpochsTable from '../screens/index/components/epochs'
 import TopAddress from '../screens/index/components/topaddress'
 import Miners from '../screens/index/components/miners'
-import {getLastEpoch} from '../shared/api'
+import Mempool from '../screens/index/components/mempool'
+import Blocks from '../screens/epoch/components/blocks'
+import Transactions from '../screens/epoch/components/transactions'
+import {getLastEpoch, getUpgradeVoting} from '../shared/api'
 import {useHash, useHashChange} from '../shared/utils/useHashChange'
+import Pools from '../screens/index/components/pools'
 
-const DEFAULT_TAB = '#epochs'
+const DEFAULT_TAB = '#transactions'
 
 function Home() {
   const {hash, setHash, hashReady} = useHash()
@@ -18,21 +22,32 @@ function Home() {
 
   const {data} = useQuery('last-epoch', getLastEpoch)
 
+  const isHardForkData = useQuery('hard-fork', getUpgradeVoting)
+  const isHardFork =
+    isHardForkData && isHardForkData.data && isHardForkData.data.length > 0
+
   return (
     <Layout>
       <section className="section section_info">
         <div className="row">
+          <Identities epoch={data && data.epoch} />
           <Supply />
-          <Identities />
         </div>
       </section>
 
       <section className="section ">
         <div className="button-group">
-          <Link href="/circulation">
+          {isHardFork && (
+            <Link href="/hardfork">
+              <a className="btn btn-secondary btn-small">
+                <span>Hard fork voting</span>
+              </a>
+            </Link>
+          )}
+
+          <Link href="/epoch/[epoch]" as={`/epoch/${data && data.epoch}`}>
             <a className="btn btn-secondary btn-small">
-              <i className="icon icon--coins" />
-              <span>Circulating supply</span>
+              <span>Current epoch data</span>
             </a>
           </Link>
 
@@ -42,19 +57,9 @@ function Home() {
           >
             <a className="btn btn-secondary btn-small">
               <i className="icon icon--report" />
-              <span>Validation results</span>
+              <span>Last validation results</span>
             </a>
           </Link>
-
-          <a
-            className="btn btn-secondary btn-small"
-            href="https://idena.today"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <i className="icon icon--timer" />
-            <span>More stats</span>
-          </a>
         </div>
       </section>
 
@@ -70,6 +75,24 @@ function Home() {
                         hashReady && (hash === DEFAULT_TAB || hash === '')
                       }
                       href={DEFAULT_TAB}
+                    >
+                      <h3>Transactions</h3>
+                    </NavLink>
+                  </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#blocks'}
+                      href="#blocks"
+                    >
+                      <h3>Blocks</h3>
+                    </NavLink>
+                  </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#epochs'}
+                      href="#epochs"
                     >
                       <h3>Epochs</h3>
                     </NavLink>
@@ -92,6 +115,24 @@ function Home() {
                       <h3>Online miners</h3>
                     </NavLink>
                   </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#pools'}
+                      href="#pools"
+                    >
+                      <h3>Pools</h3>
+                    </NavLink>
+                  </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#mempool'}
+                      href="#mempool"
+                    >
+                      <h3>Mempool</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
@@ -100,19 +141,55 @@ function Home() {
           <TabContent activeTab={hashReady ? hash || DEFAULT_TAB : ''}>
             <TabPane tabId={DEFAULT_TAB}>
               <div className="card">
-                <EpochsTable
+                <Transactions
+                  epoch={data && data.epoch}
+                  limit={10}
                   visible={hashReady && (hash === DEFAULT_TAB || hash === '')}
                 />
               </div>
             </TabPane>
+
+            <TabPane tabId="#blocks">
+              <div className="card">
+                <Blocks
+                  epoch={data && data.epoch}
+                  limit={10}
+                  visible={hashReady && hash === '#blocks'}
+                />
+              </div>
+            </TabPane>
+
+            <TabPane tabId="#epochs">
+              <div className="card">
+                <EpochsTable visible={hashReady && hash === '#epochs'} />
+              </div>
+            </TabPane>
+
             <TabPane tabId="#topaddress">
               <div className="card">
                 <TopAddress visible={hashReady && hash === '#topaddress'} />
               </div>
             </TabPane>
+
             <TabPane tabId="#miners">
               <div className="card">
                 <Miners visible={hashReady && hash === '#miners'} />
+              </div>
+            </TabPane>
+
+            <TabPane tabId="#pools">
+              <div className="card">
+                <Pools visible={hashReady && hash === '#pools'} />
+              </div>
+            </TabPane>
+
+            <TabPane tabId="#mempool">
+              <div className="card">
+                <Mempool
+                  epoch={50}
+                  limit={10}
+                  visible={hashReady && hash === '#mempool'}
+                />
               </div>
             </TabPane>
           </TabContent>

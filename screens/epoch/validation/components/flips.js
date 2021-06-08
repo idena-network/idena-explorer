@@ -8,7 +8,8 @@ import {iconToSrc} from '../../../../shared/utils/utils'
 const LIMIT = 30
 
 export default function Flips({epoch, visible}) {
-  const fetchFlips = (_, epoch, skip = 0) => getEpochFlips(epoch, skip, LIMIT)
+  const fetchFlips = (_, epoch, continuationToken = null) =>
+    getEpochFlips(epoch, LIMIT, continuationToken)
 
   const {data: flipsCount} = useQuery(
     epoch > 0 && visible && ['epoch/flipsCount', epoch],
@@ -20,9 +21,9 @@ export default function Flips({epoch, visible}) {
     [epoch],
     fetchFlips,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
@@ -98,7 +99,7 @@ export default function Flips({epoch, visible}) {
                   <td>
                     <div className="user-pic">
                       <img
-                        src={`https://robohash.org/${item.author.toLowerCase()}`}
+                        src={`https://robohash.idena.io/${item.author.toLowerCase()}`}
                         alt="pic"
                         width="32"
                       />

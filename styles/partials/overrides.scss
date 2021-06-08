@@ -501,7 +501,6 @@ p {
 
 .tabs {
   -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 
 .nav-tabs {
@@ -617,10 +616,22 @@ p {
   [data-toggle='tooltip'] {
     border-bottom: 1px dotted $grey;
   }
+
+  a {
+    color: $grey;
+    border-bottom: 0;
+    &:hover {
+      color: $primary;
+    }
+  }
 }
 
 .control-label[data-toggle='tooltip'] {
   border-bottom: 1px dotted $grey;
+}
+
+.hide-border {
+  border-bottom: 0 !important;
 }
 
 .pager {
@@ -749,4 +760,107 @@ p {
 }
 .show {
   display: block;
+}
+
+.toolTipArrow:before {
+  border-bottom-color: #53565c !important;
+}
+
+.toolTipPopper {
+  opacity: 1 !important;
+}
+
+.toolTipInnerPopper {
+  background-color: #53565c !important;
+  border-radius: 8px !important;
+}
+
+.topheader {
+  overflow: hidden;
+  position: relative;
+  border-radius: 12px;
+  margin: 6px 6px 12px 6px;
+  height: 4.4rem;
+
+  @media (#{$max_phones--big}) {
+    border-radius: 0px;
+    margin: 12px;
+    height: 77px;
+  }
+
+  .topheader-div {
+    position: absolute;
+    background-color: #53565c; // #f5f6f7;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: -30px;
+    overflow-x: hide;
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (#{$max_phones--big}) {
+      overflow-x: scroll;
+      background-color: #f5f6f7;
+      animation: scroll 2s ease-out 1s;
+      animation-fill-mode: forwards;
+      @keyframes scroll {
+        100% {
+          left: -20px;
+        }
+      }
+    }
+
+    @media all and (min-width: 0px) and (max-width: 500px) {
+    }
+  }
+
+  .item {
+    min-width: 150px;
+    white-space: nowrap;
+    padding: 0.5rem 0;
+    display: table-cell;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #96999e;
+
+    @media (#{$max_phones--big}) {
+      padding: 0.5rem 0.3rem;
+    }
+
+    .content {
+      position: relative;
+      cursor: default;
+
+      &:hover,
+      &:active {
+        background-color: #ffffff10;
+      }
+
+      display: block;
+      padding: 7px 20px;
+      border-radius: 12px;
+      @media (#{$max_phones--big}) {
+        background-color: #53565c;
+        line-height: 22px;
+
+        &:hover,
+        &:active {
+          background-color: #53565c;
+        }
+      }
+      a {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        display: inline;
+      }
+    }
+  }
 }

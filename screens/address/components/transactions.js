@@ -8,21 +8,22 @@ import {
 } from '../../../shared/utils/utils'
 import {getTransactions, getTransactionsCount} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
+import {WarningTooltip} from '../../../shared/components/tooltip'
 
 const LIMIT = 30
 
 export default function Transactions({address, visible}) {
-  const fetchTransactions = (_, address, skip = 0) =>
-    getTransactions(address, skip, LIMIT)
+  const fetchTransactions = (_, address, continuationToken = null) =>
+    getTransactions(address, LIMIT, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     address && visible && `${address}/transactions`,
     [address],
     fetchTransactions,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
@@ -69,7 +70,7 @@ export default function Transactions({address, visible}) {
                   <td>
                     <div className="user-pic">
                       <img
-                        src={`https://robohash.org/${
+                        src={`https://robohash.idena.io/${
                           item.from && item.from.toLowerCase()
                         }`}
                         alt="pic"
@@ -97,7 +98,7 @@ export default function Transactions({address, visible}) {
                       <>
                         <div className="user-pic">
                           <img
-                            src={`https://robohash.org/${item.to.toLowerCase()}`}
+                            src={`https://robohash.idena.io/${item.to.toLowerCase()}`}
                             alt="pic"
                             width="32"
                           />
@@ -124,17 +125,28 @@ export default function Transactions({address, visible}) {
                   </td>
                   <td>
                     {dnaFmt(
-                      precise6(
-                        !(item.amount * 1) &&
-                          typeof item.transfer !== 'undefined'
-                          ? item.transfer
-                          : item.amount
-                      ),
+                      (!item.txReceipt || item.txReceipt.success) &&
+                        precise6(
+                          !(item.amount * 1) &&
+                            typeof item.transfer !== 'undefined'
+                            ? item.transfer
+                            : (!item.txReceipt || item.txReceipt.success) &&
+                                item.amount
+                        ),
                       ''
                     )}
                   </td>
                   <td>{dateTimeFmt(item.timestamp)}</td>
-                  <td>{txTypeFmt(item.type, item.data)}</td>
+                  <td>
+                    {item.txReceipt && !item.txReceipt.success && (
+                      <WarningTooltip
+                        tooltip={`Smart contract failed: ${item.txReceipt.errorMsg}`}
+                        placement="top"
+                        style={{marginRight: '5px'}}
+                      />
+                    )}
+                    {txTypeFmt(item.type, item.data)}
+                  </td>
                 </tr>
               ))
           )}

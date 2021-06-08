@@ -13,6 +13,7 @@ import Link from 'next/link'
 import {Helmet} from 'react-helmet'
 import {search} from '../api'
 import {useSession} from '../utils/session-context'
+import TopHeader from './topheader'
 
 function Layout({children, title = '', signinLoading = false}) {
   const router = useRouter()
@@ -36,21 +37,21 @@ function Layout({children, title = '', signinLoading = false}) {
       } else {
         for (let i = 0; i < result.length; i += 1) {
           const item = result[i]
-          switch (item.Name) {
+          switch (item.name) {
             case 'Address': {
-              Router.push(`/address/${item.Value}`)
+              Router.push(`/address/${item.value}`)
               return
             }
             case 'Block': {
-              Router.push(`/block/${item.Value}`)
+              Router.push(`/block/${item.value}`)
               return
             }
             case 'Flip': {
-              Router.push(`/flip/${item.Value}`)
+              Router.push(`/flip/${item.value}`)
               return
             }
             case 'Transaction': {
-              Router.push(`/transaction/${item.Value}`)
+              Router.push(`/transaction/${item.value}`)
               return
             }
             default:
@@ -67,6 +68,7 @@ function Layout({children, title = '', signinLoading = false}) {
       <Helmet>
         <title>{title}</title>
       </Helmet>
+      <TopHeader />
       <header className="header">
         <div className="container">
           <div className="row justify-content-between align-items-center">
@@ -74,9 +76,9 @@ function Layout({children, title = '', signinLoading = false}) {
               <div className="header_logo">
                 <a className="" href="/">
                   <img
-                    src="/static/images/idena-logo.svg"
+                    src="/static/images/idena_black.svg"
                     alt="Idena"
-                    width="40px"
+                    width="44px"
                   />
                 </a>
               </div>
@@ -115,7 +117,7 @@ function Layout({children, title = '', signinLoading = false}) {
                       <div className="user-pic">
                         <img
                           className="user-avatar"
-                          src={`https://robohash.org/${session.address}`}
+                          src={`https://robohash.idena.io/${session.address}`}
                           alt="pic"
                           width="40"
                         />

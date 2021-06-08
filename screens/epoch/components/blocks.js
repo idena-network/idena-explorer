@@ -1,24 +1,29 @@
 import Link from 'next/link'
 import {useInfiniteQuery, useQuery} from 'react-query'
 import {Fragment} from 'react'
-import {precise2, precise6, dateTimeFmt} from '../../../shared/utils/utils'
+import {GoRepoForked} from 'react-icons/go'
+import {
+  precise2,
+  precise6,
+  epochFmt,
+  timeSince,
+} from '../../../shared/utils/utils'
 import {getEpochBlocks, getEpochBlocksCount} from '../../../shared/api'
 import TooltipText, {IconTooltip} from '../../../shared/components/tooltip'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 
-const LIMIT = 30
-
-export default function Blocks({epoch, visible}) {
-  const fetchBlocks = (_, epoch, skip = 0) => getEpochBlocks(epoch, skip, LIMIT)
+export default function Blocks({epoch, visible, limit = 30}) {
+  const fetchBlocks = (_, epoch, continuationToken = null) =>
+    getEpochBlocks(epoch, limit, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     epoch > 0 && visible && `${epoch}/blocks`,
     [epoch],
     fetchBlocks,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
@@ -34,6 +39,7 @@ export default function Blocks({epoch, visible}) {
         <thead>
           <tr>
             <th>Block</th>
+            <th>Timestamp</th>
             <th>Block issuer</th>
             <th>
               <TooltipText tooltip="Block issuer verifiable random score">
@@ -50,7 +56,6 @@ export default function Blocks({epoch, visible}) {
               </TooltipText>
             </th>
             <th>Flags</th>
-            <th>Created</th>
             <th>
               Size,
               <br />
@@ -88,12 +93,13 @@ export default function Blocks({epoch, visible}) {
                         </Link>
                       </div>
                     </td>
+                    <td>{timeSince(item.timestamp, true)}</td>
                     <td>
                       {item.proposer ? (
                         <>
                           <div className="user-pic">
                             <img
-                              src={`https://robohash.org/${item.proposer.toLowerCase()}`}
+                              src={`https://robohash.idena.io/${item.proposer.toLowerCase()}`}
                               alt="pic"
                               width="32"
                             />
@@ -119,13 +125,17 @@ export default function Blocks({epoch, visible}) {
                     </td>
                     <td>{precise6(item.vrfProposerThreshold)}</td>
                     <td>
-                      {item.flags
-                        ? item.flags.map((flag) => (
-                            <BlockFlag key={flag} flag={flag} />
-                          ))
-                        : '-'}
+                      {item.flags &&
+                        item.flags.map((flag) => (
+                          <BlockFlag key={flag} flag={flag} />
+                        ))}
+                      {item.upgrade > 0 && (
+                        <BlockFlag key="upgrade" flag="HardForkUpdate" />
+                      )}
+                      {!item.flags &&
+                        (!item.upgrade || item.upgrade <= 0) &&
+                        '-'}
                     </td>
-                    <td>{dateTimeFmt(item.timestamp)}</td>
                     <td>{item.fullSize}</td>
                     <td>{item.txCount || '-'}</td>
                     <td>{precise2(item.coins.minted)}</td>
@@ -145,9 +155,9 @@ export default function Blocks({epoch, visible}) {
           className="btn btn-small"
           onClick={() => fetchMore()}
         >
-          Show more (
+          Show more blocks (
           {data.reduce((prev, cur) => prev + (cur ? cur.length : 0), 0)} of{' '}
-          {blocksCount})
+          {blocksCount}) in epoch {epochFmt(epoch)}
         </button>
       </div>
     </div>
@@ -180,6 +190,13 @@ function BlockFlag({flag}) {
           placement="top"
         />
       )
+    case 'HardForkUpdate':
+      return (
+        <TooltipText tooltip="Hard fork update is activated" placement="top">
+          <GoRepoForked color="black" />
+        </TooltipText>
+      )
+
     case 'AfterLongSessionStarted':
       return (
         <IconTooltip

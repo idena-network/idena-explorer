@@ -59,7 +59,7 @@ function Identity() {
           <div className="col-auto">
             <div className="section_main__image">
               <img
-                src={`https://robohash.org/${address.toLowerCase()}`}
+                src={`https://robohash.idena.io/${address.toLowerCase()}`}
                 alt="pic"
                 width="160"
               />
@@ -194,9 +194,40 @@ function IdentityData({addressInfo, identityInfo, onlineStatus, identityAge}) {
                 <div className={`onlineMiner ${onlineMiner ? '' : 'hidden'}`}>
                   <hr />
                   <div className="control-label">Online miner status:</div>
-                  <div className="text_block">
-                    {onlineStatus && onlineStatus.online ? 'On' : 'Off'}
-                  </div>
+                  {onlineStatus && onlineStatus.delegatee && (
+                    <>
+                      <div className="text_block">
+                        <span>Delegated to</span>
+                      </div>
+                      <div
+                        className="text_block text_block--ellipsis"
+                        style={{width: '50%'}}
+                      >
+                        <Link
+                          href="/pool/[address]"
+                          as={`/pool/${onlineStatus.delegatee.address}`}
+                        >
+                          <a>
+                            <img
+                              alt="user-pic"
+                              className="user-pic"
+                              width="32"
+                              src={`https://robohash.idena.io/${onlineStatus.delegatee.address.toLowerCase()}`}
+                            />
+                            <span>{onlineStatus.delegatee.address}</span>
+                          </a>
+                        </Link>
+                      </div>
+                    </>
+                  )}
+                  {!onlineStatus ||
+                    (!onlineStatus.delegatee && (
+                      <>
+                        <div className="text_block">
+                          {onlineStatus && onlineStatus.online ? 'On' : 'Off'}
+                        </div>
+                      </>
+                    ))}
                   <hr />
                   <TooltipText
                     className="control-label"

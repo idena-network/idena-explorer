@@ -12,15 +12,16 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 const LIMIT = 30
 
 export default function Miners({visible}) {
-  const fetchIdentities = (_, skip = 0) => getOnlineIdentities(skip, LIMIT)
+  const fetchIdentities = (_, continuationToken = null) =>
+    getOnlineIdentities(LIMIT, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `identities`,
     fetchIdentities,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )
@@ -59,7 +60,7 @@ export default function Miners({visible}) {
                     <td>
                       <div className="user-pic">
                         <img
-                          src={`https://robohash.org/${item.address.toLowerCase()}`}
+                          src={`https://robohash.idena.io/${item.address.toLowerCase()}`}
                           alt="pic"
                           width="32"
                         />

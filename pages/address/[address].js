@@ -3,11 +3,18 @@ import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
 import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
-import {getEpochsCount, getIdentity, getAddressInfo} from '../../shared/api'
+import {
+  getEpochsCount,
+  getIdentity,
+  getAddressInfo,
+  getContract,
+  getPool,
+} from '../../shared/api'
 import {dnaFmt, identityStatusFmt} from '../../shared/utils/utils'
 import Transactions from '../../screens/address/components/transactions'
 import Rewards from '../../screens/address/components/rewards'
 import Penalties from '../../screens/address/components/penalties'
+import BalanceHistory from '../../screens/address/components/balances'
 import {useHash, useHashChange} from '../../shared/utils/useHashChange'
 import TooltipText from '../../shared/components/tooltip'
 
@@ -35,6 +42,16 @@ function Address() {
     (_, address) => getIdentity(address)
   )
 
+  const {data: contractInfo} = useQuery(
+    address && ['contract', address],
+    (_, address) => getContract(address)
+  )
+
+  const {data: poolInfo} = useQuery(
+    address && ['pool', address],
+    (_, address) => getPool(address)
+  )
+
   return (
     <Layout title={`Address ${address}`}>
       <section className="section">
@@ -46,7 +63,12 @@ function Address() {
         </div>
       </section>
 
-      <AddressData addressInfo={addressInfo} identityInfo={identityInfo} />
+      <AddressData
+        addressInfo={addressInfo}
+        identityInfo={identityInfo}
+        contractInfo={contractInfo}
+        poolInfo={poolInfo}
+      />
 
       <section className="section section_tabs">
         <div className="tabs">
@@ -86,6 +108,14 @@ function Address() {
                       </NavItem>
                     </>
                   )}
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#history'}
+                      href="#history"
+                    >
+                      <h3>Balance history</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
@@ -116,6 +146,14 @@ function Address() {
                 />
               </div>
             </TabPane>
+            <TabPane tabId="#history">
+              <div className="card">
+                <BalanceHistory
+                  address={address}
+                  visible={hashReady && hash === '#history'}
+                />
+              </div>
+            </TabPane>
           </TabContent>
         </div>
       </section>
@@ -123,7 +161,7 @@ function Address() {
   )
 }
 
-function AddressData({addressInfo, identityInfo}) {
+function AddressData({addressInfo, identityInfo, contractInfo, poolInfo}) {
   return (
     <>
       <section className="section section_info">
@@ -204,7 +242,7 @@ function AddressData({addressInfo, identityInfo}) {
                           alt="user-pic"
                           className="user-pic"
                           width="32"
-                          src={`https://robohash.org/${identityInfo.address.toLowerCase()}`}
+                          src={`https://robohash.idena.io/${identityInfo.address.toLowerCase()}`}
                         />
                         <span>{identityInfo.address}</span>
                       </a>
@@ -218,6 +256,86 @@ function AddressData({addressInfo, identityInfo}) {
                   <div className="text_block">
                     {identityStatusFmt(identityInfo.state)}
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {contractInfo && (
+        <section className="section section_details">
+          <h3>Smart contract</h3>
+          <div className="card">
+            <div className="row">
+              <div className="col-12 col-sm-6">
+                <div className="section__group">
+                  <div className="control-label">Address:</div>
+                  <div
+                    className="text_block text_block--ellipsis"
+                    style={{width: '80%'}}
+                  >
+                    <Link
+                      href="/contract/[address]"
+                      as={`/contract/${contractInfo.address}`}
+                    >
+                      <a>
+                        <img
+                          alt="user-pic"
+                          className="user-pic"
+                          width="32"
+                          src={`https://robohash.org/${contractInfo.address.toLowerCase()}`}
+                        />
+                        <span>{contractInfo.address}</span>
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-sm-6">
+                <div className="section__group">
+                  <div className="control-label">Type:</div>
+                  <div className="text_block">{contractInfo.type}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {poolInfo && (
+        <section className="section section_details">
+          <h3>Pool</h3>
+          <div className="card">
+            <div className="row">
+              <div className="col-12 col-sm-6">
+                <div className="section__group">
+                  <div className="control-label">Address:</div>
+                  <div
+                    className="text_block text_block--ellipsis"
+                    style={{width: '80%'}}
+                  >
+                    <Link
+                      href="/pool/[address]"
+                      as={`/pool/${poolInfo.address}`}
+                    >
+                      <a>
+                        <img
+                          alt="user-pic"
+                          className="user-pic"
+                          width="32"
+                          src={`https://robohash.org/${poolInfo.address.toLowerCase()}`}
+                        />
+                        <span>{poolInfo.address}</span>
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-sm-6">
+                <div className="section__group">
+                  <div className="control-label">Size:</div>
+                  <div className="text_block">{poolInfo.size}</div>
                 </div>
               </div>
             </div>

@@ -10,22 +10,27 @@ export function precise6(x) {
   return Math.round(x * 1000000) / 1000000
 }
 
-export function dnaFmt(amount, curency = 'iDNA') {
+export function dnaFmt(amount, curency = ' iDNA') {
   if (!amount || amount === 0) return '-'
-  return `${Number(amount).toLocaleString()} ${curency}`
+  return `${Number(amount).toLocaleString()}${curency}`
+}
+
+export function usdFmt(amount, curency = '$') {
+  if (!amount || amount === 0) return '-'
+  return `${curency}${Number(amount).toLocaleString()}`
 }
 
 export function txTypeFmt(txType, data) {
   if (txType === 'OnlineStatusTx')
     return `Mining status ${
-      data ? (data.BecomeOnline ? 'On' : 'Off') : 'switching'
+      data ? (data.becomeOnline ? 'On' : 'Off') : 'switching'
     }`
   if (txType === 'SubmitFlipTx') return `Submit flip`
   if (txType === 'SendTx') return `Send`
   if (txType === 'ActivationTx') return 'Activate invitation'
   if (txType === 'InviteTx') return 'Issue invitation'
   if (txType === 'KillInviteeTx') return 'Terminate invitation '
-  if (txType === 'KillTx') return 'Terminate tdentity'
+  if (txType === 'KillTx') return 'Terminate identity'
   if (txType === 'EvidenceTx') return 'Validation evidence'
   if (txType === 'SubmitShortAnswersTx') return 'Short session answers'
   if (txType === 'SubmitLongAnswersTx') return 'Long session answers'
@@ -64,9 +69,32 @@ export function identityStatusFmt(s) {
   return s
 }
 
+export function timeSince(str, addBreak = false) {
+  const timeStamp = new Date(str)
+  const now = new Date()
+  const secondsPast = Math.round((now.getTime() - timeStamp) / 1000)
+  if (secondsPast < 60) {
+    return `${secondsPast} secs ago`
+  }
+  if (secondsPast <= 300) {
+    return `${Math.round((secondsPast * 1) / 60)} min ago`
+  }
+
+  if (secondsPast > 300) {
+    return addBreak ? [dateFmt(str), <br />, timeFmt(str)] : dateTimeFmt(str)
+  }
+}
+
 export function dateFmt(str) {
   const dt = new Date(str)
   return dt.toLocaleDateString()
+}
+
+export function timeFmt(str) {
+  const dt = new Date(str)
+  return dt.toLocaleTimeString(undefined, {
+    hour12: false,
+  })
 }
 
 export function dateTimeFmt(str) {
@@ -103,4 +131,14 @@ export function iconToSrc(icon) {
 
 export function isIdentityPassed(state) {
   return state === 'Newbie' || state === 'Verified' || state === 'Human'
+}
+
+export function hexToObject(hex) {
+  try {
+    return JSON.parse(
+      new TextDecoder().decode(Buffer.from(hex.substring(2), 'hex'))
+    )
+  } catch {
+    return {}
+  }
 }

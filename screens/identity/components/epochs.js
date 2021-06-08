@@ -19,8 +19,8 @@ const LIMIT = 10
 const PASSED = ['Newbie', 'Verified', 'Human']
 
 export default function Epochs({address, visible}) {
-  const fetchEpochs = (_, address, skip = 0) =>
-    getIdentityEpochs(address, skip, LIMIT)
+  const fetchEpochs = (_, address, continuationToken = null) =>
+    getIdentityEpochs(address, LIMIT, continuationToken)
 
   const {data: lastEpoch} = useQuery(address && visible && 'lastEpoch', () =>
     getLastEpoch()
@@ -31,9 +31,9 @@ export default function Epochs({address, visible}) {
     [address],
     fetchEpochs,
     {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup && lastGroup.length === LIMIT
-          ? allGroups.length * LIMIT
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
           : false,
     }
   )

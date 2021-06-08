@@ -2,6 +2,14 @@ import axios from 'axios'
 
 const BASE_API_URL = 'https://api.idena.org/api'
 
+const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
+
+function apiCoingecko() {
+  return axios.create({
+    baseURL: COINGECKO_API_URL,
+  })
+}
+
 function apiClient() {
   return axios.create({
     baseURL: BASE_API_URL,
@@ -10,9 +18,25 @@ function apiClient() {
 
 async function getResponse(request) {
   const {data} = await request
-  const {result, error} = data
+  const {result, continuationToken, error} = data
   if (error) throw error
+  if (continuationToken) result.continuationToken = continuationToken
   return result
+}
+
+export async function getCoingeckoData() {
+  const params = {
+    ids: 'idena',
+    vs_currencies: 'usd',
+    include_market_cap: true,
+    include_24hr_vol: true,
+    include_24hr_change: true,
+    include_last_updated_at: true,
+  }
+
+  const request = apiCoingecko().get('/simple/price', {params})
+  const {data} = await request
+  return data
 }
 
 export async function getCurrentSession(onlyCheck) {
@@ -45,18 +69,18 @@ export async function getBlock(block) {
   return getResponse(apiClient().get(`block/${block}`))
 }
 
-export async function getBlockTransactions(block, skip, limit) {
+export async function getBlockTransactions(block, limit, continuationToken) {
   return getResponse(
     apiClient().get(`block/${block}/txs`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
 
-export async function getTransactions(address, skip, limit) {
+export async function getTransactions(address, limit, continuationToken) {
   return getResponse(
     apiClient().get(`address/${address}/txs`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
@@ -65,10 +89,10 @@ export async function getTransactionsCount(address) {
   return getResponse(apiClient().get(`address/${address}/txs/count`))
 }
 
-export async function getRewards(address, skip, limit) {
+export async function getRewards(address, limit, continuationToken) {
   return getResponse(
     apiClient().get(`identity/${address}/epochrewards`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
@@ -77,10 +101,10 @@ export async function getRewardsCount(address) {
   return getResponse(apiClient().get(`identity/${address}/epochrewards/count`))
 }
 
-export async function getPenalties(address, skip, limit) {
+export async function getPenalties(address, limit, continuationToken) {
   return getResponse(
     apiClient().get(`address/${address}/penalties`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
@@ -101,6 +125,10 @@ export async function getLastEpoch() {
   return getResponse(apiClient().get('epoch/last'))
 }
 
+export async function getUpgradeVoting() {
+  return getResponse(apiClient().get('UpgradeVoting'))
+}
+
 export async function getEpoch(epoch) {
   return getResponse(apiClient().get(`epoch/${epoch}`))
 }
@@ -119,46 +147,46 @@ export async function getEpochIdentitiesCount(
 
 export async function getEpochIdentities(
   epoch,
-  skip,
   limit,
+  continuationToken,
   states = ['Newbie', 'Verified', 'Human'],
   prevStates = []
 ) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/identities`, {
-      params: {states, skip, limit, prevStates},
+      params: {states, limit, continuationToken, prevStates},
     })
   )
 }
 
-export async function getEpochInvitations(epoch, skip, limit) {
+export async function getEpochInvitations(epoch, limit, continuationToken) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/invites`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
 
-export async function getEpochFlips(epoch, skip, limit) {
+export async function getEpochFlips(epoch, limit, continuationToken) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/flips`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
 
-export async function getEpochTransactions(epoch, skip, limit) {
+export async function getEpochTransactions(epoch, limit, continuationToken) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/txs`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
 
-export async function getEpochBlocks(epoch, skip, limit) {
+export async function getEpochBlocks(epoch, limit, continuationToken) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/blocks`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
@@ -195,10 +223,14 @@ export async function getEpochRewardsSummary(epoch) {
   return getResponse(apiClient().get(`epoch/${epoch}/rewardsSummary`))
 }
 
-export async function getEpochIdentityRewards(epoch, skip, limit) {
+export async function getEpochRewardBounds(epoch) {
+  return getResponse(apiClient().get(`epoch/${epoch}/rewardBounds`))
+}
+
+export async function getEpochIdentityRewards(epoch, limit, continuationToken) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/identityRewards`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
@@ -207,10 +239,10 @@ export async function getEpochIdentityRewardsCount(epoch) {
   return getResponse(apiClient().get(`epoch/${epoch}/identityRewards/count`))
 }
 
-export async function getEpochBadAuthors(epoch, skip, limit) {
+export async function getEpochBadAuthors(epoch, limit, continuationToken) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/authors/bad`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
@@ -219,12 +251,34 @@ export async function getEpochBadAuthorsCount(epoch) {
   return getResponse(apiClient().get(`epoch/${epoch}/authors/bad/count`))
 }
 
-export async function getEpochsData(skip, limit) {
-  return getResponse(apiClient().get('epochs', {params: {skip, limit}}))
+export async function getEpochsData(limit, continuationToken) {
+  return getResponse(
+    apiClient().get('epochs', {params: {limit, continuationToken}})
+  )
 }
 
 export async function getEpochsDataCount() {
   return getResponse(apiClient().get('epochs/count'))
+}
+
+export async function getHardForkVotingHistory(upgrade) {
+  return getResponse(apiClient().get(`upgrade/${upgrade}/votinghistory`))
+}
+
+export async function getUpgradeVotings(limit) {
+  return getResponse(apiClient().get('UpgradeVotings', {params: {limit}}))
+}
+
+export async function getUpgradeData(upgrade) {
+  return getResponse(apiClient().get(`upgrade/${upgrade}`))
+}
+
+export async function getValidatorsCount() {
+  return getResponse(apiClient().get('validators/count'))
+}
+
+export async function getOnlineValidatorsCount() {
+  return getResponse(apiClient().get('onlineValidators/count'))
 }
 
 export async function getOnlineMinersCount() {
@@ -235,14 +289,24 @@ export async function getOnlineIdentitiesCount() {
   return getResponse(apiClient().get('onlineidentities/count'))
 }
 
-export async function getBalances(skip, limit) {
-  return getResponse(apiClient().get('balances', {params: {skip, limit}}))
+export async function getBalances(limit, continuationToken) {
+  return getResponse(
+    apiClient().get('balances', {params: {limit, continuationToken}})
+  )
 }
 
-export async function getOnlineIdentities(skip, limit) {
+export async function getBalanceChanges(address, limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`address/${address}/balance/changes`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
+export async function getOnlineIdentities(limit, continuationToken) {
   return getResponse(
     apiClient().get('onlineidentities', {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
@@ -325,10 +389,10 @@ export async function getIdentityFlipStates(address) {
   return getResponse(apiClient().get(`identity/${address}/flipStates`))
 }
 
-export async function getIdentityEpochs(address, skip, limit) {
+export async function getIdentityEpochs(address, limit, continuationToken) {
   return getResponse(
     apiClient().get(`identity/${address}/epochs`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
@@ -337,28 +401,28 @@ export async function getIdentityEpochsCount(address) {
   return getResponse(apiClient().get(`identity/${address}/epochs/count`))
 }
 
-export async function getAddressFlips(address, skip, limit) {
+export async function getAddressFlips(address, limit, continuationToken) {
   return getResponse(
-    apiClient().get(`address/${address}/flips`, {
-      params: {skip, limit},
+    apiClient().get(`identity/${address}/flips`, {
+      params: {limit, continuationToken},
     })
   )
 }
 
 export async function getAddressFlipsCount(address) {
-  return getResponse(apiClient().get(`address/${address}/flips/count`))
+  return getResponse(apiClient().get(`identity/${address}/flips/count`))
 }
 
-export async function getIdentityInvites(address, skip, limit) {
+export async function getIdentityInvites(address, limit, continuationToken) {
   return getResponse(
     apiClient().get(`identity/${address}/invites`, {
-      params: {skip, limit},
+      params: {limit, continuationToken},
     })
   )
 }
 
 export async function getIdentityInvitesCount(address) {
-  return getResponse(apiClient().get(`identity/${address}/invites`))
+  return getResponse(apiClient().get(`identity/${address}/invites/count`))
 }
 
 export async function getFlip(cid) {
@@ -374,13 +438,69 @@ export async function getAdjacentFlips(cid) {
 }
 
 export async function getFlipShortAnswers(cid) {
-  return getResponse(
-    apiClient().get(`flip/${cid}/answers/short?skip=0&limit=100`)
-  )
+  return getResponse(apiClient().get(`flip/${cid}/answers/short`))
 }
 
 export async function getFlipLongAnswers(cid) {
+  return getResponse(apiClient().get(`flip/${cid}/answers/long`))
+}
+
+export async function getContract(address) {
+  return getResponse(apiClient().get(`contract/${address}`))
+}
+
+export async function getContractBalanceUpdates(
+  address,
+  limit,
+  continuationToken
+) {
   return getResponse(
-    apiClient().get(`flip/${cid}/answers/long?skip=0&limit=100`)
+    apiClient().get(`contract/${address}/balanceUpdates`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
+export async function getTimeLockContract(address) {
+  return getResponse(apiClient().get(`timeLockContract/${address}`))
+}
+
+export async function getOracleLockContract(address) {
+  return getResponse(apiClient().get(`oracleLockContract/${address}`))
+}
+
+export async function getOracleVotingContract(address) {
+  return getResponse(apiClient().get(`oracleVotingContract/${address}`))
+}
+
+export async function getMempoolTxs(limit) {
+  return getResponse(
+    apiClient().get(`Mempool/Txs`, {
+      params: {limit},
+    })
+  )
+}
+
+export async function getPoolsCount() {
+  return getResponse(apiClient().get(`pools/count`))
+}
+
+export async function getPools(limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`pools`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
+export async function getPool(address) {
+  return getResponse(apiClient().get(`pool/${address}`))
+}
+
+export async function getPoolDelegators(address, limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`pool/${address}/delegators`, {
+      params: {limit, continuationToken},
+    })
   )
 }

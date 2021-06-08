@@ -57,7 +57,7 @@ function Flip() {
         <div className="section_main__group">
           <h1 className="section_main__title">
             Flip{' '}
-            {flipContent && !flipContent.LeftOrder ? '(encrypted content)' : ''}
+            {flipContent && !flipContent.leftOrder ? '(encrypted content)' : ''}
           </h1>
           <h3 className="section_main__subtitle">{cid}</h3>
         </div>
@@ -229,7 +229,7 @@ function Flip() {
                           alt="user-pic"
                           className="user-pic"
                           width="32"
-                          src={`https://robohash.org/${flip.author.toLowerCase()}`}
+                          src={`https://robohash.idena.io/${flip.author.toLowerCase()}`}
                         />
                         <span>{flip.author}</span>
                       </a>
@@ -437,7 +437,7 @@ function Flip() {
                           <td>
                             <div className="user-pic">
                               <img
-                                src={`https://robohash.org/${item.address.toLowerCase()}`}
+                                src={`https://robohash.idena.io/${item.address.toLowerCase()}`}
                                 alt="pic"
                                 width="32"
                               />
@@ -522,7 +522,7 @@ function Flip() {
                           <td>
                             <div className="user-pic">
                               <img
-                                src={`https://robohash.org/${item.address.toLowerCase()}`}
+                                src={`https://robohash.idena.io/${item.address.toLowerCase()}`}
                                 alt="pic"
                                 width="32"
                               />
@@ -578,9 +578,9 @@ function getImagesPositions(flipContent) {
   if (!flipContent) {
     return res
   }
-  for (let i = 0; i < flipContent.Pics.length; i += 1) {
+  for (let i = 0; i < flipContent.pics.length; i += 1) {
     const buffArray = new Uint8Array(
-      flipContent.Pics[i]
+      flipContent.pics[i]
         .substring(2)
         .match(/.{1,2}/g)
         .map((byte) => parseInt(byte, 16))
@@ -588,13 +588,13 @@ function getImagesPositions(flipContent) {
     let lposition = -1
     let rposition = -1
 
-    if (flipContent.LeftOrder == null) {
+    if (flipContent.leftOrder == null) {
       lposition = i === 0 ? 0 : -1
       rposition = i === 1 ? 0 : -1
     } else {
-      for (let j = 0; j < flipContent.Pics.length; j += 1) {
-        if (flipContent.LeftOrder[j] === i) lposition = j
-        if (flipContent.RightOrder[j] === i) rposition = j
+      for (let j = 0; j < flipContent.pics.length; j += 1) {
+        if (flipContent.leftOrder[j] === i) lposition = j
+        if (flipContent.rightOrder[j] === i) rposition = j
       }
     }
 
