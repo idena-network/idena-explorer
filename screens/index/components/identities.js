@@ -2,6 +2,7 @@ import Link from 'next/link'
 import {useEffect, useState} from 'react'
 import {AreaChart, Area, Tooltip, ResponsiveContainer} from 'recharts'
 import {
+  getOnlineValidatorsCount,
   getOnlineMinersCount,
   getOnlineIdentitiesCount,
   getEpochsData,
@@ -9,7 +10,7 @@ import {
 import TooltipText from '../../../shared/components/tooltip'
 
 const initialState = {
-  epoch: 0,
+  validators: '-',
   online: '-',
   total: '-',
 }
@@ -23,11 +24,13 @@ export default function Identities({epoch}) {
 
   useEffect(() => {
     async function getData() {
-      const [online, total] = await Promise.all([
+      const [validators, online, total] = await Promise.all([
+        getOnlineValidatorsCount(),
         getOnlineMinersCount(),
         getOnlineIdentitiesCount(),
       ])
       setState({
+        validators,
         online,
         total,
       })
@@ -80,12 +83,12 @@ export default function Identities({epoch}) {
   }
 
   return (
-    <div className="col-12 col-sm-6">
+    <div className="col-12 col-sm-7">
       <h1>Network</h1>
       <div className="card">
         <div className="info_block">
           <div className="row">
-            <div className="col-12 col-sm-4 bordered-col">
+            <div className="col-12 col-sm-3 bordered-col">
               <div style={{width: '100%', height: '2.43rem'}}>
                 <ResponsiveContainer>
                   <AreaChart data={chartData}>
@@ -104,9 +107,9 @@ export default function Identities({epoch}) {
               </div>
 
               <TooltipText
-                className="control-label hide-border"
+                className="control-label"
                 data-toggle="tooltip"
-                tooltip="View more network stats at https://idena.today"
+                tooltip="Click to view more network stats at https://idena.today"
               >
                 <a href="https://idena.today" target="blank">
                   Network stats &rsaquo;
@@ -114,34 +117,56 @@ export default function Identities({epoch}) {
               </TooltipText>
             </div>
 
-            <div className="col-12 col-sm-4 bordered-col">
-              <Link href="/epoch/[epoch]" as={`/epoch/${epoch}`}>
+            <div className="col-12 col-sm-3 bordered-col">
+              {/* TODO: add actual epoch stats with terminated identities
+              <Link href="/epoch/[epoch]" as={`/epoch/${epoch}`}> 
+              <div className="info_block__link"> */}
+              <h3 className="info_block__accent">
+                <span>{state.total}</span>
+              </h3>
+              <TooltipText
+                className="control-label"
+                data-toggle="tooltip"
+                tooltip="Validated identities"
+              >
+                Identities
+              </TooltipText>
+              {/* </div>
+               </Link> */}
+            </div>
+
+            <div className="col-12 col-sm-3 bordered-col">
+              <Link href="/charts/miners" as="/charts/miners">
                 <div className="info_block__link">
                   <h3 className="info_block__accent">
-                    <span>{state.total}</span>
+                    <span>{state.validators}</span>
                   </h3>
                   <TooltipText
                     className="control-label"
                     data-toggle="tooltip"
-                    tooltip="Total validated identities / Online mining nodes"
+                    tooltip="Full mining nodes run by individual identities and pool owners activated online status. Click for stats"
                   >
-                    Total nodes
+                    Mining nodes
                   </TooltipText>
                 </div>
               </Link>
             </div>
 
-            <div className="col-12 col-sm-4 bordered-col">
-              <h3 className="info_block__accent">
-                <span>{state.online}</span>
-              </h3>
-              <TooltipText
-                className="control-label"
-                data-toggle="tooltip"
-                tooltip="Total validated identities / Online mining nodes"
-              >
-                Online miners
-              </TooltipText>
+            <div className="col-12 col-sm-3 bordered-col">
+              <Link href="/charts/miners" as="/charts/miners">
+                <div className="info_block__link">
+                  <h3 className="info_block__accent">
+                    <span>{state.online}</span>
+                  </h3>
+                  <TooltipText
+                    className="control-label"
+                    data-toggle="tooltip"
+                    tooltip="Total mining identities. Click for stats"
+                  >
+                    Miners
+                  </TooltipText>
+                </div>
+              </Link>
             </div>
           </div>
         </div>

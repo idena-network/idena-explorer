@@ -29,19 +29,19 @@ export default function Supply() {
           'M'
         ),
         totalBurnt: dnaFmt(precise1(totalCoins.burnt / 1000000), 'M iDNA'),
-        circulatingSupply: dnaFmt(Math.round(supply)),
+        circulatingSupply: dnaFmt(precise1(supply / 1000000), 'M iDNA'),
       })
     }
     getData()
   }, [])
 
   return (
-    <div className="col-12 col-sm-6">
+    <div className="col-12 col-sm-5">
       <h1>Coins</h1>
       <div className="card">
         <div className="info_block">
           <div className="row">
-            <div className="col-12 col-sm-8 bordered-col">
+            <div className="col-12 col-sm-6 bordered-col">
               <Link href="/circulation">
                 <div className="info_block__link">
                   <h3 className="info_block__accent">
@@ -52,12 +52,12 @@ export default function Supply() {
                     className="control-label"
                     data-toggle="tooltip"
                   >
-                    Circulating supply
+                    Circulating supply &rsaquo;
                   </TooltipText>
                 </div>
               </Link>
             </div>
-            <div className="col-12 col-sm-4 bordered-col">
+            <div className="col-12 col-sm-6 bordered-col">
               <h3 className="info_block__accent">{state.totalBurnt}</h3>
               <TooltipText
                 className="control-label"
