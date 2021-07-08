@@ -109,7 +109,7 @@ export default function Identities({epoch}) {
               <TooltipText
                 className="control-label"
                 data-toggle="tooltip"
-                tooltip="Click to view more network stats at https://idena.today"
+                tooltip="Click to view more stats at https://idena.today"
               >
                 <a href="https://idena.today" target="blank">
                   Network stats &rsaquo;
@@ -139,6 +139,23 @@ export default function Identities({epoch}) {
               <Link href="/charts/miners" as="/charts/miners">
                 <div className="info_block__link">
                   <h3 className="info_block__accent">
+                    <span>{state.online}</span>
+                  </h3>
+                  <TooltipText
+                    className="control-label"
+                    data-toggle="tooltip"
+                    tooltip="Total mining identities. Click for stats"
+                  >
+                    Active miners
+                  </TooltipText>
+                </div>
+              </Link>
+            </div>
+
+            <div className="col-12 col-sm-3 bordered-col">
+              <Link href="/charts/validators" as="/charts/validators">
+                <div className="info_block__link">
+                  <h3 className="info_block__accent">
                     <span>{state.validators}</span>
                   </h3>
                   <TooltipText
@@ -147,23 +164,6 @@ export default function Identities({epoch}) {
                     tooltip="Full mining nodes run by individual identities and pool owners activated online status. Click for stats"
                   >
                     Mining nodes
-                  </TooltipText>
-                </div>
-              </Link>
-            </div>
-
-            <div className="col-12 col-sm-3 bordered-col">
-              <Link href="/charts/miners" as="/charts/miners">
-                <div className="info_block__link">
-                  <h3 className="info_block__accent">
-                    <span>{state.online}</span>
-                  </h3>
-                  <TooltipText
-                    className="control-label"
-                    data-toggle="tooltip"
-                    tooltip="Total mining identities. Click for stats"
-                  >
-                    Miners
                   </TooltipText>
                 </div>
               </Link>

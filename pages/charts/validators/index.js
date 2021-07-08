@@ -14,7 +14,7 @@ function Miners() {
       const data =
         result &&
         result.map((item) => ({
-          y: item.onlineMiners,
+          y: item.onlineValidators,
           x: dateTimeFmt(item.timestamp),
         }))
       setChartData(data)
@@ -23,14 +23,14 @@ function Miners() {
   }, [])
 
   return (
-    <Layout title="Active Miners Chart">
+    <Layout title="Full Mining Nodes Chart">
       <section className="section section_info">
-        <h1>Active miners</h1>
+        <h1>Full Mining Nodes</h1>
         <div className="card">
           <div className="row">
             <p className="control-label">
-              Total number of activly mining identities running their own mining
-              nodes or delegated into mining pools.
+              Total number of full mining nodes run by individual identities or
+              pool owners who activated online status.
             </p>
           </div>
         </div>
@@ -38,7 +38,10 @@ function Miners() {
         <div className="card">
           <div className="info_block">
             <div className="row">
-              <DataAreaChart chartData={chartData} valueName="Active miners" />
+              <DataAreaChart
+                chartData={chartData}
+                valueName="Full mining nodes"
+              />
             </div>
           </div>
         </div>
