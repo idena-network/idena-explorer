@@ -201,7 +201,7 @@ export default function TopHeader() {
                     100
                   : undefined
               }
-              tooltip="Total nodes | Change since last validation"
+              tooltip="Validated identities | Change since last validation"
             />
           </div>
         </div>
