@@ -29,8 +29,8 @@ function Miners() {
         <div className="card">
           <div className="row">
             <p className="control-label">
-              Total number of activly mining identities running their own mining
-              nodes or delegated into mining pools.
+              Total number of actively mining identities running their own
+              mining nodes or delegated into mining pools.
             </p>
           </div>
         </div>
