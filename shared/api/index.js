@@ -265,6 +265,10 @@ export async function getHardForkVotingHistory(upgrade) {
   return getResponse(apiClient().get(`upgrade/${upgrade}/votinghistory`))
 }
 
+export async function getPeersHistory() {
+  return getResponse(apiClient().get(`Peers/History`))
+}
+
 export async function getMinersHistory() {
   return getResponse(apiClient().get(`Miners/History`))
 }

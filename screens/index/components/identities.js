@@ -146,7 +146,7 @@ export default function Identities({epoch}) {
                     data-toggle="tooltip"
                     tooltip="Total mining identities. Click for stats"
                   >
-                    Active miners
+                    Active miners &rsaquo;
                   </TooltipText>
                 </div>
               </Link>
@@ -163,7 +163,7 @@ export default function Identities({epoch}) {
                     data-toggle="tooltip"
                     tooltip="Full mining nodes run by individual identities and pool owners activated online status. Click for stats"
                   >
-                    Mining nodes
+                    Mining nodes &rsaquo;
                   </TooltipText>
                 </div>
               </Link>
