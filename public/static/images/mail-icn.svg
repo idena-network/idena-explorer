@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>mail-icn</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Idena_website/05a_contribute_translations" transform="translate(-892.000000, -156.000000)">
+            <g id="Group-19" transform="translate(508.000000, 156.000000)">
+                <g id="email_icn" transform="translate(384.000000, 0.000000)">
+                    <rect id="mail-icn" fill="#D8D8D8" fill-rule="nonzero" opacity="0" x="0" y="0" width="40" height="40"></rect>
+                    <path d="M28.659,15.7519 L20.659,22.7519 C20.471,22.9169 20.235,22.9999 20,22.9999 C19.765,22.9999 19.53,22.9169 19.342,22.7519 L11.342,15.7519 C10.926,15.3879 10.884,14.7569 11.248,14.3409 C11.612,13.9259 12.242,13.8839 12.659,14.2469 L20,20.6709 L27.342,14.2469 C27.758,13.8829 28.389,13.9259 28.753,14.3409 C29.117,14.7569 29.075,15.3879 28.659,15.7519 M30,11 L10,11 C8.896,11 8,11.895 8,13 L8,27 C8,28.104 8.896,29 10,29 L30,29 C31.105,29 32,28.104 32,27 L32,13 C32,11.895 31.105,11 30,11" id="Shape" fill="#53565C"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

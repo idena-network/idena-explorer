@@ -1,29 +1,36 @@
 .social_list {
-  font-size: rem(30px);
-  margin-bottom: rem(25px);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  margin-bottom: rem(20px);
 
   &__item {
-    padding: rem(8px);
-    color: inherit;
+    padding: rem(12px);
+    color: gray;
     text-decoration: none !important;
     display: inline-block;
     vertical-align: middle;
     line-height: 0;
 
     &:hover {
-      color: #0467D8;
+      color: darkgray;
     }
 
     .icon {
+      width: 33px;
+      height: 33px;
       margin-right: 0;
     }
   }
 
   @media (#{$max_phones--big}) {
-    font-size: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
 
     &__item {
-      padding: 8px;
+      padding: rem(24px);
     }
   }
 }
