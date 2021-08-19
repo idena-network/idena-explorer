@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import {useInfiniteQuery, useQuery} from 'react-query'
+import {useEffect, useState} from 'react'
 import {
   timeSince,
   precise6,
@@ -15,24 +16,42 @@ import {SkeletonRows} from '../../../shared/components/skeleton'
 import {WarningTooltip} from '../../../shared/components/tooltip'
 
 export default function Transactions({epoch, visible, limit = 30}) {
+  const [lastTx, setLastTx] = useState(null)
+
   const fetchTransactions = (_, epoch, continuationToken = null) =>
     getEpochTransactions(epoch, limit, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     epoch > 0 && `${epoch}/transactions`,
     [epoch],
-    fetchTransactions,
+    (_, epoch, continuationToken) =>
+      fetchTransactions(_, epoch, continuationToken).then((data) => {
+        data.forEach((element) => {
+          element.isNew = lastTx && new Date(element.timestamp) > lastTx
+        })
+        return data
+      }),
     {
       getFetchMore: (lastGroup) =>
         lastGroup && lastGroup.continuationToken
           ? lastGroup.continuationToken
           : false,
+      refetchInterval: 20 * 1000,
     }
   )
 
+  useEffect(() => {
+    if (data && data.length && data[0].length) {
+      setLastTx(new Date(data[0][0].timestamp))
+    }
+  }, [data])
+
   const {data: txsCount} = useQuery(
     epoch > 0 && ['epoch/txsCount', epoch],
-    (_, epoch) => getEpochTransactionsCount(epoch)
+    (_, epoch) => getEpochTransactionsCount(epoch),
+    {
+      refetchInterval: 60 * 1000,
+    }
   )
 
   return (
@@ -54,7 +73,7 @@ export default function Transactions({epoch, visible, limit = 30}) {
             (page) =>
               page &&
               page.map((item) => (
-                <tr key={item.hash}>
+                <tr key={item.hash} className={item.isNew ? 'new-tx' : ''}>
                   <td>
                     <div
                       className="text_block text_block--ellipsis"
@@ -159,6 +178,21 @@ export default function Transactions({epoch, visible, limit = 30}) {
           {txsCount}) in epoch {epochFmt(epoch)}
         </button>
       </div>
+      <style jsx>
+        {`
+          .new-tx {
+            animation: highlight 1500ms ease-out;
+          }
+          @keyframes highlight {
+            0% {
+              background-color: #20c997;
+            }
+            100% {
+              background-color: white;
+            }
+          }
+        `}
+      </style>
     </div>
   )
 }
