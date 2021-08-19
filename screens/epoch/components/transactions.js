@@ -181,11 +181,11 @@ export default function Transactions({epoch, visible, limit = 30}) {
       <style jsx>
         {`
           .new-tx {
-            animation: highlight 1500ms ease-out;
+            animation: highlight 2000ms ease-out;
           }
           @keyframes highlight {
             0% {
-              background-color: #20c997;
+              background-color: #f5f6f7;
             }
             100% {
               background-color: white;
