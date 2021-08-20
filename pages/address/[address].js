@@ -367,8 +367,7 @@ function AddressData({
                   {(activityInfo && dnaFmt(activityInfo.balanceIn)) || '-'}
                 </div>
                 {activityInfo &&
-                  activityInfo.stakeOut > 0 &&
-                  activityInfo.stakeIn > 0 && (
+                  (activityInfo.stakeOut > 0 || activityInfo.stakeIn) > 0 && (
                     <>
                       <hr />
                       <div className="control-label">Total stake received:</div>
@@ -386,8 +385,7 @@ function AddressData({
                   {(activityInfo && dnaFmt(activityInfo.balanceOut)) || '-'}
                 </div>
                 {activityInfo &&
-                  activityInfo.stakeOut > 0 &&
-                  activityInfo.stakeIn > 0 && (
+                  (activityInfo.stakeOut > 0 || activityInfo.stakeIn) > 0 && (
                     <>
                       <hr />
                       <TooltipText

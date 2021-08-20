@@ -2,8 +2,6 @@ import axios from 'axios'
 
 const BASE_API_URL = 'https://api.idena.org/api'
 
-// const BASE_API_URL = 'http://157.90.234.190:1235/api/'
-
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 
 function apiCoingecko() {
