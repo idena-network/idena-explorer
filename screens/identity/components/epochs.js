@@ -9,7 +9,7 @@ import TooltipText from '../../../shared/components/tooltip'
 import {
   identityStatusFmt,
   dnaFmt,
-  precise2,
+  precise1,
   epochFmt,
 } from '../../../shared/utils/utils'
 import {SkeletonRows} from '../../../shared/components/skeleton'
@@ -45,7 +45,7 @@ export default function Epochs({address, visible}) {
   )
 
   const formatPoints = (point, count) =>
-    `${point} out of ${count} (${precise2((point / count) * 100)}%)`
+    `${point} out of ${count} (${precise1((point / count) * 100)}%)`
 
   return (
     <div className="table-responsive">
@@ -79,7 +79,7 @@ export default function Epochs({address, visible}) {
               score
             </th>
             <th style={{width: 100}}>Validated</th>
-            <th style={{width: 90}}>Details</th>
+            <th style={{width: 90}}> </th>
           </tr>
         </thead>
         <tbody>
@@ -208,6 +208,7 @@ function PassedIdentity({identity, address, shortScoreTxt, longScoreTxt}) {
           as={`/identity/${address}/epoch/${identity.epoch + 1}/validation`}
         >
           <a>
+            <span>Details</span>
             <i className="icon icon--thin_arrow_right" />
           </a>
         </Link>
@@ -238,6 +239,7 @@ function LateSubmission({identity, address, shortScoreTxt, longScoreTxt}) {
           as={`/identity/${address}/epoch/${identity.epoch + 1}/validation`}
         >
           <a>
+            <span>Details</span>
             <i className="icon icon--thin_arrow_right" />
           </a>
         </Link>
@@ -268,6 +270,7 @@ function WrongAnswers({identity, address, shortScoreTxt, longScoreTxt}) {
           as={`/identity/${address}/epoch/${identity.epoch + 1}/validation`}
         >
           <a>
+            <span>Details</span>
             <i className="icon icon--thin_arrow_right" />
           </a>
         </Link>
@@ -298,6 +301,7 @@ function NotAllowed({identity, address}) {
           as={`/identity/${address}/epoch/${identity.epoch + 1}/validation`}
         >
           <a>
+            <span>Details</span>
             <i className="icon icon--thin_arrow_right" />
           </a>
         </Link>
@@ -328,6 +332,7 @@ function Missed({identity, address}) {
           as={`/identity/${address}/epoch/${identity.epoch + 1}/validation`}
         >
           <a>
+            <span>Details</span>
             <i className="icon icon--thin_arrow_right" />
           </a>
         </Link>
