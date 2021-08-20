@@ -20,13 +20,13 @@ export default function LongAnswers({address, epoch, visible}) {
             <th style={{width: 300}}>Flip</th>
             <th>
               <TooltipText tooltip="Answer agreed by qualification committee">
-                Right
+                Correct
                 <br />
                 answer
               </TooltipText>
             </th>
             <th>
-              <TooltipText tooltip="Qualification committee consensus about the right answer">
+              <TooltipText tooltip="Qualification committee consensus about the correct answer">
                 Consensus
               </TooltipText>
             </th>
