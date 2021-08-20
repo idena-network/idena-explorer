@@ -61,6 +61,12 @@ export async function getAddressInfo(address) {
   return getResponse(apiClient().get(`address/${address}`))
 }
 
+export async function getAddressChangesSummary(address) {
+  return getResponse(
+    apiClient().get(`address/${address}/Balance/Changes/Summary`)
+  )
+}
+
 export async function getTransaction(hash) {
   return getResponse(apiClient().get(`transaction/${hash}`))
 }
