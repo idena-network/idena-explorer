@@ -9,6 +9,7 @@ import {
   getAddressInfo,
   getContract,
   getPool,
+  getAddressChangesSummary,
 } from '../../shared/api'
 import {dnaFmt, identityStatusFmt} from '../../shared/utils/utils'
 import Transactions from '../../screens/address/components/transactions'
@@ -52,6 +53,11 @@ function Address() {
     (_, address) => getPool(address)
   )
 
+  const {data: activityInfo} = useQuery(
+    address && ['address', address],
+    (_, address) => getAddressChangesSummary(address)
+  )
+
   return (
     <Layout title={`Address ${address}`}>
       <section className="section">
@@ -68,6 +74,7 @@ function Address() {
         identityInfo={identityInfo}
         contractInfo={contractInfo}
         poolInfo={poolInfo}
+        activityInfo={activityInfo}
       />
 
       <section className="section section_tabs">
@@ -161,13 +168,19 @@ function Address() {
   )
 }
 
-function AddressData({addressInfo, identityInfo, contractInfo, poolInfo}) {
+function AddressData({
+  addressInfo,
+  identityInfo,
+  contractInfo,
+  poolInfo,
+  activityInfo,
+}) {
   return (
     <>
       <section className="section section_info">
         <div className="row">
           <div className="col-12 col-sm-12">
-            <h3>Details</h3>
+            <h3>Summary</h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
@@ -342,6 +355,58 @@ function AddressData({addressInfo, identityInfo, contractInfo, poolInfo}) {
           </div>
         </section>
       )}
+
+      <section className="section section_details">
+        <h3>Details</h3>
+        <div className="card">
+          <div className="row">
+            <div className="col-12 col-sm-6">
+              <div className="section__group">
+                <div className="control-label">Total received:</div>
+                <div className="text_block">
+                  {(activityInfo && dnaFmt(activityInfo.balanceIn)) || '-'}
+                </div>
+                {activityInfo &&
+                  activityInfo.stakeOut > 0 &&
+                  activityInfo.stakeIn > 0 && (
+                    <>
+                      <hr />
+                      <div className="control-label">Total stake received:</div>
+                      <div className="text_block">
+                        {(activityInfo && dnaFmt(activityInfo.stakeIn)) || '-'}
+                      </div>
+                    </>
+                  )}
+              </div>
+            </div>
+            <div className="col-12 col-sm-6">
+              <div className="section__group">
+                <div className="control-label">Total sent:</div>
+                <div className="text_block">
+                  {(activityInfo && dnaFmt(activityInfo.balanceOut)) || '-'}
+                </div>
+                {activityInfo &&
+                  activityInfo.stakeOut > 0 &&
+                  activityInfo.stakeIn > 0 && (
+                    <>
+                      <hr />
+                      <TooltipText
+                        className="control-label"
+                        data-toggle="tooltip"
+                        tooltip="Burnt stake due to validation failure"
+                      >
+                        Total stake burned:
+                      </TooltipText>
+                      <div className="text_block">
+                        {(activityInfo && dnaFmt(activityInfo.stakeOut)) || '-'}
+                      </div>
+                    </>
+                  )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   )
 }

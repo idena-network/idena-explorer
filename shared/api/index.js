@@ -2,6 +2,8 @@ import axios from 'axios'
 
 const BASE_API_URL = 'https://api.idena.org/api'
 
+// const BASE_API_URL = 'http://157.90.234.190:1235/api/'
+
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 
 function apiCoingecko() {
@@ -59,6 +61,12 @@ export async function search(value) {
 
 export async function getAddressInfo(address) {
   return getResponse(apiClient().get(`address/${address}`))
+}
+
+export async function getAddressChangesSummary(address) {
+  return getResponse(
+    apiClient().get(`address/${address}/Balance/Changes/Summary`)
+  )
 }
 
 export async function getTransaction(hash) {
