@@ -15,9 +15,9 @@ export default function ValidationStatus({identityInfo}) {
               <TooltipText
                 className="control-label"
                 data-toggle="tooltip"
-                tooltip="Total right answers (forks included)"
+                tooltip="Total correct answers"
               >
-                Right answers
+                Correct answers
               </TooltipText>
             </div>
             <div className="col-12 col-sm-4 bordered-col">
@@ -28,7 +28,7 @@ export default function ValidationStatus({identityInfo}) {
               <TooltipText
                 className="control-label"
                 data-toggle="tooltip"
-                tooltip="Total flips solved (forks included)"
+                tooltip="Total flips solved"
               >
                 Solved flips
               </TooltipText>
