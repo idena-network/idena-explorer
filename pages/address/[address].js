@@ -388,13 +388,9 @@ function AddressData({
                   (activityInfo.stakeOut > 0 || activityInfo.stakeIn) > 0 && (
                     <>
                       <hr />
-                      <TooltipText
-                        className="control-label"
-                        data-toggle="tooltip"
-                        tooltip="Burnt stake due to validation failure"
-                      >
-                        Total stake burned:
-                      </TooltipText>
+                      <div className="control-label">
+                        Total stake sent or burnt:
+                      </div>
                       <div className="text_block">
                         {(activityInfo && dnaFmt(activityInfo.stakeOut)) || '-'}
                       </div>
