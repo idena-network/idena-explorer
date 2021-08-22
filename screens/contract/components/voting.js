@@ -50,30 +50,60 @@ export default function VotingData({address}) {
                 </div>
               </div>
               <div className="col-12 col-sm-4">
-                <div className="control-label">Winner threshold:</div>
+                <div className="control-label">Votes required:</div>
                 <div className="text_block">
-                  {(votingInfo && votingInfo.winnerThreshold) || '-'}%
+                  {(votingInfo &&
+                    votingInfo.committeeSize &&
+                    votingInfo.quorum &&
+                    Math.floor(
+                      (votingInfo.committeeSize * votingInfo.quorum) / 100
+                    )) ||
+                    '-'}
                 </div>
               </div>
               <div className="col-12">
                 <hr />
               </div>
               <div className="col-12 col-sm-4">
-                <div className="control-label">Secret votes:</div>
+                <div className="control-label">Majority threshold:</div>
                 <div className="text_block">
-                  {(votingInfo && votingInfo.voteProofsCount) || '-'}
-                </div>
-              </div>
-              <div className="col-12 col-sm-4">
-                <div className="control-label">Votes:</div>
-                <div className="text_block">
-                  {(votingInfo && votingInfo.votesCount) || '-'}
+                  {(votingInfo && votingInfo.winnerThreshold) || '-'}%
                 </div>
               </div>
               <div className="col-12 col-sm-4">
                 <div className="control-label">Voting deposit:</div>
                 <div className="text_block">
                   {votingInfo && dnaFmt(votingInfo.minPayment, '')} iDNA
+                </div>
+              </div>
+              <div className="col-12 col-sm-4">
+                <div className="control-label">Owner fee:</div>
+                <div className="text_block">
+                  {(votingInfo && votingInfo.ownerFee) || '-'}%
+                </div>
+              </div>
+              <div className="col-12">
+                <hr />
+              </div>
+              <div className="col-12 col-sm-4">
+                <div className="control-label">Total votes:</div>
+                <div className="text_block">
+                  {(votingInfo &&
+                    (votingInfo.secretVotesCount || 0) +
+                      (votingInfo.votesCount || 0)) ||
+                    '-'}
+                </div>
+              </div>
+              <div className="col-12 col-sm-4">
+                <div className="control-label">Secret votes:</div>
+                <div className="text_block">
+                  {(votingInfo && votingInfo.secretVotesCount) || '-'}
+                </div>
+              </div>
+              <div className="col-12 col-sm-4">
+                <div className="control-label">Votes published:</div>
+                <div className="text_block">
+                  {(votingInfo && votingInfo.votesCount) || '-'}
                 </div>
               </div>
             </div>
