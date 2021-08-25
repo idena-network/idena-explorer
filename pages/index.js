@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
+import TagManager from 'react-gtm-module'
+import {useEffect} from 'react'
 import Supply from '../screens/index/components/supply'
 import Identities from '../screens/index/components/identities'
 import Layout from '../shared/components/layout'
@@ -16,7 +18,20 @@ import Pools from '../screens/index/components/pools'
 
 const DEFAULT_TAB = '#transactions'
 
+const tagManagerArgs = {
+  dataLayer: {
+    userId: '0x67c2b42569398d1fd92d2285b2f87134a0a58fa0',
+    userProject: 'project-explorer-manual',
+    page: 'home-page-explorer-manual',
+  },
+  dataLayerName: 'PageDataLayer-manual',
+}
+
 function Home() {
+  useEffect(() => {
+    TagManager.dataLayer(tagManagerArgs)
+  }, [])
+
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
 
