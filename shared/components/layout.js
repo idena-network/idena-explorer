@@ -8,7 +8,6 @@ import {
 } from 'reactstrap'
 import {useState} from 'react'
 import Router, {useRouter} from 'next/router'
-import ReactGA from 'react-ga'
 import Link from 'next/link'
 import {Helmet} from 'react-helmet'
 import {search} from '../api'
@@ -17,8 +16,6 @@ import TopHeader from './topheader'
 
 function Layout({children, title = '', signinLoading = false}) {
   const router = useRouter()
-  ReactGA.initialize('UA-139651161-2')
-  ReactGA.pageview(router.asPath)
 
   const {session, logout} = useSession()
   const [state, setState] = useState({
