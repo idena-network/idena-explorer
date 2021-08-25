@@ -4,6 +4,8 @@ import '../styles/index.scss'
 import Head from 'next/head'
 import {Helmet} from 'react-helmet'
 import {ReactQueryConfigProvider} from 'react-query'
+import {useEffect} from 'react'
+import ReactGA from 'react-ga'
 import {SessionProvider} from '../shared/utils/session-context'
 
 const queryConfig = {
@@ -16,6 +18,11 @@ const queryConfig = {
 }
 
 export default function MyApp({Component, pageProps}) {
+  useEffect(() => {
+    ReactGA.initialize('UA-139651161-2')
+    ReactGA.pageview(window.location.pathname + window.location.search)
+  }, [])
+
   return (
     <>
       <Helmet

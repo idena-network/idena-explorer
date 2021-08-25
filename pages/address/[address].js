@@ -1,7 +1,10 @@
+/* eslint-disable react/button-has-type */
 import Link from 'next/link'
 import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
 import {useRouter} from 'next/router'
+import {useEffect} from 'react'
+import ReactGA from 'react-ga'
 import Layout from '../../shared/components/layout'
 import {
   getEpochsCount,
@@ -24,6 +27,10 @@ const DEFAULT_TAB = '#transactions'
 function Address() {
   const router = useRouter()
   const {address} = router.query
+
+  useEffect(() => {
+    ReactGA.set({userId: address})
+  }, [address])
 
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
@@ -58,6 +65,14 @@ function Address() {
     (_, address) => getAddressChangesSummary(address)
   )
 
+  const send = (action) => {
+    ReactGA.event({
+      category: 'Validation',
+      action,
+      label: `${action}-label`,
+    })
+  }
+
   return (
     <Layout title={`Address ${address}`}>
       <section className="section">
@@ -68,6 +83,13 @@ function Address() {
           </h3>
         </div>
       </section>
+      <button onClick={() => send('Start validation')}>Start validation</button>
+      <button onClick={() => send('Load short flips')}>Load short flips</button>
+      <button onClick={() => send('Load long flips')}>Load long flips</button>
+      <button onClick={() => send('Fail validation')}>Fail validation</button>
+      <button onClick={() => send('Success validation')}>
+        Success validation
+      </button>
 
       <AddressData
         addressInfo={addressInfo}
