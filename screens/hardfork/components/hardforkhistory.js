@@ -43,7 +43,7 @@ export default function HardForkHistory({upgrade = 0, votesRequired = 0}) {
             lineHeight: '3px',
           }}
         >
-          <p className="label">{`Votes: ${payload[0] && payload[0].value}`}</p>
+          <p className="label">{`Votes: ${payload && payload.length && payload[0] && payload[0].value}`}</p>
           <p className="label">{`Timestamp: ${label}`}</p>
         </div>
       )
