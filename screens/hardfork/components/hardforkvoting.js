@@ -17,7 +17,7 @@ const initialState = {
 }
 
 export default function HardForkVoting({
-  upgrade = 5,
+  upgrade = 6,
   lastActivatedUpgrade = 5,
 }) {
   const [state, setState] = useState(initialState)
