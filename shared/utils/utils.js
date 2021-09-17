@@ -98,9 +98,6 @@ export function timeFmt(str) {
 }
 
 export function dateTimeFmt(str) {
-  if (!str) {
-    return '-'
-  }
   const dt = new Date(str)
   return `${dt.toLocaleDateString()} ${dt.toLocaleTimeString(undefined, {
     hour12: false,

@@ -136,7 +136,7 @@ export default function Transactions({address, visible}) {
                       ''
                     )}
                   </td>
-                  <td>{dateTimeFmt(item.timestamp)}</td>
+                  <td>{item.timestamp ? dateTimeFmt(item.timestamp) : '-'}</td>
                   <td>
                     {item.txReceipt && !item.txReceipt.success && (
                       <WarningTooltip
