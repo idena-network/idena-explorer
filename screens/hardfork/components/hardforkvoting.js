@@ -65,7 +65,8 @@ export default function HardForkVoting({
   const votesRequired = votes
     ? Math.round(Math.max(state.online * 0.8, (state.total * 2) / 3))
     : null
-  const missingVotes = status === 'Activated' ? 0 : votesRequired - votes
+  const missingVotes =
+    status === 'Activated' ? 0 : Math.max(votesRequired - votes, 0)
   return (
     <div>
       {state.upgradeData && (
@@ -157,7 +158,7 @@ export default function HardForkVoting({
                           {votes
                             ? `${votes} (${
                                 votesRequired &&
-                                Math.round((votes / votesRequired) * 100)
+                                Math.round((votes / votesRequired) * 1000) / 10
                               }%)`
                             : status}
                         </span>
@@ -177,7 +178,9 @@ export default function HardForkVoting({
                           {missingVotes
                             ? `${missingVotes} (${
                                 votesRequired &&
-                                Math.round((missingVotes / votesRequired) * 100)
+                                Math.round(
+                                  (missingVotes / votesRequired) * 1000
+                                ) / 10
                               }%)`
                             : '-'}
                         </span>
