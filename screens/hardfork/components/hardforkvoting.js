@@ -12,7 +12,7 @@ import {dateTimeFmt} from '../../../shared/utils/utils'
 const initialState = {
   online: 0,
   total: 0,
-  upgradeVoting: [{upgrade: 0, votes: 0}],
+  upgradeVoting: [{upgrade: 6, votes: 1}],
   upgradeData: null,
 }
 
@@ -114,14 +114,15 @@ export default function HardForkVoting({
                   <div className="row">
                     <div className="col-12 col-sm-6 bordered-col">
                       <h3 className="info_block__accent">
-                        <span>
-                          {Math.round(state.online * 0.8)} out of {state.online}
+                        <span>{Math.round(state.online * 0.8)} </span>
+                        <span className="control-label">
+                          out of {state.online}
                         </span>
                       </h3>
                       <TooltipText
                         className="control-label"
                         data-toggle="tooltip"
-                        tooltip="Requires 80% of online nodes to activate the hard fork (delegated nodes excluded)"
+                        tooltip="Requires 80% of online nodes (delegated nodes excluded)"
                       >
                         Online nodes required
                       </TooltipText>
@@ -129,17 +130,17 @@ export default function HardForkVoting({
 
                     <div className="col-12 col-sm-6 bordered-col">
                       <h3 className="info_block__accent">
-                        <span>
-                          {Math.round((state.total / 3) * 2)} out of{' '}
-                          {state.total}
+                        <span>{Math.round((state.total / 3) * 2)} </span>
+                        <span className="control-label">
+                          out of {state.total}
                         </span>
                       </h3>
                       <TooltipText
                         className="control-label"
                         data-toggle="tooltip"
-                        tooltip="Requires 2/3 of the total number of nodes to activate the hard fork (delegated nodes excluded)"
+                        tooltip="Requires 2/3 of validators (non-delegated identities and pool owners without their delegated accounts)"
                       >
-                        Total nodes required
+                        Validators required
                       </TooltipText>
                     </div>
                   </div>
