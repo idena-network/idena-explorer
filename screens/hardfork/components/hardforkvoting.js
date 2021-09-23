@@ -121,7 +121,7 @@ export default function HardForkVoting({
                       <TooltipText
                         className="control-label"
                         data-toggle="tooltip"
-                        tooltip="Requires 80% of online nodes to activate the hard fork (delegated nodes excluded)"
+                        tooltip="Requires 80% of online nodes (delegated nodes excluded)"
                       >
                         Online nodes required
                       </TooltipText>
@@ -137,9 +137,9 @@ export default function HardForkVoting({
                       <TooltipText
                         className="control-label"
                         data-toggle="tooltip"
-                        tooltip="Requires 2/3 of the total number of nodes to activate the hard fork (delegated nodes excluded)"
+                        tooltip="Requires 2/3 of validators (non-delegated identities and pool owners without their delegated accounts)"
                       >
-                        Total nodes required
+                        Validators required
                       </TooltipText>
                     </div>
                   </div>
