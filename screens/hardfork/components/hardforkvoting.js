@@ -60,7 +60,7 @@ export default function HardForkVoting({
     state.upgradeVoting &&
     state.upgradeVoting.filter((u) => u.upgrade === upgrade)
 
-  const votes = upd ? upd.votes : null
+  const votes = upd.length > 0 && upd[0] ? upd[0].votes : null
 
   const votesRequired = votes
     ? Math.round(Math.max(state.online * 0.8, (state.total * 2) / 3))
