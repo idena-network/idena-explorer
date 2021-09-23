@@ -113,8 +113,9 @@ export default function HardForkVoting({
                   <div className="row">
                     <div className="col-12 col-sm-6 bordered-col">
                       <h3 className="info_block__accent">
-                        <span>
-                          {Math.round(state.online * 0.8)} out of {state.online}
+                        <span>{Math.round(state.online * 0.8)} </span>
+                        <span className="control-label">
+                          out of {state.online}
                         </span>
                       </h3>
                       <TooltipText
@@ -128,9 +129,9 @@ export default function HardForkVoting({
 
                     <div className="col-12 col-sm-6 bordered-col">
                       <h3 className="info_block__accent">
-                        <span>
-                          {Math.round((state.total / 3) * 2)} out of{' '}
-                          {state.total}
+                        <span>{Math.round((state.total / 3) * 2)} </span>
+                        <span className="control-label">
+                          out of {state.total}
                         </span>
                       </h3>
                       <TooltipText
