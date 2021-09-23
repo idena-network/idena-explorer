@@ -12,7 +12,7 @@ import {dateTimeFmt} from '../../../shared/utils/utils'
 const initialState = {
   online: 0,
   total: 0,
-  upgradeVoting: [{upgrade: 0, votes: 0}],
+  upgradeVoting: [{upgrade: 6, votes: 1}],
   upgradeData: null,
 }
 
