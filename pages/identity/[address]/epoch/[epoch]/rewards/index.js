@@ -968,7 +968,7 @@ function getCurrentEpochSavedInvites(epoch, savedInvites, rewardsSummary) {
     for (let j = 0; j < item.count; j += 1) {
       res.push({
         epoch,
-        title: 'Saved invitation reward',
+        title: 'Saved invitation',
         validationResult: '-',
         invitationReward,
         missingInvitationReward,
@@ -1008,7 +1008,7 @@ function getPreviousEpochSavedInvites(
 
     res.push({
       epoch: epoch - back,
-      title: 'Saved invitation reward',
+      title: 'Saved invitation',
       validationResult: '-',
       invitationReward,
       missingInvitationReward,
