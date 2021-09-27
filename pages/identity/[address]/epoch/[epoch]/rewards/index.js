@@ -5,14 +5,12 @@ import {useRouter} from 'next/router'
 import Layout from '../../../../../../shared/components/layout'
 import {
   getEpochRewardsSummary,
-  getIdentityAuthorsBadByEpoch,
-  getIdentityByEpoch,
-  getIdentityRewardsByEpoch,
   getIdentityRewardedFlipsByEpoch,
   getIdentityRewardedInvitesByEpoch,
   getIdentitySavedInviteRewardsByEpoch,
   getIdentityAvailableInvitesByEpoch,
   getIdentityReportRewardsByEpoch,
+  getIdentityValidationSummary,
 } from '../../../../../../shared/api'
 import {
   epochFmt,
@@ -37,21 +35,6 @@ function Reward() {
 
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
-
-  const {data: identityInfo} = useQuery(
-    address && epoch && ['epoch/identity', address, epoch - 1],
-    (_, address, epoch) => getIdentityByEpoch(address, epoch)
-  )
-
-  const {data: validationPenalty} = useQuery(
-    address && epoch && ['epoch/identity/authors/bad', address, epoch - 1],
-    (_, address, epoch) => getIdentityAuthorsBadByEpoch(address, epoch)
-  )
-
-  const {data: identityRewards} = useQuery(
-    address && epoch && ['epoch/identity/rewards', address, epoch - 1],
-    (_, address, epoch) => getIdentityRewardsByEpoch(address, epoch)
-  )
 
   const {data: rewardsSummary} = useQuery(
     address && epoch && ['epoch/rewardsSummary', epoch - 1],
@@ -83,12 +66,20 @@ function Reward() {
     (_, address, epoch) => getIdentityReportRewardsByEpoch(address, epoch)
   )
 
+  const {data: validationSummary} = useQuery(
+    address &&
+      epoch && ['epoch/identity/validationSummary', address, epoch - 1],
+    (_, address, epoch) => getIdentityValidationSummary(address, epoch)
+  )
+
+  const identityInfo = validationSummary
+
   const getPenalizationReason = (reason) => {
     switch (reason) {
       case 'WrongWords':
         return 'Yes (flip was reported)'
       case 'QualifiedByNone':
-        return 'Yes (flip was not availalbe)'
+        return 'Yes (flip was not available)'
       case 'NoQualifiedFlips':
         return 'Yes (non of the flips are qualified)'
       default:
@@ -96,47 +87,66 @@ function Reward() {
     return ''
   }
 
-  const getReward = (arr, type) => {
-    if (!arr) {
-      return 0
-    }
-    const item = arr.find((x) => x.type === type)
-    if (!item) {
-      return 0
-    }
-    return item.balance * 1 + item.stake * 1
-  }
-
   const getInvitationsReward = () =>
-    getReward(identityRewards, 'Invitations') +
-    getReward(identityRewards, 'Invitations2') +
-    getReward(identityRewards, 'Invitations3') +
-    getReward(identityRewards, 'SavedInvite') +
-    getReward(identityRewards, 'SavedInviteWin')
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.invitations &&
+      validationSummary.rewards.invitations.earned * 1) ||
+    0
 
-  const getValidationReward = () => getReward(identityRewards, 'Validation')
+  const getValidationReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.validation &&
+      validationSummary.rewards.validation.earned * 1) ||
+    0
 
-  const getFlipsReward = () => getReward(identityRewards, 'Flips')
+  const getFlipsReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.flips &&
+      validationSummary.rewards.flips.earned * 1) ||
+    0
 
-  const getReportsReward = () => getReward(identityRewards, 'Reports')
+  const getReportsReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.reports &&
+      validationSummary.rewards.reports.earned * 1) ||
+    0
 
   const getMissingValidationReward = () =>
-    (identityInfo &&
-      rewardsSummary &&
-      (!isIdentityPassed(identityInfo.state) || validationPenalty) &&
-      (epoch - identityInfo.birthEpoch) ** (1 / 3) *
-        rewardsSummary.validationShare) ||
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.validation &&
+      validationSummary.rewards.validation.missed * 1) ||
     0
 
   const getMissingFlipsReward = () =>
-    (rewardsSummary &&
-      identityInfo &&
-      Math.max(
-        0,
-        rewardsSummary.flipsShare * identityInfo.availableFlips -
-          getFlipsReward()
-      )) ||
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.flips &&
+      validationSummary.rewards.flips.missed * 1) ||
     0
+
+  const getMissingInvitationsReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.invitations &&
+      validationSummary.rewards.invitations.missed * 1) ||
+    0
+
+  const getMissingReportsReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.reports &&
+      validationSummary.rewards.reports.missed * 1) ||
+    0
+
+  const validationPenalty = validationSummary &&
+    validationSummary.penalized && {
+      reason: validationSummary.penaltyReason,
+    }
 
   const invitationRewards = [
     ...getRewardedData(
@@ -163,21 +173,12 @@ function Reward() {
     ),
   ]
 
-  const getMissingInvitationsReward = () =>
-    invitationRewards.reduce(
-      (prev, cur) => prev + cur.missingInvitationReward,
-      0
-    )
-
   const reportRewardsData = getReportRewardsData(
     reportRewards,
     rewardsSummary,
     validationPenalty,
     identityInfo
   )
-
-  const getMissingReportsReward = () =>
-    reportRewardsData.reduce((prev, cur) => prev + cur.missingReward, 0)
 
   return (
     <Layout title={`Identity rewards ${address} for epoch ${epochFmt(epoch)}`}>
@@ -900,26 +901,38 @@ function getRewardedData(
       let missingInvitationReward
       let reason
 
-      invitationReward = rewardsSummary.invitationsShare * rewardCoef
+      const maxInvitationReward = rewardsSummary.invitationsShare * rewardCoef
+      let coef =
+        (rewardsSummary.epochDuration &&
+          item.epochHeight / rewardsSummary.epochDuration) ||
+        0
+      if (coef > 1) {
+        coef = 1
+      }
+      coef = 1.0 - 0.5 * coef ** 4
+      invitationReward = maxInvitationReward * coef
       missingInvitationReward = 0
       reason = '-'
 
       if (isValidated && validationPenalty) {
         reason = 'Validation penalty'
-        missingInvitationReward = invitationReward
+        missingInvitationReward = maxInvitationReward
         invitationReward = 0
       } else if (!isValidated) {
         reason = 'Invitee failed'
-        missingInvitationReward = invitationReward
+        missingInvitationReward = maxInvitationReward
         invitationReward = 0
       } else if (identityInfo && !isIdentityPassed(identityInfo.state)) {
-        missingInvitationReward = invitationReward
+        missingInvitationReward = maxInvitationReward
         invitationReward = 0
         reason = 'My validation failed'
       } else if (!item.rewardType) {
-        missingInvitationReward = invitationReward
+        missingInvitationReward = maxInvitationReward
         invitationReward = 0
         reason = 'Another issuer'
+      } else if (maxInvitationReward > invitationReward) {
+        missingInvitationReward = maxInvitationReward - invitationReward
+        reason = 'Late activation'
       }
 
       return {
@@ -955,7 +968,7 @@ function getCurrentEpochSavedInvites(epoch, savedInvites, rewardsSummary) {
     for (let j = 0; j < item.count; j += 1) {
       res.push({
         epoch,
-        title: 'Saved invititation reward',
+        title: 'Saved invitation reward',
         validationResult: '-',
         invitationReward,
         missingInvitationReward,
@@ -974,25 +987,28 @@ function getPreviousEpochSavedInvites(
   rewardedInvites,
   rewardsSummary
 ) {
-  if (!rewardedInvites || !availableInvites) {
+  if (!availableInvites) {
     return []
   }
   const available = availableInvites.find((x) => x.epoch === epoch - back)
   if (!available) {
     return []
   }
-  const activatedCount = rewardedInvites.filter(
+  const activatedCount = (rewardedInvites || []).filter(
     (x) => x.epoch === epoch - back && x.activationHash
   )
   const res = []
   for (let i = 0; i < available.invites - activatedCount; i += 1) {
+    let rewardCoef = 9
+    if (back === 2) {
+      rewardCoef *= 2
+    }
     const invitationReward = 0
-    const missingInvitationReward =
-      rewardsSummary.invitationsShare * 3 ** (1 + back)
+    const missingInvitationReward = rewardsSummary.invitationsShare * rewardCoef
 
     res.push({
       epoch: epoch - back,
-      title: 'Saved invititation reward',
+      title: 'Saved invitation reward',
       validationResult: '-',
       invitationReward,
       missingInvitationReward,
