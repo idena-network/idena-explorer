@@ -387,6 +387,12 @@ export async function getIdentityAuthorsBadByEpoch(address, epoch) {
   )
 }
 
+export async function getIdentityValidationSummary(address, epoch) {
+  return getResponse(
+    apiClient().get(`epoch/${epoch}/identity/${address}/ValidationSummary`)
+  )
+}
+
 export async function getEpochsCount(address) {
   return getResponse(apiClient().get(`identity/${address}/epochs/count`))
 }
