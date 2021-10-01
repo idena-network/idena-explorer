@@ -275,6 +275,22 @@ export async function getPeersHistory() {
   return getResponse(apiClient().get(`Peers/History`))
 }
 
+export async function getTransactionsDaily() {
+  return getResponse(apiClient().get(`Data/TransactionsDaily`))
+}
+
+export async function getNewcomers() {
+  return getResponse(apiClient().get(`Data/Newcomers`))
+}
+
+export async function getIdentitiesByStatus() {
+  return getResponse(apiClient().get(`Data/IdentitiesByStatus`))
+}
+
+export async function getSuccessRatio() {
+  return getResponse(apiClient().get(`Data/SuccessRatio`))
+}
+
 export async function getMinersHistory() {
   return getResponse(apiClient().get(`Miners/History`))
 }

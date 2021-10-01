@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import {Tooltip} from 'reactstrap'
 
 export default function TooltipText({
@@ -9,16 +9,22 @@ export default function TooltipText({
   ...props
 }) {
   const [tooltipOpen, setTooltipOpen] = useState(false)
-
+  const [current, setCurrent] = useState(null)
   const ref = useRef(null)
+
+  useEffect(() => {
+    setCurrent(ref && ref.current)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref.current])
+
   return (
     <>
       <span ref={ref} {...props}>
         {children}
       </span>
-      {ref.current && (
+      {current && tooltip && (
         <Tooltip
-          target={ref.current}
+          target={current}
           placement={placement}
           arrowClassName="toolTipArrow"
           popperClassName="toolTipPopper"

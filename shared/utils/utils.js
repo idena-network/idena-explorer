@@ -93,14 +93,14 @@ export function dateFmt(str) {
 export function timeFmt(str) {
   const dt = new Date(str)
   return dt.toLocaleTimeString(undefined, {
-    hour12: false,
+    hourCycle: 'h23',
   })
 }
 
 export function dateTimeFmt(str) {
   const dt = new Date(str)
   return `${dt.toLocaleDateString()} ${dt.toLocaleTimeString(undefined, {
-    hour12: false,
+    hourCycle: 'h23',
   })}`
 }
 

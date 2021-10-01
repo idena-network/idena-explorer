@@ -109,11 +109,9 @@ export default function Identities({epoch}) {
               <TooltipText
                 className="control-label"
                 data-toggle="tooltip"
-                tooltip="Click to view more stats at https://idena.today"
+                tooltip="Click to view more stats"
               >
-                <a href="https://idena.today" target="blank">
-                  Network stats &rsaquo;
-                </a>
+                <a href="/charts">Network stats &rsaquo;</a>
               </TooltipText>
             </div>
 

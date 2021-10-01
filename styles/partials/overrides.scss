@@ -630,6 +630,10 @@ p {
   border-bottom: 1px dotted $grey;
 }
 
+.control-label[position='right'] {
+  float: right;
+}
+
 .hide-border {
   border-bottom: 0 !important;
 }

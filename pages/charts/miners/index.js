@@ -4,6 +4,7 @@ import Layout from '../../../shared/components/layout'
 import DataAreaChart from '../../../screens/charts/components/dataarea'
 import {dateTimeFmt} from '../../../shared/utils/utils'
 import {getMinersHistory} from '../../../shared/api'
+import ChartHeader from '../../../screens/charts/components/chartheader'
 
 function Miners() {
   const [chartData, setChartData] = useState([])
@@ -24,21 +25,21 @@ function Miners() {
 
   return (
     <Layout title="Active Miners Chart">
+      <ChartHeader
+        title="Active miners"
+        descr="Total number of actively mining identities running their own
+        mining nodes or delegated into mining pools."
+      />
       <section className="section section_info">
-        <h1>Active miners</h1>
-        <div className="card">
-          <div className="row">
-            <p className="control-label">
-              Total number of actively mining identities running their own
-              mining nodes or delegated into mining pools.
-            </p>
-          </div>
-        </div>
-
         <div className="card">
           <div className="info_block">
             <div className="row">
-              <DataAreaChart chartData={chartData} valueName="Active miners" />
+              <DataAreaChart
+                chartData={chartData}
+                valueName="Active miners"
+                xValueName="Timestamp"
+                xReversed
+              />
             </div>
           </div>
         </div>

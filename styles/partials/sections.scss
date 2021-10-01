@@ -93,6 +93,27 @@
   }
 }
 
+.chart-preview-block {
+  padding-top: rem(18px);
+  padding-bottom: rem(18px);
+
+  img {
+    filter: gray;
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+  }
+
+  &:hover {
+    img {
+      -webkit-filter: grayscale(0);
+      filter: none;
+    }
+    .control-label {
+      color: $primary;
+    }
+  }
+}
+
 .info_block {
   text-align: center;
   white-space: nowrap;
