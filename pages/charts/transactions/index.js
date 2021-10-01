@@ -3,33 +3,41 @@ import {useEffect, useState} from 'react'
 import Layout from '../../../shared/components/layout'
 import DataAreaChart from '../../../screens/charts/components/dataarea'
 import {dateTimeFmt} from '../../../shared/utils/utils'
-import {getPeersHistory} from '../../../shared/api'
+import {getTransactionsDaily} from '../../../shared/api'
 import ChartHeader from '../../../screens/charts/components/chartheader'
 
-function Miners() {
+function Transactions() {
   const [chartData, setChartData] = useState([])
 
   useEffect(() => {
     async function getData() {
-      const result = await getPeersHistory()
+      const result = await getTransactionsDaily()
       const data =
         result &&
-        result.map((item) => ({
-          y: item.count,
-          x: dateTimeFmt(item.timestamp),
+        result.data &&
+        result.data.map((item) => ({
+          y:
+            item.send_trans +
+            item.invite_trans +
+            item.flip_trans +
+            item.valid_trans +
+            item.contract_trans +
+            item.deleg_trans +
+            item.mining_trans +
+            item.other_trans,
+          x: dateTimeFmt(item.date),
         }))
-      setChartData(data)
+      setChartData({data, date: result.date})
     }
     getData()
   }, [])
 
   return (
-    <Layout title="Full Nodes Chart">
+    <Layout title="Daily Transactions Chart">
       <ChartHeader
-        title="Full Nodes"
-        descr="Total number of full nodes discovered in the network within 1
-        hour. These nodes are run by both validated identities and non-validated users: candidates,
-        shared node owners, wallets, exchanges, etc."
+        title="Transactions"
+        descr="This chart shows the total number of transactions by days."
+        actualDate={chartData.date}
       />
 
       <section className="section section_info">
@@ -37,10 +45,9 @@ function Miners() {
           <div className="info_block">
             <div className="row">
               <DataAreaChart
-                chartData={chartData}
-                valueName="Full nodes"
+                chartData={chartData.data}
+                valueName="Transactions"
                 xValueName="Timestamp"
-                xReversed
               />
             </div>
           </div>
@@ -50,4 +57,4 @@ function Miners() {
   )
 }
 
-export default Miners
+export default Transactions

@@ -275,6 +275,22 @@ export async function getPeersHistory() {
   return getResponse(apiClient().get(`Peers/History`))
 }
 
+export async function getTransactionsDaily() {
+  return getResponse(apiClient().get(`Data/TransactionsDaily`))
+}
+
+export async function getNewcomers() {
+  return getResponse(apiClient().get(`Data/Newcomers`))
+}
+
+export async function getIdentitiesByStatus() {
+  return getResponse(apiClient().get(`Data/IdentitiesByStatus`))
+}
+
+export async function getSuccessRatio() {
+  return getResponse(apiClient().get(`Data/SuccessRatio`))
+}
+
 export async function getMinersHistory() {
   return getResponse(apiClient().get(`Miners/History`))
 }
@@ -384,12 +400,6 @@ export async function getIdentityLongAnswersByEpoch(address, epoch) {
 export async function getIdentityAuthorsBadByEpoch(address, epoch) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/identity/${address}/authors/bad`)
-  )
-}
-
-export async function getIdentityValidationSummary(address, epoch) {
-  return getResponse(
-    apiClient().get(`epoch/${epoch}/identity/${address}/ValidationSummary`)
   )
 }
 
