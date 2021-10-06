@@ -241,6 +241,24 @@ export async function getEpochIdentityRewards(epoch, limit, continuationToken) {
   )
 }
 
+export async function getEpochDelegateeTotalRewards(
+  epoch,
+  limit,
+  continuationToken
+) {
+  return getResponse(
+    apiClient().get(`epoch/${epoch}/delegateeTotalRewards`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
+export async function getEpochDelegateeTotalReward(address, epoch) {
+  return getResponse(
+    apiClient().get(`/epoch/${epoch}/address/${address}/delegateeTotalRewards`)
+  )
+}
+
 export async function getEpochIdentityRewardsCount(epoch) {
   return getResponse(apiClient().get(`epoch/${epoch}/identityRewards/count`))
 }
@@ -536,6 +554,27 @@ export async function getPool(address) {
 export async function getPoolDelegators(address, limit, continuationToken) {
   return getResponse(
     apiClient().get(`pool/${address}/delegators`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
+export async function getPoolTotalRewards(address, limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`address/${address}/delegateeTotalRewards`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
+export async function getDelegateeRewardsByAddress(
+  address,
+  epoch,
+  limit,
+  continuationToken
+) {
+  return getResponse(
+    apiClient().get(`epoch/${epoch}/address/${address}/delegateeRewards`, {
       params: {limit, continuationToken},
     })
   )

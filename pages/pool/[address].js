@@ -5,10 +5,17 @@ import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
 import {getPool} from '../../shared/api'
 import Delegators from '../../screens/pool/components/delegators'
+import {useHash, useHashChange} from '../../shared/utils/useHashChange'
+import Rewards from '../../screens/pool/components/rewards'
+
+const DEFAULT_TAB = '#delegators'
 
 function Contract() {
   const router = useRouter()
   const address = router.query.address || ''
+
+  const {hash, setHash, hashReady} = useHash()
+  useHashChange((hash) => setHash(hash))
 
   const {data: poolInfo} = useQuery(
     address && ['pool', address],
@@ -57,8 +64,21 @@ function Contract() {
               <div className="col">
                 <ul className="nav nav-tabs" role="tablist">
                   <NavItem>
-                    <NavLink active>
+                    <NavLink
+                      active={
+                        hashReady && (hash === DEFAULT_TAB || hash === '')
+                      }
+                      href={DEFAULT_TAB}
+                    >
                       <h3>Pool's delegators</h3>
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#rewards'}
+                      href="#rewards"
+                    >
+                      <h3>Rewards</h3>
                     </NavLink>
                   </NavItem>
                 </ul>
@@ -66,10 +86,25 @@ function Contract() {
             </div>
           </div>
 
-          <TabContent activeTab="delegators">
-            <TabPane tabId="delegators">
+          <TabContent activeTab={hashReady ? hash || DEFAULT_TAB : ''}>
+            <TabPane tabId={DEFAULT_TAB}>
               <div className="card">
-                {poolInfo && <Delegators address={address} />}
+                {poolInfo && (
+                  <Delegators
+                    address={address}
+                    visible={hashReady && (hash === DEFAULT_TAB || !hash)}
+                  />
+                )}
+              </div>
+            </TabPane>
+            <TabPane tabId="#rewards">
+              <div className="card">
+                {poolInfo && (
+                  <Rewards
+                    address={address}
+                    visible={hashReady && hash === '#rewards'}
+                  />
+                )}
               </div>
             </TabPane>
           </TabContent>

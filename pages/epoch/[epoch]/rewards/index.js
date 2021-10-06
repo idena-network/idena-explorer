@@ -10,6 +10,7 @@ import Distribution from '../../../../screens/epoch/rewards/components/distribut
 import {useHash, useHashChange} from '../../../../shared/utils/useHashChange'
 import Penalty from '../../../../screens/epoch/rewards/components/penalty'
 import Ages from '../../../../screens/epoch/rewards/components/ages'
+import Pools from '../../../../screens/epoch/rewards/components/pools'
 
 const DEFAULT_TAB = '#ages'
 
@@ -78,6 +79,15 @@ function Rewards() {
                       <h3>Penalized identities</h3>
                     </NavLink>
                   </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#pools'}
+                      href="#pools"
+                    >
+                      <h3>Pool's rewards</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
@@ -109,6 +119,15 @@ function Rewards() {
                 <Penalty
                   epoch={epoch - 1}
                   visible={hashReady && hash === '#penalty'}
+                />
+              </div>
+            </TabPane>
+
+            <TabPane tabId="#pools">
+              <div className="card">
+                <Pools
+                  epoch={epoch - 1}
+                  visible={hashReady && hash === '#pools'}
                 />
               </div>
             </TabPane>

@@ -272,6 +272,24 @@ function Reward() {
                       : 'Wrong answers'
                     : '-'}
                 </div>
+
+                {validationSummary && validationSummary.delegateeReward && (
+                  <>
+                    <hr />
+                    <div className="control-label">Delegated to pool:</div>
+                    <div
+                      className="text_block text_block--ellipsis"
+                      style={{width: '65%'}}
+                    >
+                      <Link
+                        href="/pool/[address]/epoch/[epoch]/rewards"
+                        as={`/pool/${validationSummary.delegateeReward.address}/epoch/${epoch}/rewards`}
+                      >
+                        <a>{validationSummary.delegateeReward.address}</a>
+                      </Link>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className="col-12 col-sm-6">
@@ -314,6 +332,18 @@ function Reward() {
                     }`}
                   />
                 </div>
+
+                {validationSummary && validationSummary.delegateeReward && (
+                  <>
+                    <hr />
+                    <div className="control-label">
+                      Paid to pool for validation:
+                    </div>
+                    <div className="text_block">
+                      {dnaFmt(validationSummary.delegateeReward.amount)}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
