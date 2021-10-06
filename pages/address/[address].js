@@ -33,14 +33,8 @@ function Address() {
     (_, address) => getAddressInfo(address)
   )
 
-  const {data: epochsCount} = useQuery(
-    address && ['epochs', address],
-    (_, address) => getEpochsCount(address)
-  )
-
-  const {data: identityInfo} = useQuery(
-    epochsCount && ['identity', address],
-    (_, address) => getIdentity(address)
+  const {data: identityInfo} = useQuery(['identity', address], (_, address) =>
+    getIdentity(address)
   )
 
   const {data: contractInfo} = useQuery(
