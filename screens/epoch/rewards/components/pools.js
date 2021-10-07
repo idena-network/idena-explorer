@@ -40,21 +40,28 @@ export default function Pools({epoch, visible}) {
             <th style={{width: 80}}>
               Validation
               <br />
-              reward,
+              rewards,
               <br />
               iDNA
             </th>
             <th style={{width: 80}}>
-              Flips
+              Flip
               <br />
-              reward,
+              rewards,
               <br />
               iDNA
             </th>
             <th style={{width: 80}}>
               Invitation
               <br />
-              reward,
+              rewards,
+              <br />
+              iDNA
+            </th>
+            <th style={{width: 80}}>
+              Report
+              <br />
+              rewards,
               <br />
               iDNA
             </th>
@@ -68,7 +75,7 @@ export default function Pools({epoch, visible}) {
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={6} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={7} />)}
           {data &&
             data.map((page, i) => (
               <Fragment key={i}>
@@ -85,9 +92,9 @@ export default function Pools({epoch, visible}) {
                       getReward(item.rewards, 'SavedInvite') +
                       getReward(item.rewards, 'SavedInviteWin')
 
-                    const flipsReward =
-                      getReward(item.rewards, 'Flips') +
-                      getReward(item.rewards, 'Reports')
+                    const flipsReward = getReward(item.rewards, 'Flips')
+
+                    const reportsReward = getReward(item.rewards, 'Reports')
 
                     return (
                       <tr key={item.address}>
@@ -101,7 +108,7 @@ export default function Pools({epoch, visible}) {
                           </div>
                           <div
                             className="text_block text_block--ellipsis"
-                            style={{width: 200}}
+                            style={{width: 150}}
                           >
                             <Link
                               href="/pool/[address]/epoch/[epoch]/rewards"
@@ -117,6 +124,7 @@ export default function Pools({epoch, visible}) {
                         <td>{precise6(validationReward) || '-'}</td>
                         <td>{precise6(flipsReward) || '-'}</td>
                         <td>{precise6(invitationsReward) || '-'}</td>
+                        <td>{precise6(reportsReward) || '-'}</td>
                         <td>
                           {precise6(
                             item.rewards.reduce(

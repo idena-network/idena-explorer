@@ -4,7 +4,6 @@ import {useQuery} from 'react-query'
 import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
 import {
-  getEpochsCount,
   getIdentity,
   getAddressInfo,
   getContract,

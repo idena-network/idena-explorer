@@ -9,7 +9,12 @@ import {
   getDelegateeRewardsByAddress,
   getEpochDelegateeTotalReward,
 } from '../../../../../../shared/api'
-import {epochFmt, dnaFmt, precise6} from '../../../../../../shared/utils/utils'
+import {
+  epochFmt,
+  dnaFmt,
+  precise6,
+  identityStatusFmt,
+} from '../../../../../../shared/utils/utils'
 import {SkeletonRows} from '../../../../../../shared/components/skeleton'
 import TooltipText from '../../../../../../shared/components/tooltip'
 
@@ -62,10 +67,10 @@ function Rewards() {
     0
 
   const flipsReward =
-    (totalRewards &&
-      getReward(totalRewards.rewards, 'Flips') +
-        getReward(totalRewards.rewards, 'Reports')) ||
-    0
+    (totalRewards && getReward(totalRewards.rewards, 'Flips')) || 0
+
+  const reportsReward =
+    (totalRewards && getReward(totalRewards.rewards, 'Reports')) || 0
 
   return (
     <Layout title={`Pool rewards ${address} for epoch ${epochFmt(epoch)}`}>
@@ -123,12 +128,12 @@ function Rewards() {
             <div className="col-12 col-sm-6">
               <div className="section__group">
                 <div className="control-label">
-                  Validation results for epoch:
+                  Validation rewards for epoch:
                 </div>
                 <div className="text_block">
                   <Link
-                    href="/epoch/[epoch]/validation"
-                    as={`/epoch/${epoch}/validation`}
+                    href="/epoch/[epoch]/rewards"
+                    as={`/epoch/${epoch}/rewards`}
                   >
                     <a>{epochFmt(epoch)}</a>
                   </Link>
@@ -142,7 +147,7 @@ function Rewards() {
       <section className="section section_info">
         <div className="row">
           <div className="col-12 col-sm-4">
-            <h3>Total reward</h3>
+            <h3>Total reward, iDNA</h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
@@ -150,7 +155,8 @@ function Rewards() {
                     <h3 className="info_block__accent">
                       <span>
                         {dnaFmt(
-                          validationReward + flipsReward + invitationsReward
+                          validationReward + flipsReward + invitationsReward,
+                          ''
                         )}
                       </span>
                     </h3>
@@ -168,45 +174,57 @@ function Rewards() {
           </div>
 
           <div className="col-12 col-sm-8">
-            <h3>Rewards paid </h3>
+            <h3>Rewards paid, iDNA </h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
-                  <div className="col-12 col-sm-4 bordered-col">
+                  <div className="col-12 col-sm-3 bordered-col">
                     <h3 className="info_block__accent">
-                      {dnaFmt(validationReward)}
+                      {dnaFmt(validationReward, '')}
                     </h3>
                     <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
                       tooltip="Reward for succesfull validation"
                     >
-                      Validation reward
+                      Validation
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-4 bordered-col">
+                  <div className="col-12 col-sm-3 bordered-col">
                     <h3 className="info_block__accent">
-                      {dnaFmt(flipsReward)}
+                      {dnaFmt(flipsReward, '')}
                     </h3>
                     <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
                       tooltip="Reward for qualified flips"
                     >
-                      Flip reward
+                      Flips
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-4 bordered-col">
+                  <div className="col-12 col-sm-3 bordered-col">
                     <h3 className="info_block__accent">
-                      {dnaFmt(invitationsReward)}
+                      {dnaFmt(invitationsReward, '')}
                     </h3>
-                    <div
+                    <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
-                      title="Reward for validated invitations"
+                      tooltip="Reward for validated invitations"
                     >
-                      Invitation reward
-                    </div>
+                      Invitations
+                    </TooltipText>
+                  </div>
+                  <div className="col-12 col-sm-3 bordered-col">
+                    <h3 className="info_block__accent">
+                      {dnaFmt(reportsReward, '')}
+                    </h3>
+                    <TooltipText
+                      className="control-label"
+                      data-toggle="tooltip"
+                      tooltip="Reward for reports"
+                    >
+                      Reports
+                    </TooltipText>
                   </div>
                 </div>
               </div>
@@ -223,7 +241,7 @@ function Rewards() {
                 <ul className="nav nav-tabs" role="tablist">
                   <NavItem>
                     <NavLink active>
-                      <h3>Delegator rewards</h3>
+                      <h3>Delegator's rewards</h3>
                     </NavLink>
                   </NavItem>
                 </ul>
@@ -237,6 +255,11 @@ function Rewards() {
                 <thead>
                   <tr>
                     <th>Address</th>
+                    <th>
+                      Previous <br />
+                      status
+                    </th>
+                    <th>Status</th>
                     <th style={{width: 80}}>
                       Validation
                       <br />
@@ -245,16 +268,23 @@ function Rewards() {
                       iDNA
                     </th>
                     <th style={{width: 80}}>
-                      Flips
+                      Flip
                       <br />
-                      reward,
+                      rewards,
                       <br />
                       iDNA
                     </th>
                     <th style={{width: 80}}>
                       Invitation
                       <br />
-                      reward,
+                      rewards,
+                      <br />
+                      iDNA
+                    </th>
+                    <th style={{width: 80}}>
+                      Report
+                      <br />
+                      rewards,
                       <br />
                       iDNA
                     </th>
@@ -268,7 +298,7 @@ function Rewards() {
                   </tr>
                 </thead>
                 <tbody>
-                  {status === 'loading' && <SkeletonRows cols={6} />}
+                  {status === 'loading' && <SkeletonRows cols={8} />}
                   {data &&
                     data.map((page, i) => (
                       <Fragment key={i}>
@@ -283,9 +313,12 @@ function Rewards() {
                               getReward(item.rewards, 'Invitations2') +
                               getReward(item.rewards, 'Invitations3')
 
-                            const flipsReward =
-                              getReward(item.rewards, 'Flips') +
-                              getReward(item.rewards, 'Reports')
+                            const flipsReward = getReward(item.rewards, 'Flips')
+
+                            const reportsReward = getReward(
+                              item.rewards,
+                              'Reports'
+                            )
 
                             return (
                               <tr key={item.delegatorAddress}>
@@ -297,7 +330,10 @@ function Rewards() {
                                       width="32"
                                     />
                                   </div>
-                                  <div className="text_block text_block--ellipsis">
+                                  <div
+                                    className="text_block text_block--ellipsis"
+                                    style={{width: 150}}
+                                  >
                                     <Link
                                       href="/identity/[address]/epoch/[epoch]/rewards"
                                       as={`/identity/${item.delegatorAddress}/epoch/${epoch}/rewards`}
@@ -306,9 +342,12 @@ function Rewards() {
                                     </Link>
                                   </div>
                                 </td>
+                                <td>{identityStatusFmt(item.prevState)}</td>
+                                <td>{identityStatusFmt(item.state)}</td>
                                 <td>{precise6(validationReward) || '-'}</td>
                                 <td>{precise6(flipsReward) || '-'}</td>
                                 <td>{precise6(invitaionReward) || '-'}</td>
+                                <td>{precise6(reportsReward) || '-'}</td>
                                 <td>
                                   {precise6(
                                     item.rewards.reduce(

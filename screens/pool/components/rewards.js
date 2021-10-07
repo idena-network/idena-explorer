@@ -40,21 +40,28 @@ export default function Rewards({address, visible}) {
             <th>
               Validation
               <br />
-              reward,
+              rewards,
               <br />
               iDNA
             </th>
             <th>
-              Flips
+              Flip
               <br />
-              reward,
+              rewards,
               <br />
               iDNA
             </th>
             <th>
               Invitation
               <br />
-              reward,
+              rewards,
+              <br />
+              iDNA
+            </th>
+            <th>
+              Report
+              <br />
+              rewards,
               <br />
               iDNA
             </th>
@@ -68,7 +75,7 @@ export default function Rewards({address, visible}) {
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={6} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={7} />)}
           {data &&
             data.map((page, i) => (
               <Fragment key={i}>
@@ -83,9 +90,9 @@ export default function Rewards({address, visible}) {
                       getReward(item.rewards, 'Invitations2') +
                       getReward(item.rewards, 'Invitations3')
 
-                    const flipsReward =
-                      getReward(item.rewards, 'Flips') +
-                      getReward(item.rewards, 'Reports')
+                    const flipsReward = getReward(item.rewards, 'Flips')
+
+                    const reportsReward = getReward(item.rewards, 'Reports')
 
                     return (
                       <tr key={item.epoch}>
@@ -105,6 +112,7 @@ export default function Rewards({address, visible}) {
                         <td>{precise6(validationReward) || '-'}</td>
                         <td>{precise6(flipsReward) || '-'}</td>
                         <td>{precise6(invitaionReward) || '-'}</td>
+                        <td>{precise6(reportsReward) || '-'}</td>
                         <td>
                           {precise6(
                             item.rewards.reduce(
