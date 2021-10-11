@@ -37,7 +37,7 @@ export default function Supply() {
 
   return (
     <div className="col-12 col-sm-4">
-      <h1>Сoins iDNA</h1>
+      <h1>Сoins, iDNA</h1>
       <div className="card">
         <div className="info_block">
           <div className="row">

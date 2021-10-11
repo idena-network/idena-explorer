@@ -33,9 +33,7 @@ export default function Epoch({epochData}) {
         Math.max(0, ((endEpochDate - nowDate) / 86400000) * 24 * 60)
       )
 
-      const epochLeftPercent = Math.round(
-        (epochLeftMinutes / epochDurationMinutes) * 100
-      )
+      const epochLeftPercent = (epochLeftMinutes / epochDurationMinutes) * 100
 
       const {epochLeft, epochLeftUnit} =
         epochLeftMinutes < 60
@@ -63,13 +61,13 @@ export default function Epoch({epochData}) {
   const epochProgress = [
     {
       name: 'progress',
-      value: 100 - state.epochLeftPercent,
+      value: Math.trunc(100 - state.epochLeftPercent),
       color: '#578fff',
       innerColor: '#578fff22',
     },
     {
       name: 'left',
-      value: state.epochLeftPercent,
+      value: Math.ceil(state.epochLeftPercent),
       color: '#578fff22',
       innerColor: '#578fff00',
     },
@@ -141,7 +139,9 @@ export default function Epoch({epochData}) {
                               </PieChart>
                             </ResponsiveContainer>
                             <h3 className="accent">
-                              <span>{100 - state.epochLeftPercent}%</span>
+                              <span>
+                                {100 - Math.ceil(state.epochLeftPercent)}%
+                              </span>
                             </h3>
                           </div>
                         </div>
