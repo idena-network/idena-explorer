@@ -12,10 +12,9 @@ const initialState = {
   issuedCount: '-',
   usedCount: '-',
   leftCount: '-',
-  left: '-',
 }
 
-export default function Invites({epoch, epochData}) {
+export default function Invites({epoch}) {
   const [state, setState] = useState(initialState)
 
   useEffect(() => {
@@ -35,19 +34,17 @@ export default function Invites({epoch, epochData}) {
             getCount(identitiesSummary, 'Newbie')
           : 0
 
-      const totalCount = Math.round(prevNodesCount / 2 + prevNodesCount * 0.1)
+      const totalCount = Math.max(
+        500,
+        Math.round(prevNodesCount / 2 + prevNodesCount * 0.1)
+      )
       const {usedCount, allCount: issuedCount} = invitesSummary
-
-      const left =
-        // totalCount && Math.round(((totalCount - usedCount) / totalCount) * 100)
-        totalCount && Math.round((usedCount / issuedCount) * 100)
 
       setState({
         totalCount,
         usedCount,
         issuedCount,
-        leftCount: totalCount - usedCount,
-        left,
+        leftCount: Math.max(0, totalCount - usedCount),
       })
     }
     if (epoch) getData()
