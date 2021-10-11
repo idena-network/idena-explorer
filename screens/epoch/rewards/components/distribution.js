@@ -5,7 +5,7 @@ import {
   getEpochIdentityRewards,
   getEpochIdentityRewardsCount,
 } from '../../../../shared/api'
-import {identityStatusFmt, precise6} from '../../../../shared/utils/utils'
+import {identityStatusFmt, precise2, precise6} from '../../../../shared/utils/utils'
 import {SkeletonRows} from '../../../../shared/components/skeleton'
 
 const LIMIT = 30
@@ -59,16 +59,23 @@ export default function Distribution({epoch, visible}) {
               iDNA
             </th>
             <th style={{width: 80}}>
-              Flips
+              Flip
               <br />
-              reward,
+              rewards,
               <br />
               iDNA
             </th>
             <th style={{width: 80}}>
               Invitation
               <br />
-              reward,
+              rewards,
+              <br />
+              iDNA
+            </th>
+            <th style={{width: 80}}>
+              Report
+              <br />
+              rewards,
               <br />
               iDNA
             </th>
@@ -82,7 +89,7 @@ export default function Distribution({epoch, visible}) {
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={7} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={8} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
@@ -93,9 +100,9 @@ export default function Distribution({epoch, visible}) {
                     getReward(item.rewards, 'Invitations2') +
                     getReward(item.rewards, 'Invitations3')
 
-                  const flipsReward =
-                    getReward(item.rewards, 'Flips') +
-                    getReward(item.rewards, 'Reports')
+                  const flipsReward = getReward(item.rewards, 'Flips')
+
+                  const reportsReward = getReward(item.rewards, 'Reports')
 
                   return (
                     <tr key={item.address}>
@@ -123,9 +130,9 @@ export default function Distribution({epoch, visible}) {
                       </td>
                       <td>{identityStatusFmt(item.prevState)}</td>
                       <td>{identityStatusFmt(item.state)}</td>
-                      <td>{precise6(validationReward) || '-'}</td>
+                      <td>{precise2(validationReward) || '-'}</td>
                       <td>
-                        {precise6(flipsReward) ||
+                        {precise2(flipsReward) ||
                           (item.prevState === 'Newbie' ||
                           item.prevState === 'Verified' ||
                           item.prevState === 'Human'
@@ -133,14 +140,22 @@ export default function Distribution({epoch, visible}) {
                             : 'N/A')}
                       </td>
                       <td>
-                        {precise6(invitaionReward) ||
+                        {precise2(invitaionReward) ||
                           (item.prevState === 'Verified' ||
                           item.prevState === 'Human'
                             ? '-'
                             : 'N/A')}
                       </td>
                       <td>
-                        {precise6(
+                        {precise2(reportsReward) ||
+                          (item.prevState === 'Newbie' ||
+                          item.prevState === 'Verified' ||
+                          item.prevState === 'Human'
+                            ? '-'
+                            : 'N/A')}
+                      </td>
+                      <td>
+                        {precise2(
                           item.rewards.reduce(
                             (prev, cur) =>
                               prev + cur.balance * 1 + cur.stake * 1,

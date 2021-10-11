@@ -4,12 +4,19 @@ import {TabContent, TabPane, NavItem, NavLink} from 'reactstrap'
 import {useRouter} from 'next/router'
 import Layout from '../../../../shared/components/layout'
 import {getEpoch, getEpochRewardsSummary} from '../../../../shared/api'
-import {epochFmt, dateFmt, dnaFmt} from '../../../../shared/utils/utils'
+import {
+  epochFmt,
+  dateFmt,
+  dnaFmt,
+  precise1,
+  precise0,
+} from '../../../../shared/utils/utils'
 import TooltipText from '../../../../shared/components/tooltip'
 import Distribution from '../../../../screens/epoch/rewards/components/distribution'
 import {useHash, useHashChange} from '../../../../shared/utils/useHashChange'
 import Penalty from '../../../../screens/epoch/rewards/components/penalty'
 import Ages from '../../../../screens/epoch/rewards/components/ages'
+import Pools from '../../../../screens/epoch/rewards/components/pools'
 
 const DEFAULT_TAB = '#ages'
 
@@ -78,6 +85,15 @@ function Rewards() {
                       <h3>Penalized identities</h3>
                     </NavLink>
                   </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#pools'}
+                      href="#pools"
+                    >
+                      <h3>Pool's rewards</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
@@ -112,6 +128,15 @@ function Rewards() {
                 />
               </div>
             </TabPane>
+
+            <TabPane tabId="#pools">
+              <div className="card">
+                <Pools
+                  epoch={epoch - 1}
+                  visible={hashReady && hash === '#pools'}
+                />
+              </div>
+            </TabPane>
           </TabContent>
         </div>
       </section>
@@ -129,13 +154,15 @@ function RewardsData({epoch}) {
     <section className="section section_info">
       <div className="row">
         <div className="col-12 col-sm-4">
-          <h3>Total reward fund</h3>
+          <h3>Total reward fund, iDNA</h3>
           <div className="card">
             <div className="info_block">
               <div className="row">
                 <div className="col-12 col-sm-12 bordered-col">
                   <h3 className="info_block__accent">
-                    {(rewardsSummary && dnaFmt(rewardsSummary.total)) || '-'}
+                    {(rewardsSummary &&
+                      dnaFmt(precise0(rewardsSummary.total), '')) ||
+                      '-'}
                   </h3>
                   <TooltipText
                     className="control-label"
@@ -151,13 +178,14 @@ function RewardsData({epoch}) {
         </div>
 
         <div className="col-12 col-sm-8">
-          <h3>Rewards</h3>
+          <h3>Rewards, iDNA</h3>
           <div className="card">
             <div className="info_block">
               <div className="row">
-                <div className="col-12 col-sm-4 bordered-col">
+                <div className="col-12 col-sm-3 bordered-col">
                   <h3 className="info_block__accent">
-                    {(rewardsSummary && dnaFmt(rewardsSummary.validation)) ||
+                    {(rewardsSummary &&
+                      dnaFmt(precise0(rewardsSummary.validation), '')) ||
                       '-'}
                   </h3>
                   <TooltipText
@@ -165,24 +193,27 @@ function RewardsData({epoch}) {
                     data-toggle="tooltip"
                     tooltip="Fund for succesfull validation"
                   >
-                    Validation rewards
+                    Validation
                   </TooltipText>
                 </div>
-                <div className="col-12 col-sm-4 bordered-col">
+                <div className="col-12 col-sm-3 bordered-col">
                   <h3 className="info_block__accent">
-                    {(rewardsSummary && dnaFmt(rewardsSummary.flips)) || '-'}
+                    {(rewardsSummary &&
+                      dnaFmt(precise0(rewardsSummary.flips), '')) ||
+                      '-'}
                   </h3>
                   <TooltipText
                     className="control-label"
                     data-toggle="tooltip"
                     tooltip="Fund for qualified flips"
                   >
-                    Flips rewards
+                    Flips
                   </TooltipText>
                 </div>
-                <div className="col-12 col-sm-4 bordered-col">
+                <div className="col-12 col-sm-3 bordered-col">
                   <h3 className="info_block__accent">
-                    {(rewardsSummary && dnaFmt(rewardsSummary.invitations)) ||
+                    {(rewardsSummary &&
+                      dnaFmt(precise0(rewardsSummary.invitations), '')) ||
                       '-'}
                   </h3>
                   <TooltipText
@@ -190,7 +221,21 @@ function RewardsData({epoch}) {
                     data-toggle="tooltip"
                     tooltip="Fund for validated invitations"
                   >
-                    Invitations rewards
+                    Invitations
+                  </TooltipText>
+                </div>
+                <div className="col-12 col-sm-3 bordered-col">
+                  <h3 className="info_block__accent">
+                    {(rewardsSummary &&
+                      dnaFmt(precise0(rewardsSummary.reports), '')) ||
+                      '-'}
+                  </h3>
+                  <TooltipText
+                    className="control-label"
+                    data-toggle="tooltip"
+                    tooltip="Fund for reports"
+                  >
+                    Reports
                   </TooltipText>
                 </div>
               </div>

@@ -6,12 +6,12 @@ import {identityStatusFmt} from '../../../shared/utils/utils'
 
 const LIMIT = 30
 
-export default function Delegators({address}) {
+export default function Delegators({address, visible}) {
   const fetchDelegators = (_, address, continuationToken = null) =>
     getPoolDelegators(address, LIMIT, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
-    address && `pool/${address}/delegators`,
+    address && visible && `pool/${address}/delegators`,
     [address],
     fetchDelegators,
     {
@@ -33,7 +33,7 @@ export default function Delegators({address}) {
           </tr>
         </thead>
         <tbody>
-          {status === 'loading' && <SkeletonRows cols={2} />}
+          {!visible || (status === 'loading' && <SkeletonRows cols={3} />)}
           {data.map(
             (page) =>
               page &&

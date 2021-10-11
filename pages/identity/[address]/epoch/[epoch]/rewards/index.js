@@ -272,17 +272,35 @@ function Reward() {
                       : 'Wrong answers'
                     : '-'}
                 </div>
+
+                {validationSummary && validationSummary.delegateeReward && (
+                  <>
+                    <hr />
+                    <div className="control-label">Delegated to pool:</div>
+                    <div
+                      className="text_block text_block--ellipsis"
+                      style={{width: '65%'}}
+                    >
+                      <Link
+                        href="/pool/[address]/epoch/[epoch]/rewards"
+                        as={`/pool/${validationSummary.delegateeReward.address}/epoch/${epoch}/rewards`}
+                      >
+                        <a>{validationSummary.delegateeReward.address}</a>
+                      </Link>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className="col-12 col-sm-6">
               <div className="section__group">
                 <div className="control-label">
-                  Validation results for epoch:
+                  Validation rewards for epoch:
                 </div>
                 <div className="text_block">
                   <Link
-                    href="/epoch/[epoch]/validation"
-                    as={`/epoch/${epoch}/validation`}
+                    href="/epoch/[epoch]/rewards"
+                    as={`/epoch/${epoch}/rewards`}
                   >
                     <a>{epochFmt(epoch)}</a>
                   </Link>
@@ -314,6 +332,18 @@ function Reward() {
                     }`}
                   />
                 </div>
+
+                {validationSummary && validationSummary.delegateeReward && (
+                  <>
+                    <hr />
+                    <div className="control-label">
+                      Paid to pool for validation:
+                    </div>
+                    <div className="text_block">
+                      {dnaFmt(validationSummary.delegateeReward.amount)}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -323,7 +353,7 @@ function Reward() {
       <section className="section section_info">
         <div className="row">
           <div className="col-12 col-sm-4">
-            <h3>Total reward</h3>
+            <h3>Total reward, iDNA</h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
@@ -334,7 +364,8 @@ function Reward() {
                           getValidationReward() +
                             getFlipsReward() +
                             getInvitationsReward() +
-                            getReportsReward()
+                            getReportsReward(),
+                          ''
                         )}
                       </span>
                     </h3>
@@ -352,45 +383,57 @@ function Reward() {
           </div>
 
           <div className="col-12 col-sm-8">
-            <h3>Rewards paid </h3>
+            <h3>Rewards paid, iDNA </h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
-                  <div className="col-12 col-sm-4 bordered-col">
+                  <div className="col-12 col-sm-3 bordered-col">
                     <h3 className="info_block__accent">
-                      {dnaFmt(getValidationReward())}
+                      {dnaFmt(getValidationReward(), '')}
                     </h3>
                     <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
                       tooltip="Reward for succesfull validation"
                     >
-                      Validation reward
+                      Validation
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-4 bordered-col">
+                  <div className="col-12 col-sm-3 bordered-col">
                     <h3 className="info_block__accent">
-                      {dnaFmt(getFlipsReward() + getReportsReward())}
+                      {dnaFmt(getFlipsReward(), '')}
                     </h3>
                     <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
                       tooltip="Reward for qualified flips"
                     >
-                      Flip reward
+                      Flips
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-4 bordered-col">
+                  <div className="col-12 col-sm-3 bordered-col">
                     <h3 className="info_block__accent">
-                      {dnaFmt(getInvitationsReward())}
+                      {dnaFmt(getInvitationsReward(), '')}
                     </h3>
                     <div
                       className="control-label"
                       data-toggle="tooltip"
                       title="Reward for validated invitations"
                     >
-                      Invitation reward
+                      Invitations
                     </div>
+                  </div>
+                  <div className="col-12 col-sm-3 bordered-col">
+                    <h3 className="info_block__accent">
+                      {dnaFmt(getReportsReward(), '')}
+                    </h3>
+                    <TooltipText
+                      className="control-label"
+                      data-toggle="tooltip"
+                      tooltip="Reward for reports"
+                    >
+                      Reports
+                    </TooltipText>
                   </div>
                 </div>
               </div>
@@ -402,7 +445,7 @@ function Reward() {
       <section className="section section_info">
         <div className="row">
           <div className="col-12 col-sm-4">
-            <h3>Missed rewards</h3>
+            <h3>Missed rewards, iDNA</h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
@@ -415,7 +458,8 @@ function Reward() {
                             getMissingValidationReward() +
                               getMissingFlipsReward() +
                               getMissingInvitationsReward() +
-                              getMissingReportsReward()
+                              getMissingReportsReward(),
+                            ''
                           )) ||
                           '-'}
                       </span>
@@ -434,46 +478,56 @@ function Reward() {
           </div>
 
           <div className="col-12 col-sm-8">
-            <h3>Rewards not paid</h3>
+            <h3>Rewards not paid, iDNA</h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
-                  <div className="col-12 col-sm-4 bordered-col">
+                  <div className="col-12 col-sm-3 bordered-col">
                     <h3 className="info_block__accent" style={{color: 'red'}}>
-                      {dnaFmt(getMissingValidationReward())}
+                      {dnaFmt(getMissingValidationReward(), '')}
                     </h3>
                     <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
                       tooltip="Missed reward for succesfull validation"
                     >
-                      Validation reward
+                      Validation
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-4 bordered-col">
+                  <div className="col-12 col-sm-3 bordered-col">
                     <h3 className="info_block__accent" style={{color: 'red'}}>
-                      {dnaFmt(
-                        getMissingFlipsReward() + getMissingReportsReward()
-                      )}
+                      {dnaFmt(getMissingFlipsReward(), '')}
                     </h3>
                     <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
                       tooltip="Missed rewards for flips"
                     >
-                      Flip reward
+                      Flips
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-4 bordered-col">
+                  <div className="col-12 col-sm-3 bordered-col">
                     <h3 className="info_block__accent" style={{color: 'red'}}>
-                      {dnaFmt(getMissingInvitationsReward())}
+                      {dnaFmt(getMissingInvitationsReward(), '')}
                     </h3>
                     <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
                       tooltip="Missed rewards invitations"
                     >
-                      Invitation reward
+                      Invitations
+                    </TooltipText>
+                  </div>
+                  <div className="col-12 col-sm-3 bordered-col">
+                    <h3 className="info_block__accent" style={{color: 'red'}}>
+                      {dnaFmt(getMissingReportsReward(), '')}
+                    </h3>
+                    <TooltipText
+                      className="control-label"
+                      data-toggle="tooltip"
+                      tooltip="Missed rewards for reports"
+                    >
+                      Reports
                     </TooltipText>
                   </div>
                 </div>
