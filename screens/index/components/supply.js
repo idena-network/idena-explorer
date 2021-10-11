@@ -28,44 +28,46 @@ export default function Supply() {
           ),
           'M'
         ),
-        totalBurnt: dnaFmt(precise1(totalCoins.burnt / 1000000), 'M iDNA'),
-        circulatingSupply: dnaFmt(precise1(supply / 1000000), 'M iDNA'),
+        totalBurnt: dnaFmt(precise1(totalCoins.burnt / 1000000), 'M'),
+        circulatingSupply: dnaFmt(precise1(supply / 1000000), 'M'),
       })
     }
     getData()
   }, [])
 
   return (
-    <div className="col-12 col-sm-5">
-      <h1>Coins</h1>
+    <div className="col-12 col-sm-4">
+      <h1>Сoins, iDNA</h1>
       <div className="card">
         <div className="info_block">
           <div className="row">
-            <div className="col-12 col-sm-6 bordered-col">
+            <div className="col-12 col-sm-12 ">
               <Link href="/circulation">
-                <div className="info_block__link">
-                  <h3 className="info_block__accent">
-                    {state.circulatingSupply}
-                  </h3>
-                  <TooltipText
-                    tooltip="Click to see details about total / cirtulating supply"
-                    className="control-label"
-                    data-toggle="tooltip"
-                  >
-                    Circulating supply &rsaquo;
-                  </TooltipText>
-                </div>
+                <a className="link-col">
+                  <div className="row">
+                    <div className="col-12 col-sm-6 bordered-col">
+                      <h3 className="accent">{state.circulatingSupply}</h3>
+                      <TooltipText
+                        tooltip="Circulating supply"
+                        className="control-label"
+                        data-toggle="tooltip"
+                      >
+                        Supply
+                      </TooltipText>
+                    </div>
+                    <div className="col-12 col-sm-6 bordered-col">
+                      <h3 className="accent">{state.totalBurnt}</h3>
+                      <TooltipText
+                        className="control-label"
+                        data-toggle="tooltip"
+                        tooltip="Coins burnt by protocol (fees, penalties, lost stakes, etc.)"
+                      >
+                        Burnt coins
+                      </TooltipText>
+                    </div>
+                  </div>
+                </a>
               </Link>
-            </div>
-            <div className="col-12 col-sm-6 bordered-col">
-              <h3 className="info_block__accent">{state.totalBurnt}</h3>
-              <TooltipText
-                className="control-label"
-                data-toggle="tooltip"
-                tooltip="Coins burnt by protocol (fees, penalties, lost stakes, etc.)"
-              >
-                Burnt coins
-              </TooltipText>
             </div>
           </div>
         </div>

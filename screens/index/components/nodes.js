@@ -1,15 +1,11 @@
 import Link from 'next/link'
 import {useEffect, useState} from 'react'
-import {
-  getOnlineMinersCount,
-  getOnlineIdentitiesCount,
-} from '../../../shared/api'
+import {getOnlineValidatorsCount, getPeersHistory} from '../../../shared/api'
 import TooltipText from '../../../shared/components/tooltip'
 
 const initialState = {
   validators: '-',
-  online: '-',
-  total: '-',
+  peers: '-',
 }
 
 export default function Identities() {
@@ -17,13 +13,13 @@ export default function Identities() {
 
   useEffect(() => {
     async function getData() {
-      const [online, total] = await Promise.all([
-        getOnlineMinersCount(),
-        getOnlineIdentitiesCount(),
+      const [validators, result] = await Promise.all([
+        getOnlineValidatorsCount(),
+        getPeersHistory(1),
       ])
       setState({
-        online,
-        total,
+        validators,
+        peers: result && result[0] && result[0].count,
       })
     }
     getData()
@@ -31,39 +27,39 @@ export default function Identities() {
 
   return (
     <div className="col-12 col-sm-4">
-      <h1>Identities</h1>
+      <h1>Nodes</h1>
       <div className="card">
         <div className="info_block">
           <div className="row">
             <div className="col-12 col-sm-6 bordered-col ">
-              <Link href="/charts/identities" as="/charts/identities">
+              <Link href="/charts/peers" as="/charts/peers">
                 <a className="link-col">
                   <h3 className="accent">
-                    <span>{state.total}</span>
+                    <span>{state.peers}</span>
                   </h3>
                   <TooltipText
                     className="control-label"
                     data-toggle="tooltip"
-                    tooltip="Validated identities"
+                    tooltip="Total number of full nodes discovered in the network"
                   >
-                    Total &rsaquo;
+                    Total nodes &rsaquo;
                   </TooltipText>
                 </a>
               </Link>
             </div>
 
             <div className="col-12 col-sm-6 bordered-col ">
-              <Link href="/charts/miners" as="/charts/miners">
+              <Link href="/charts/validators" as="/charts/validators">
                 <a className="link-col">
                   <h3 className="accent">
-                    <span>{state.online}</span>
+                    <span>{state.validators}</span>
                   </h3>
                   <TooltipText
                     className="control-label"
                     data-toggle="tooltip"
-                    tooltip="Total mining identities. Click for stats"
+                    tooltip="Mining nodes run by individual identities and pool owners activated online status"
                   >
-                    Active miners &rsaquo;
+                    Mining nodes &rsaquo;
                   </TooltipText>
                 </a>
               </Link>

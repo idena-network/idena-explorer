@@ -36,7 +36,7 @@ function Miners() {
               <DataAreaChart
                 chartData={chartData}
                 valueName="Mining nodes"
-                xValueName="Datestamp"
+                xValueName="Timestamp"
                 xReversed
               />
             </div>
