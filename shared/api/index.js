@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const BASE_API_URL = 'https://api.idena.org/api'
+// const BASE_API_URL = 'https://api.idena.org/api'
+const BASE_API_URL = 'http://135.181.80.24:1235/api'
 
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 
@@ -271,8 +272,8 @@ export async function getHardForkVotingHistory(upgrade) {
   return getResponse(apiClient().get(`upgrade/${upgrade}/votinghistory`))
 }
 
-export async function getPeersHistory() {
-  return getResponse(apiClient().get(`Peers/History`))
+export async function getPeersHistory(limit) {
+  return getResponse(apiClient().get(`Peers/History`, {params: {limit}}))
 }
 
 export async function getTransactionsDaily() {

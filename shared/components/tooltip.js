@@ -29,7 +29,7 @@ export default function TooltipText({
           arrowClassName="toolTipArrow"
           popperClassName="toolTipPopper"
           innerClassName="toolTipInnerPopper"
-          offset="0 8px"
+          offset="0, 8px"
           isOpen={tooltipOpen}
           toggle={() => setTooltipOpen(!tooltipOpen)}
         >

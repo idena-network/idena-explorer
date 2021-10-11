@@ -50,7 +50,8 @@ h5,
 h1,
 .h1 {
   font-size: rem(28px);
-  margin-bottom: rem(30px);
+  margin-top: rem(30px);
+  margin-bottom: rem(16px);
 
   &:last-child {
     margin-bottom: 0;
@@ -146,12 +147,9 @@ p {
 
 .row {
   @media (#{$min_phones--big}) {
-    margin-left: -20px;
-    margin-right: -20px;
-
+    margin: -20px;
     > div {
-      padding-left: 20px;
-      padding-right: 20px;
+      padding: 20px;
     }
   }
 }
@@ -490,9 +488,13 @@ p {
   color: $dark;
   background-color: $white;
   border-radius: 12px;
-  padding: rem(23px 40px);
+  padding: 40px 30px;
   margin-bottom: rem(20px);
   overflow: hidden;
+
+  @media (#{$max_phones--big}) {
+    padding: 10px 30px;
+  }
 
   &:last-child {
     margin-bottom: 0;
@@ -611,7 +613,7 @@ p {
   font-weight: $font-weight-medium;
   font-size: rem(14px);
   line-height: 1.6;
-  margin-right: rem(5px);
+  border-bottom: 1px dotted $transparent;
 
   [data-toggle='tooltip'] {
     border-bottom: 1px dotted $grey;
