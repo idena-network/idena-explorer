@@ -4,7 +4,6 @@ import {dateTimeFmt} from '../../../shared/utils/utils'
 export default function ChartHeader({title, descr, actualDate}) {
   const dt = new Date(actualDate)
 
-  console.log(actualDate, dt.toLocaleTimeString())
   return (
     <section className="section">
       <div className="section_main__group">

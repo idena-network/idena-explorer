@@ -32,6 +32,11 @@ const charts = [
         img: '/static/images/charts/transactions.png',
         tooltip: 'Number of transactions by days',
       },
+    ],
+  },
+  {
+    title: 'Identities',
+    charts: [
       {
         title: 'Validated Identities',
         ref: '/charts/identities',
@@ -71,12 +76,9 @@ function Charts() {
             <div className="info_block">
               <div className="row">
                 {section.charts.map((chart, chartId) => (
-                  <div
-                    className="col-12 col-sm-3 chart-preview-block"
-                    key={chartId}
-                  >
+                  <div className="col-12 col-sm-3 " key={chartId}>
                     <Link href={chart.ref}>
-                      <a className="info_block__link">
+                      <a className="link-col">
                         <h3 className="info_block__accent">
                           {chart.img && <img src={chart.img} alt="pic" />}
                         </h3>

@@ -271,8 +271,8 @@ export async function getHardForkVotingHistory(upgrade) {
   return getResponse(apiClient().get(`upgrade/${upgrade}/votinghistory`))
 }
 
-export async function getPeersHistory() {
-  return getResponse(apiClient().get(`Peers/History`))
+export async function getPeersHistory(limit) {
+  return getResponse(apiClient().get(`Peers/History`, {params: {limit}}))
 }
 
 export async function getTransactionsDaily() {

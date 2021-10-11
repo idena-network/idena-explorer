@@ -3,6 +3,10 @@ import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
 import Supply from '../screens/index/components/supply'
 import Identities from '../screens/index/components/identities'
+import Nodes from '../screens/index/components/nodes'
+import Stats from '../screens/index/components/stats'
+import Epoch from '../screens/index/components/epoch'
+import Invites from '../screens/index/components/invites'
 import Layout from '../shared/components/layout'
 import EpochsTable from '../screens/index/components/epochs'
 import TopAddress from '../screens/index/components/topaddress'
@@ -30,7 +34,11 @@ function Home() {
     <Layout>
       <section className="section section_info">
         <div className="row">
-          <Identities epoch={data && data.epoch} />
+          <Epoch epochData={data} />
+          <Stats />
+          <Invites epoch={data && data.epoch} />
+          <Identities />
+          <Nodes />
           <Supply />
         </div>
       </section>
@@ -44,22 +52,6 @@ function Home() {
               </a>
             </Link>
           )}
-
-          <Link href="/epoch/[epoch]" as={`/epoch/${data && data.epoch}`}>
-            <a className="btn btn-secondary btn-small">
-              <span>Current epoch data</span>
-            </a>
-          </Link>
-
-          <Link
-            href="/epoch/[epoch]/validation"
-            as={`/epoch/${data && data.epoch}/validation`}
-          >
-            <a className="btn btn-secondary btn-small">
-              <i className="icon icon--report" />
-              <span>Last validation results</span>
-            </a>
-          </Link>
         </div>
       </section>
 
