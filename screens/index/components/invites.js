@@ -71,6 +71,10 @@ export default function Invites({epoch}) {
 
             <div className="col-12 col-sm-6 bordered-col">
               <h3 className="accent">
+                <MicroPie
+                  val={state.usedCount}
+                  maxVal={state.leftCount + state.usedCount}
+                />
                 <span>{state.usedCount}</span>
               </h3>
 
@@ -89,53 +93,55 @@ export default function Invites({epoch}) {
   )
 }
 
-function MicroPie({val, val2 = val, maxVal = 100}) {
+function MicroPie({val, innerVal = val, maxVal = 100, size = 11}) {
   const data = [
     {
       name: 'value',
-      usedValue: val,
-      issuedValue: val2,
+      value: val,
+      innerValue: innerVal,
       color: '#578fff',
       innerColor: '#578fff22',
     },
     {
       name: 'innerValue',
-      usedValue: maxVal - val,
-      issuedValue: maxVal - val2,
+      value: Math.max(0, maxVal - val),
+      innerValue: Math.max(0, maxVal - innerVal),
       color: '#578fff22',
       innerColor: '#578fff00',
     },
   ]
   return (
-    <ResponsiveContainer>
-      <PieChart>
-        <Pie
-          startAngle={180}
-          endAngle={0}
-          data={data}
-          dataKey="value"
-          strokeWidth={0}
-          innerRadius={43}
-          outerRadius={45}
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={data[index].color} />
-          ))}
-        </Pie>
-        <Pie
-          startAngle={180}
-          endAngle={0}
-          data={data}
-          dataKey="innerValue"
-          strokeWidth={0}
-          innerRadius={35}
-          outerRadius={40}
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={data[index].innerColor} />
-          ))}
-        </Pie>
-      </PieChart>
-    </ResponsiveContainer>
+    <div className="microPie">
+      <ResponsiveContainer width="100%">
+        <PieChart>
+          <Pie
+            startAngle={90}
+            endAngle={-270}
+            data={data}
+            dataKey="value"
+            strokeWidth={0}
+            innerRadius={size - 2}
+            outerRadius={size}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={data[index].color} />
+            ))}
+          </Pie>
+          <Pie
+            startAngle={90}
+            endAngle={-270}
+            data={data}
+            dataKey="innerValue"
+            strokeWidth={0}
+            innerRadius={0}
+            outerRadius={size - 2}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={data[index].innerColor} />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
   )
 }

@@ -17,6 +17,15 @@
       margin-right: 0;
     }
   }
+
+  .row {
+    @media (#{$max_phones--big}) {
+      > div {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+    }
+  }
 }
 
 .header_logo {
