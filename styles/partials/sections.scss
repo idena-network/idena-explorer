@@ -86,7 +86,7 @@
 
 .bordered-col {
   @media (#{$max_phones--big}) {
-    padding: rem(24px) 0;
+    padding: 0;
   }
 
   + .bordered-col {
@@ -126,6 +126,8 @@
   color: $dark;
   margin-bottom: 0.75rem;
   font-weight: 500;
+  display: flex;
+  justify-content: center;
 }
 
 .link-col {
@@ -135,9 +137,15 @@
   margin: rem(-30px) rem(-20px);
   padding: rem(30px) rem(20px);
 
+  @media (#{$max_phones--big}) {
+    margin: rem(-20px) 0;
+    padding: rem(20px) 0;
+  }
+
   img {
     filter: grayscale(1);
     height: 100px;
+    width: 90%;
   }
 
   &:hover {
@@ -181,6 +189,13 @@
       top: 39%;
     }
   }
+}
+
+.microPie {
+  width: rem(30px);
+  height: rem(30px);
+  margin-right: rem(3px);
+  margin-top: rem(-2px);
 }
 
 .info_block {

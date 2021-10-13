@@ -33,7 +33,10 @@ export default function Epoch({epochData}) {
         Math.max(0, ((endEpochDate - nowDate) / 86400000) * 24 * 60)
       )
 
-      const epochLeftPercent = (epochLeftMinutes / epochDurationMinutes) * 100
+      const epochLeftPercent = Math.min(
+        99,
+        (epochLeftMinutes / epochDurationMinutes) * 100
+      )
 
       const {epochLeft, epochLeftUnit} =
         epochLeftMinutes < 60
@@ -75,7 +78,9 @@ export default function Epoch({epochData}) {
 
   return (
     <div className="col-12 col-sm-4">
-      <h1>{`Epoch ${epochData && epochFmt(epochData.epoch)}`}</h1>
+      <h1>{`Epoch ${
+        epochData && epochData.epoch ? epochFmt(epochData.epoch) : ''
+      }`}</h1>
       <div className="card">
         <div className="info_block">
           <div className="row">

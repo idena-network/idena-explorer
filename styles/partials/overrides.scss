@@ -146,6 +146,12 @@ p {
 }
 
 .row {
+  @media (#{$max_phones--big}) {
+    margin: -20px 0;
+    > div {
+      padding: 20px 0;
+    }
+  }
   @media (#{$min_phones--big}) {
     margin: -20px;
     > div {
@@ -493,7 +499,7 @@ p {
   overflow: hidden;
 
   @media (#{$max_phones--big}) {
-    padding: 10px 30px;
+    padding: 30px 10px;
   }
 
   &:last-child {
@@ -770,6 +776,7 @@ p {
 
 .toolTipArrow:before {
   border-bottom-color: #53565c !important;
+  border-top-color: #53565c !important;
 }
 
 .toolTipPopper {

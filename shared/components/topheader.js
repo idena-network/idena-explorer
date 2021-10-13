@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import {useEffect, useState} from 'react'
+import Link from 'next/link'
 import TooltipText from './tooltip'
 import {usdFmt, precise1, precise2} from '../utils/utils'
 
@@ -244,13 +245,15 @@ function Card({
             )}
           </div>
           {href && (
-            <a
-              href={href}
-              target={blank ? '_blank' : ''}
-              rel={blank ? 'noreferrer' : ''}
-            >
-              {' '}
-            </a>
+            <Link href={href}>
+              <a
+                href={href}
+                target={blank ? '_blank' : ''}
+                rel={blank ? 'noreferrer' : ''}
+              >
+                {' '}
+              </a>
+            </Link>
           )}
         </div>
       </div>
