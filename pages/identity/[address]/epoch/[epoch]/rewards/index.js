@@ -27,6 +27,7 @@ import {
 } from '../../../../../../shared/utils/useHashChange'
 
 const DEFAULT_TAB = '#flips'
+const REPORT_REWARD_FUND_FIRST_EPOCH = 75
 
 function Reward() {
   const router = useRouter()
@@ -1086,7 +1087,11 @@ function getReportRewardsData(
     let missingReward = 0
     let details = '-'
     if (!(reward && reward > 0)) {
-      missingReward = rewardsSummary.flipsShare / 5.0
+      missingReward =
+        rewardsSummary.epoch &&
+        rewardsSummary.epoch >= REPORT_REWARD_FUND_FIRST_EPOCH
+          ? rewardsSummary.reportsShare
+          : rewardsSummary.flipsShare / 5.0
       if (validationPenalty) {
         details = 'Validation penalty'
       } else if (!isIdentityPassed(identityInfo.state)) {
