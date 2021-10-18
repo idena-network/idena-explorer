@@ -127,6 +127,10 @@ export async function getCirculatingSupply() {
   return getResponse(apiClient().get('circulatingsupply?format=short'))
 }
 
+export async function getCoins() {
+  return getResponse(apiClient().get(`Data/Coins`))
+}
+
 export async function getLastEpoch() {
   return getResponse(apiClient().get('epoch/last'))
 }

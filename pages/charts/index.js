@@ -64,6 +64,35 @@ const charts = [
       },
     ],
   },
+  {
+    title: 'Coins',
+    charts: [
+      {
+        title: 'Circulating supply',
+        ref: '/charts/circulatingsupply',
+        img: '/static/images/charts/circulatingsupply.png',
+        tooltip: 'Total amount of iDNA coins available for trade',
+      },
+      {
+        title: 'Burnt',
+        ref: '/charts/burnt',
+        img: '/static/images/charts/burnt.png',
+        tooltip: 'Total amount of iDNA coins burnt by protocol',
+      },
+      {
+        title: 'Staked',
+        ref: '/charts/staked',
+        img: '/static/images/charts/staked.png',
+        tooltip: 'Total amount of iDNA coins locked in identities stakes',
+      },
+      {
+        title: 'Total supply',
+        ref: '/charts/totalsupply',
+        img: '/static/images/charts/totalsupply.png',
+        tooltip: 'Total supply structure',
+      },
+    ],
+  },
 ]
 
 function Charts() {
