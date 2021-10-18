@@ -7,6 +7,13 @@ function Circulation() {
   return (
     <Layout title="Circulating supply (iDNA)">
       <section className="section section_info">
+        <div className="section_main__group">
+          <h1>Circulating supply</h1>
+          <p className="section_main__subtitle">
+            Circulating supply is calculated as 'Total Supply' minus 'Vested
+            Coins' minus 'Staked Coins'
+          </p>
+        </div>
         <div className="row">
           <Coins />
         </div>

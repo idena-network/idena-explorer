@@ -42,10 +42,10 @@ export default function Supply() {
         <div className="info_block">
           <div className="row">
             <div className="col-12 col-sm-12 ">
-              <Link href="/circulation">
-                <a className="link-col">
-                  <div className="row">
-                    <div className="col-12 col-sm-6 bordered-col">
+              <div className="row">
+                <div className="col-12 col-sm-6 bordered-col">
+                  <Link href="/circulation">
+                    <a className="link-col">
                       <h3 className="accent">{state.circulatingSupply}</h3>
                       <TooltipText
                         tooltip="Circulating supply"
@@ -54,8 +54,12 @@ export default function Supply() {
                       >
                         Supply
                       </TooltipText>
-                    </div>
-                    <div className="col-12 col-sm-6 bordered-col">
+                    </a>
+                  </Link>
+                </div>
+                <div className="col-12 col-sm-6 bordered-col">
+                  <Link href="/charts/burnt">
+                    <a className="link-col">
                       <h3 className="accent">{state.totalBurnt}</h3>
                       <TooltipText
                         className="control-label"
@@ -64,10 +68,10 @@ export default function Supply() {
                       >
                         Burnt coins
                       </TooltipText>
-                    </div>
-                  </div>
-                </a>
-              </Link>
+                    </a>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>

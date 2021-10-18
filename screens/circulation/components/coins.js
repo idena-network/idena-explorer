@@ -38,7 +38,6 @@ export default function Coins() {
   return (
     <>
       <div className="col-12 col-sm-4">
-        <h1>Circulating supply</h1>
         <div className="card">
           <div className="info_block">
             <div className="row">
@@ -59,7 +58,6 @@ export default function Coins() {
         </div>
       </div>
       <div className="col-12 col-sm-8">
-        <h1>&nbsp;</h1>
         <div className="card">
           <div className="info_block">
             <div className="row">
@@ -88,7 +86,7 @@ export default function Coins() {
                 <TooltipText
                   className="control-label"
                   data-toggle="tooltip"
-                  tooltip="Frozen coins minted for identities' stakes"
+                  tooltip="Locked coins minted for identities' stakes"
                 >
                   Staked coins
                 </TooltipText>

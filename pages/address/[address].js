@@ -205,7 +205,7 @@ function AddressData({
                     <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
-                      tooltip="Frozen balance"
+                      tooltip="Locked balance"
                     >
                       Stake
                     </TooltipText>
