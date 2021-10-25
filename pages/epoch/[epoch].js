@@ -39,7 +39,7 @@ function Epoch() {
   return (
     <Layout title={`Epoch ${epochFmt(epoch)}`}>
       <section className="section">
-        <h1>Epoch</h1>
+        <h1>Epoch {epoch && epochFmt(epoch)}</h1>
 
         <div className="button-group">
           <Link href="/epoch/[epoch]" as={`/epoch/${epoch - 1}${hash}`}>
