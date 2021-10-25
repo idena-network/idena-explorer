@@ -164,7 +164,7 @@ export default function Blocks({epoch, visible, limit = 30}) {
   )
 }
 
-function BlockFlag({flag}) {
+export function BlockFlag({flag}) {
   switch (flag) {
     case 'FlipLotteryStarted':
       return (

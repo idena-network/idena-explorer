@@ -2,27 +2,60 @@ import {useQuery} from 'react-query'
 import Link from 'next/link'
 import {NavItem, NavLink, TabContent, TabPane} from 'reactstrap'
 import {useRouter} from 'next/router'
+import {useEffect, useState} from 'react'
 import Layout from '../../shared/components/layout'
-import {getBlock} from '../../shared/api'
+import {getBlock, getEpochBlocks, getLastEpoch} from '../../shared/api'
 import {PageLoading, PageError} from '../../shared/components/loading'
 import {dateTimeFmt, epochFmt} from '../../shared/utils/utils'
 import Transactions from '../../screens/block/components/transactions'
 import TooltipText from '../../shared/components/tooltip'
+import {BlockFlag} from '../../screens/epoch/components/blocks'
 
 function Block() {
   const router = useRouter()
   const {block} = router.query
 
+  const [lastBlock, setLastBlock] = useState()
+
   const {data, error, status} = useQuery(block, getBlock)
+
+  useEffect(() => {
+    async function getData() {
+      const {epoch} = await getLastEpoch()
+      const blockData = await getEpochBlocks(epoch, 1)
+      const block = blockData && blockData[0] && blockData[0].height
+      setLastBlock(block)
+    }
+    getData()
+  }, [])
 
   return (
     <Layout title={`Block ${block}`}>
       <section className="section">
         <div className="section_main__group">
-          <h1 className="section_main__title">Block</h1>
+          <h1 className="section_main__title">Block {block}</h1>
           <h3 className="section_main__subtitle">
             <span>{(data && data.hash) || '...'}</span>
           </h3>
+        </div>
+
+        <div className="button-group">
+          <Link href="/block/[block]" as={`/block/${block - 1}`}>
+            <a className="btn btn-secondary btn-small" disabled={block === 1}>
+              <i className="icon icon--thin_arrow_left" />
+              <span>Previous block</span>
+            </a>
+          </Link>
+
+          <Link href="/block/[block]" as={`/block/${block * 1 + 1}`}>
+            <a
+              className="btn btn-secondary btn-small"
+              disabled={block * 1 >= lastBlock}
+            >
+              <span>Next block</span>
+              <i className="icon icon--thin_arrow_right" />
+            </a>
+          </Link>
         </div>
       </section>
       {status === 'loading' && <PageLoading />}
@@ -139,7 +172,7 @@ function BlockDetails(data) {
               <div className="text_block">{data.proposerVrfScore || '-'}</div>
 
               <hr />
-              <div className="control-label">
+              <div className="control-label" data-toggle="tooltip">
                 <TooltipText tooltip="Mininum threshold for the block proposer selection">
                   Proposer selection threshold:
                 </TooltipText>
@@ -147,14 +180,36 @@ function BlockDetails(data) {
               <div className="text_block">{data.vrfProposerThreshold}</div>
 
               <hr />
-              <div className="control-label">
+              <div className="control-label" data-toggle="tooltip">
                 <TooltipText tooltip="iDNA per byte">Fee rate:</TooltipText>
               </div>
               <div className="text_block">{data.feeRate}</div>
 
               <hr />
-              <div className="control-label" />
-              <div className="text_block" />
+              <div className="control-label" data-toggle="tooltip">
+                <TooltipText tooltip="Block flags">Flags:</TooltipText>
+              </div>
+              <div className="text_block">
+                {(data && data.flags && (
+                  <div
+                    style={{
+                      marginTop: '4px',
+                    }}
+                  >
+                    {data.flags.map((flag) => (
+                      <span
+                        key={flag}
+                        style={{
+                          marginRight: '4px',
+                        }}
+                      >
+                        <BlockFlag flag={flag} />
+                      </span>
+                    ))}
+                  </div>
+                )) ||
+                  '-'}
+              </div>
             </div>
           </div>
         </div>
