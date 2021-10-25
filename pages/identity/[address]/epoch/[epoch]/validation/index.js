@@ -10,7 +10,9 @@ import {
   precise1,
   isIdentityPassed,
 } from '../../../../../../shared/utils/utils'
-import TooltipText from '../../../../../../shared/components/tooltip'
+import TooltipText, {
+  IconTooltip,
+} from '../../../../../../shared/components/tooltip'
 import ShortAnswers from '../../../../../../screens/identity/address/epoch/validation/components/shortAnswers'
 import LongAnswers from '../../../../../../screens/identity/address/epoch/validation/components/longAnswers'
 import {
@@ -313,7 +315,24 @@ function AnswersData({address, epoch, identity}) {
                           }}
                         >
                           {shortInTime}
+                          {shortInTime === 'Late' && (
+                            <Link href="https://www.idena.io/faq#faq-validation-11">
+                              <a target="_blank" rel="noreferrer">
+                                <IconTooltip
+                                  style={{
+                                    color: '#578fff',
+                                    fontSize: '18px',
+                                    margin: '0 3px',
+                                  }}
+                                  tooltip="See FAQ for details"
+                                  className="icon icon--info"
+                                  placement="top"
+                                />
+                              </a>
+                            </Link>
+                          )}
                         </h3>
+
                         <TooltipText
                           data-toggle="tooltip"
                           className="control-label"
