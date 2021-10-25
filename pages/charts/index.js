@@ -4,24 +4,24 @@ import TooltipText from '../../shared/components/tooltip'
 
 const charts = [
   {
-    title: 'Network stats',
+    title: 'Network Stats',
     charts: [
       {
-        title: 'Active miners',
+        title: 'Active Miners',
         ref: '/charts/miners',
         img: '/static/images/charts/miners.png',
         tooltip:
           'Total number of actively mining identities running their own mining nodes or delegated into mining pools',
       },
       {
-        title: 'Mining nodes',
+        title: 'Mining Nodes',
         ref: '/charts/validators',
         img: '/static/images/charts/validators.png',
         tooltip:
           'Total number of mining nodes run by individual identities or pool owners who activated online status',
       },
       {
-        title: 'Full nodes',
+        title: 'Full Nodes',
         ref: '/charts/peers',
         img: '/static/images/charts/peers.png',
         tooltip: 'Number of nodes discovered in the network',
@@ -31,6 +31,12 @@ const charts = [
         ref: '/charts/transactions',
         img: '/static/images/charts/transactions.png',
         tooltip: 'Number of transactions by days',
+      },
+      {
+        title: 'Invites Activation Progress',
+        ref: '/charts/inviteactivations',
+        img: '/static/images/charts/inviteactivations.png',
+        tooltip: 'Total number of activated invitations',
       },
     ],
   },
@@ -68,7 +74,13 @@ const charts = [
     title: 'Coins',
     charts: [
       {
-        title: 'Circulating supply',
+        title: 'Supply Structure',
+        ref: '/circulation',
+        img: '/static/images/charts/supplystructure.png',
+        tooltip: 'Total supply structure',
+      },
+      {
+        title: 'Circulating Supply',
         ref: '/charts/circulatingsupply',
         img: '/static/images/charts/circulatingsupply.png',
         tooltip: 'Total amount of iDNA coins available for trade',
@@ -86,10 +98,17 @@ const charts = [
         tooltip: 'Total amount of iDNA coins locked in identities stakes',
       },
       {
-        title: 'Total supply',
+        title: 'Vested',
+        ref: '/charts/vested',
+        img: '/static/images/charts/vested.png',
+        tooltip: 'Total amount of vested iDNA coins',
+      },
+
+      {
+        title: 'Total Supply',
         ref: '/charts/totalsupply',
         img: '/static/images/charts/totalsupply.png',
-        tooltip: 'Total supply structure',
+        tooltip: 'Total supply structure, dynamics',
       },
     ],
   },

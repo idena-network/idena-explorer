@@ -1,40 +1,7 @@
-import {useEffect, useState} from 'react'
-import {getCirculatingSupply, getTotalCoins} from '../../../shared/api'
-import {precise2, dnaFmt} from '../../../shared/utils/utils'
+import Link from 'next/link'
 import TooltipText from '../../../shared/components/tooltip'
 
-const initialState = {
-  circulatingSupply: '-',
-  totalSupply: '-',
-  vestedCoins: '-',
-  stakedCoins: '-',
-}
-
-export default function Coins() {
-  const [state, setState] = useState(initialState)
-
-  useEffect(() => {
-    async function getData() {
-      const [circulation, totalCoins] = await Promise.all([
-        getCirculatingSupply(),
-        getTotalCoins(),
-      ])
-      const totalSupply = precise2(
-        1 * totalCoins.totalBalance + 1 * totalCoins.totalStake
-      )
-      setState({
-        circulatingSupply: dnaFmt(precise2(circulation), ''),
-        totalSupply: dnaFmt(totalSupply, ''),
-        vestedCoins: dnaFmt(
-          precise2(totalSupply - circulation - totalCoins.totalStake),
-          ''
-        ),
-        stakedCoins: dnaFmt(precise2(totalCoins.totalStake), ''),
-      })
-    }
-    getData()
-  }, [])
-
+export default function Coins({coinsData}) {
   return (
     <>
       <div className="col-12 col-sm-4">
@@ -42,16 +9,18 @@ export default function Coins() {
           <div className="info_block">
             <div className="row">
               <div className="col-12 col-sm-12 bordered-col">
-                <h3 className="info_block__accent">
-                  {state.circulatingSupply}
-                </h3>
-                <TooltipText
-                  className="control-label"
-                  data-toggle="tooltip"
-                  tooltip="Total supply minus vested and staked coins"
-                >
-                  Circulating supply
-                </TooltipText>
+                <Link href="/charts/totalsupply">
+                  <a className="link-col">
+                    <h3 className="accent">{coinsData.totalSupply}</h3>
+                    <TooltipText
+                      className="control-label"
+                      data-toggle="tooltip"
+                      tooltip="Total coins available (including vested and staked coins)"
+                    >
+                      Total supply
+                    </TooltipText>
+                  </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -62,34 +31,46 @@ export default function Coins() {
           <div className="info_block">
             <div className="row">
               <div className="col-12 col-sm-4 bordered-col">
-                <h3 className="info_block__accent">{state.totalSupply}</h3>
-                <TooltipText
-                  className="control-label"
-                  data-toggle="tooltip"
-                  tooltip="Total coins available (including vested and staked coins)"
-                >
-                  Total supply
-                </TooltipText>
+                <Link href="/charts/circulatingsupply">
+                  <a className="link-col">
+                    <h3 className="accent">{coinsData.circulatingSupply}</h3>
+                    <TooltipText
+                      className="control-label"
+                      data-toggle="tooltip"
+                      tooltip="Total supply minus vested and staked coins"
+                    >
+                      Circulating supply
+                    </TooltipText>
+                  </a>
+                </Link>
               </div>
               <div className="col-12 col-sm-4 bordered-col">
-                <h3 className="info_block__accent">{state.vestedCoins}</h3>
-                <TooltipText
-                  className="control-label"
-                  data-toggle="tooltip"
-                  tooltip="Vested coins (see details below)"
-                >
-                  Vested coins
-                </TooltipText>
+                <Link href="/charts/vested">
+                  <a className="link-col">
+                    <h3 className="accent">{coinsData.vestedCoins}</h3>
+                    <TooltipText
+                      className="control-label"
+                      data-toggle="tooltip"
+                      tooltip="Vested coins (see details below)"
+                    >
+                      Vested coins
+                    </TooltipText>
+                  </a>
+                </Link>
               </div>
               <div className="col-12 col-sm-4 bordered-col">
-                <h3 className="info_block__accent">{state.stakedCoins}</h3>
-                <TooltipText
-                  className="control-label"
-                  data-toggle="tooltip"
-                  tooltip="Locked coins minted for identities' stakes"
-                >
-                  Staked coins
-                </TooltipText>
+                <Link href="/charts/staked">
+                  <a className="link-col">
+                    <h3 className="accent">{coinsData.stakedCoins}</h3>
+                    <TooltipText
+                      className="control-label"
+                      data-toggle="tooltip"
+                      tooltip="Locked coins minted for identities' stakes"
+                    >
+                      Staked coins
+                    </TooltipText>
+                  </a>
+                </Link>
               </div>
             </div>
           </div>
