@@ -51,7 +51,7 @@ export default function Coins({coinsData}) {
                     <TooltipText
                       className="control-label"
                       data-toggle="tooltip"
-                      tooltip="Vested coins (see details below)"
+                      tooltip="Vested coins (click for details)"
                     >
                       Vested coins
                     </TooltipText>
