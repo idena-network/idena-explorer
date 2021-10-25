@@ -55,38 +55,42 @@ export default function Invites({epoch}) {
       <h1>Invites</h1>
       <div className="card">
         <div className="info_block">
-          <div className="row">
-            <div className="col-12 col-sm-6 bordered-col">
-              <h3 className="accent">
-                <span>{state.leftCount}</span>
-              </h3>
-              <TooltipText
-                className="control-label"
-                data-toggle="tooltip"
-                tooltip="Total invitations left"
-              >
-                Available
-              </TooltipText>
-            </div>
+          <Link href="/charts/inviteactivations">
+            <a className="link-col">
+              <div className="row">
+                <div className="col-12 col-sm-6 bordered-col">
+                  <h3 className="accent">
+                    <span>{state.leftCount}</span>
+                  </h3>
+                  <TooltipText
+                    className="control-label"
+                    data-toggle="tooltip"
+                    tooltip="Total invitations left"
+                  >
+                    Available
+                  </TooltipText>
+                </div>
 
-            <div className="col-12 col-sm-6 bordered-col">
-              <h3 className="accent">
-                <MicroPie
-                  val={state.usedCount}
-                  maxVal={state.leftCount + state.usedCount}
-                />
-                <span>{state.usedCount}</span>
-              </h3>
+                <div className="col-12 col-sm-6 bordered-col">
+                  <h3 className="accent">
+                    <MicroPie
+                      val={state.usedCount}
+                      maxVal={state.leftCount + state.usedCount}
+                    />
+                    <span>{state.usedCount}</span>
+                  </h3>
 
-              <TooltipText
-                className="control-label"
-                data-toggle="tooltip"
-                tooltip="Total invites activated"
-              >
-                Used
-              </TooltipText>
-            </div>
-          </div>
+                  <TooltipText
+                    className="control-label"
+                    data-toggle="tooltip"
+                    tooltip="Total invites activated"
+                  >
+                    Used
+                  </TooltipText>
+                </div>
+              </div>
+            </a>
+          </Link>
         </div>
       </div>
     </div>

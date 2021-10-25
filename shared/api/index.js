@@ -301,6 +301,10 @@ export async function getTransactionsDaily() {
   return getResponse(apiClient().get(`Data/TransactionsDaily`))
 }
 
+export async function getInviteActivations() {
+  return getResponse(apiClient().get(`Data/InviteActivations`))
+}
+
 export async function getNewcomers() {
   return getResponse(apiClient().get(`Data/Newcomers`))
 }
