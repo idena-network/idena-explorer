@@ -48,9 +48,9 @@ function InviteActivations() {
             epoch: item.epoch,
           }))
       const data = {
-        currEpochInvites: {data: currEpochInvitesData, epoch: 76},
-        prev1EpochInvites: {data: prev1EpochInvitesData, epoch: 75},
-        prev2EpochInvites: {data: prev2EpochInvitesData, epoch: 74},
+        currEpochInvites: {data: currEpochInvitesData, epoch},
+        prev1EpochInvites: {data: prev1EpochInvitesData, epoch: epoch - 1},
+        prev2EpochInvites: {data: prev2EpochInvitesData, epoch: epoch - 2},
       }
 
       setChartData({data, date: result.date})
