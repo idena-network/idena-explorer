@@ -63,7 +63,7 @@ export default function HardForkVoting({
   const votes = upd && upd.length > 0 && upd[0] ? upd[0].votes : null
 
   const votesRequired = votes
-    ? Math.round(Math.max(state.online * 0.8, (state.total * 2) / 3))
+    ? Math.round(Math.max(state.online * 0.8, state.total * 0.6))
     : null
   const missingVotes =
     status === 'Activated' ? 0 : Math.max(votesRequired - votes, 0)
@@ -130,7 +130,7 @@ export default function HardForkVoting({
 
                     <div className="col-12 col-sm-6 bordered-col">
                       <h3 className="info_block__accent">
-                        <span>{Math.round((state.total / 3) * 2)} </span>
+                        <span>{Math.round(state.total * 0.6)} </span>
                         <span className="control-label">
                           out of {state.total}
                         </span>
