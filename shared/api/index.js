@@ -309,6 +309,18 @@ export async function getNewcomers() {
   return getResponse(apiClient().get(`Data/Newcomers`))
 }
 
+export async function getValidationFails() {
+  return getResponse(apiClient().get(`Data/ValidationFails`))
+}
+
+export async function getPotentialParticipants() {
+  return getResponse(apiClient().get(`Data/PotentialParticipants`))
+}
+
+export async function getUnloadedFlips() {
+  return getResponse(apiClient().get(`Data/UnloadedFlips`))
+}
+
 export async function getIdentitiesByStatus() {
   return getResponse(apiClient().get(`Data/IdentitiesByStatus`))
 }

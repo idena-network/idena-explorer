@@ -8,14 +8,33 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts'
+import {precise2} from '../../../shared/utils/utils'
 
 export default function DataBarIdentitiesChart({
   chartData,
   valueName,
   xValueName,
 }) {
+  const colors = {
+    verified: '#578fff',
+    newbie: '#ff6666',
+    human: '#27d980',
+    suspended: '#96999e',
+    zombie: '#d2d4d9',
+  }
+
   function CustomTooltip({payload, label, active}) {
     if (active) {
+      const total =
+        payload && payload.reduce((result, entry) => result + entry.value, 0)
+
+      const totalRate =
+        payload &&
+        payload[0] &&
+        payload[0].payload &&
+        payload[0].payload.rates &&
+        payload[0].payload.rates.reduce((result, entry) => result + entry, 0)
+
       return (
         <div
           className="custom-tooltip"
@@ -28,22 +47,28 @@ export default function DataBarIdentitiesChart({
             lineHeight: '3px',
           }}
         >
-          <p className="label">{`Zombie: ${
-            payload && payload[4] && payload[4].value
-          }`}</p>
-          <p className="label">{`Suspended: ${
-            payload && payload[3] && payload[3].value
-          }`}</p>
-          <p className="label">{`Human: ${
-            payload && payload[2] && payload[2].value
-          }`}</p>
-          <p className="label">{`Verified: ${
-            payload && payload[1] && payload[1].value
-          }`}</p>
-          <p className="label">{`Newbie: ${
-            payload && payload[0] && payload[0].value
-          }`}</p>
-          <p className="label">{`${xValueName}: ${label}`}</p>
+          <p className="total">{`Epoch: ${label}`}</p>
+          <p className="total">{`Total: ${total} (${precise2(totalRate)}%)`}</p>
+          <div className="list">
+            {payload &&
+              payload.reverse().map((entry, index) => (
+                <p key={`item-${index}`}>
+                  <span style={{color: entry.color, marginRight: '3px'}}>
+                    •
+                  </span>
+                  {`${entry.name}: ${entry.value} (${
+                    entry.payload &&
+                    entry.payload.rates &&
+                    precise2(
+                      entry.payload.rates[
+                        entry.payload.rates.length - index - 1
+                      ]
+                    )
+                  }%)
+                  `}
+                </p>
+              ))}
+          </div>
         </div>
       )
     }
@@ -61,16 +86,31 @@ export default function DataBarIdentitiesChart({
           />
           <CartesianGrid vertical={false} strokeDasharray="1 1" />
 
-          <Bar name="Newbie" stackId="1" dataKey="newbie" fill="#ff6666" />
-          <Bar name="Verified" stackId="1" dataKey="verified" fill="#578fff" />
-          <Bar name="Human" stackId="1" dataKey="human" fill="#27d980" />
+          <Bar
+            name="Newbie"
+            stackId="1"
+            dataKey="newbie"
+            fill={colors.newbie}
+          />
+          <Bar
+            name="Verified"
+            stackId="1"
+            dataKey="verified"
+            fill={colors.verified}
+          />
+          <Bar name="Human" stackId="1" dataKey="human" fill={colors.human} />
           <Bar
             name="Suspended"
             stackId="1"
             dataKey="suspended"
-            fill="#96999e"
+            fill={colors.suspended}
           />
-          <Bar name="Zombie" stackId="1" dataKey="zombie" fill="#d2d4d9" />
+          <Bar
+            name="Zombie"
+            stackId="1"
+            dataKey="zombie"
+            fill={colors.zombie}
+          />
 
           <XAxis
             axisLine={false}

@@ -50,6 +50,7 @@ export default function DataAreaChart({
             </linearGradient>
           </defs>
           <Area
+            type="monotone"
             dataKey="y"
             stroke="#578fff"
             fillOpacity={1}
