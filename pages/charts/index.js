@@ -4,7 +4,7 @@ import TooltipText from '../../shared/components/tooltip'
 
 const charts = [
   {
-    title: 'Network Stats',
+    title: 'Network Activity',
     charts: [
       {
         title: 'Active Miners',
@@ -41,7 +41,7 @@ const charts = [
     ],
   },
   {
-    title: 'Identities',
+    title: 'Validation Stats',
     charts: [
       {
         title: 'Validated Identities',
@@ -62,11 +62,24 @@ const charts = [
         tooltip: 'Number of identities that validated for the first time',
       },
       {
-        title: 'Validation Success Ratio',
+        title: 'Success Ratio',
         ref: '/charts/successratio',
         img: '/static/images/charts/successratio.png',
         tooltip:
-          'Number of validated identities divided by number of validation participants',
+          'Number of validated identities divided by number of participants who attended validation',
+      },
+      {
+        title: 'Failure Ratio',
+        ref: '/charts/failureratio',
+        img: '/static/images/charts/failureratio.png',
+        tooltip: 'Breakdown of validation failures by reasons',
+      },
+      {
+        title: 'Participation',
+        ref: '/charts/participation',
+        img: '/static/images/charts/participation.png',
+        tooltip:
+          'Breakdown of all potential participants whether they validated, failed or missed validation',
       },
     ],
   },

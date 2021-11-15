@@ -15,6 +15,13 @@ export default function DataAreaTotalSupplyChart({
   valueName,
   xValueName,
 }) {
+  const colors = {
+    supply: '#578fff',
+    staked: '#ff6666',
+    vested: '#27d980',
+    burnt: '#d2d4d9',
+  }
+
   function CustomTooltip({payload, label, active}) {
     if (active) {
       return (
@@ -30,17 +37,26 @@ export default function DataAreaTotalSupplyChart({
           }}
         >
           <p className="label">
+            <span style={{color: `${colors.burnt}`, marginRight: '3px'}}>•</span>
+
             {`Burnt: ${dnaFmt(payload && payload[1] && payload[1].value)}`}
           </p>
-          <p className="label">{`Total Supply: ${dnaFmt(
-            payload && payload[0] && payload[0].value
-          )}`}</p>
-          <p className="label">{`Vested: ${dnaFmt(
-            payload && payload[3] && payload[3].value
-          )}`}</p>
-          <p className="label">{`Staked: ${dnaFmt(
-            payload && payload[2] && payload[2].value
-          )}`}</p>
+          <p className="label">
+            <span style={{color: `${colors.supply}`, marginRight: '3px'}}>•</span>
+
+            {`Total Supply: ${dnaFmt(
+              payload && payload[0] && payload[0].value
+            )}`}
+          </p>
+          <p className="label">
+            <span style={{color: `${colors.vested}`, marginRight: '3px'}}>•</span>
+            {`Vested: ${dnaFmt(payload && payload[3] && payload[3].value)}`}
+          </p>
+          <p className="label">
+            <span style={{color: `${colors.staked}`, marginRight: '3px'}}>•</span>
+
+            {`Staked: ${dnaFmt(payload && payload[2] && payload[2].value)}`}
+          </p>
           <p className="label">{`${xValueName}: ${dateFmt(label)}`}</p>
         </div>
       )
@@ -61,55 +77,59 @@ export default function DataAreaTotalSupplyChart({
 
           <defs>
             <linearGradient id="colorTotalSupply" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#578fff" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#578fff" stopOpacity={0} />
+              <stop offset="5%" stopColor={colors.supply} stopOpacity={0.8} />
+              <stop offset="95%" stopColor={colors.supply} stopOpacity={0} />
             </linearGradient>
             <linearGradient id="colorBurnt" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#d2d4d9" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#d2d4d9" stopOpacity={0} />
+              <stop offset="5%" stopColor={colors.burnt} stopOpacity={0.8} />
+              <stop offset="95%" stopColor={colors.burnt} stopOpacity={0} />
             </linearGradient>
             <linearGradient id="colorVested" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#27d980" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#27d980" stopOpacity={0} />
+              <stop offset="5%" stopColor={colors.vested} stopOpacity={0.8} />
+              <stop offset="95%" stopColor={colors.vested} stopOpacity={0} />
             </linearGradient>
             <linearGradient id="colorStaked" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="1%" stopColor="#ff6666" stopOpacity={0.8} />
-              <stop offset="99%" stopColor="#ff6666" stopOpacity={0} />
+              <stop offset="1%" stopColor={colors.staked} stopOpacity={0.8} />
+              <stop offset="99%" stopColor={colors.staked} stopOpacity={0} />
             </linearGradient>
           </defs>
 
           <Area
+            type="monotone"
             name="Total Supply"
             stackId="1"
             dataKey="totalSupply"
-            stroke="#578fff"
+            stroke={colors.supply}
             fill="url(#colorTotalSupply)"
-            activeDot={{stroke: '#578fff', strokeWidth: 2, r: 3}}
+            activeDot={{stroke: `${colors.supply}`, strokeWidth: 2, r: 3}}
           />
           <Area
+            type="monotone"
             name="Burnt"
             stackId="1"
             dataKey="burnt"
-            stroke="#d2d4d9"
-            fill="#d2d4d9"
-            activeDot={{stroke: '#d2d4d9', strokeWidth: 2, r: 3}}
+            stroke={colors.burnt}
+            fill={colors.burnt}
+            activeDot={{stroke: `${colors.burnt}`, strokeWidth: 2, r: 3}}
           />
           <Area
+            type="monotone"
             name="Staked"
             stackId="2"
             dataKey="staked"
-            stroke="#ff6666"
+            stroke={colors.staked}
             fill="url(#colorStaked)"
-            activeDot={{stroke: '#ff6666', strokeWidth: 2, r: 3}}
+            activeDot={{stroke: `${colors.staked}`, strokeWidth: 2, r: 3}}
           />
 
           <Area
+            type="monotone"
             name="Vested"
             stackId="2"
             dataKey="vested"
-            stroke="#27d980"
+            stroke={colors.vested}
             fill="url(#colorVested)"
-            activeDot={{stroke: '#27d980', strokeWidth: 2, r: 3}}
+            activeDot={{stroke: `${colors.vested}`, strokeWidth: 2, r: 3}}
           />
 
           <XAxis
