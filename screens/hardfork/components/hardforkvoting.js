@@ -138,7 +138,7 @@ export default function HardForkVoting({
                       <TooltipText
                         className="control-label"
                         data-toggle="tooltip"
-                        tooltip="Requires 2/3 of validators (non-delegated identities and pool owners without their delegated accounts)"
+                        tooltip="Requires 60% of validators (non-delegated identities and pool owners without their delegated accounts)"
                       >
                         Validators required
                       </TooltipText>
