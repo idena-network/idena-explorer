@@ -90,7 +90,13 @@ export default function HardForkVoting({
                     <div className="control-label">Start voting:</div>
                     <div className="text_block">{dateTimeFmt(startDate)}</div>
                     <hr />
-                    <div className="control-label">Voting deadline:</div>
+
+                    <div className="control-label" data-toggle="tooltip">
+                      <TooltipText tooltip="The date on which the voting will be stopped if the fork activation critera are not met">
+                        Voting deadline:
+                      </TooltipText>
+                    </div>
+
                     <div className="text_block">{dateTimeFmt(endDate)}</div>
                   </div>
                 </div>
@@ -106,63 +112,42 @@ export default function HardForkVoting({
       {votes && (
         <div>
           <div className="row">
-            <div className="col-12 col-sm-6">
+            <div className="col-12 col-sm-12">
               <h3>Hard fork activation criteria</h3>
-
-              <div className="card">
-                <div className="info_block">
-                  <div className="row">
-                    <div className="col-12 col-sm-6 bordered-col">
-                      <h3 className="info_block__accent">
-                        <span>{Math.round(state.online * 0.8)} </span>
-                        <span className="control-label">
-                          out of {state.online}
-                        </span>
-                      </h3>
-                      <TooltipText
-                        className="control-label"
-                        data-toggle="tooltip"
-                        tooltip="Requires 80% of online nodes (delegated nodes excluded)"
-                      >
-                        Online nodes required
-                      </TooltipText>
-                    </div>
-
-                    <div className="col-12 col-sm-6 bordered-col">
-                      <h3 className="info_block__accent">
-                        <span>{Math.round(state.total * 0.6)} </span>
-                        <span className="control-label">
-                          out of {state.total}
-                        </span>
-                      </h3>
-                      <TooltipText
-                        className="control-label"
-                        data-toggle="tooltip"
-                        tooltip="Requires 60% of validators (non-delegated identities and pool owners without their delegated accounts)"
-                      >
-                        Validators required
-                      </TooltipText>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ul>
+                <p className="text_block">
+                  1. Only addesses with <b>activated mining status</b> can vote.
+                  Delegated addesses are excluded.
+                </p>
+                <p className="text_block">
+                  2. Running the new version of the node means that the address
+                  is voting for the upcoming protocol changes.
+                </p>
+                <p className="text_block">
+                  3. The hard fork update will be activated only when both of
+                  the voting criteria are met:
+                </p>
+                <p className="text_block">
+                  - more than <b>{Math.round(state.online * 0.8)}</b> addresses
+                  support the upcoming changes (80% of all {state.online} nodes
+                  with activated mining status)
+                </p>
+                <p className="text_block">
+                  - more than <b>{Math.round(state.total * 0.6)}</b> addresses
+                  support the upcoming changes (60% of all {state.total}{' '}
+                  possible validators)
+                </p>
+              </ul>
             </div>
 
-            <div className="col-12 col-sm-6">
+            <div className="col-12 col-sm-12">
               <h3>Votes</h3>
               <div className="card">
                 <div className="info_block">
                   <div className="row">
                     <div className="col-12 col-sm-6 bordered-col">
                       <h3 className="info_block__accent">
-                        <span>
-                          {votes
-                            ? `${votes} (${
-                                votesRequired &&
-                                Math.round((votes / votesRequired) * 1000) / 10
-                              }%)`
-                            : status}
-                        </span>
+                        <span>{votes ? `${votes}` : status}</span>
                       </h3>
                       <TooltipText
                         className="control-label"
@@ -175,16 +160,7 @@ export default function HardForkVoting({
 
                     <div className="col-12 col-sm-6 bordered-col">
                       <h3 className="info_block__accent">
-                        <span>
-                          {missingVotes
-                            ? `${missingVotes} (${
-                                votesRequired &&
-                                Math.round(
-                                  (missingVotes / votesRequired) * 1000
-                                ) / 10
-                              }%)`
-                            : '-'}
-                        </span>
+                        <span>{missingVotes ? `${missingVotes}` : '-'}</span>
                       </h3>
                       <TooltipText
                         className="control-label"
@@ -205,6 +181,9 @@ export default function HardForkVoting({
       <div>
         <br />
         <h3>Voting progress</h3>
+        <p className="text_block">
+          Nodes with activated mining status supporting the fork
+        </p>
         <HardForkHistory upgrade={upgrade} votesRequired={votesRequired} />
         <br />
       </div>
