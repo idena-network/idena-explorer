@@ -116,8 +116,8 @@ export default function HardForkVoting({
               <h3>Hard fork activation criteria</h3>
               <ul>
                 <p className="text_block">
-                  1. Only addesses with <b>activated mining status</b> can vote.
-                  Delegated addesses are excluded.
+                  1. Only addresses with <b>activated mining status</b> can
+                  vote. Delegated addresses are excluded.
                 </p>
                 <p className="text_block">
                   2. Running the new version of the node means that the address
