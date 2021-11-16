@@ -128,14 +128,14 @@ export default function HardForkVoting({
                   the voting criteria are met:
                 </p>
                 <p className="text_block">
-                  - more than <b>{Math.round(state.online * 0.8)}</b> addresses
-                  support the upcoming changes (80% of all {state.online} nodes
-                  with activated mining status)
+                  - more than 80% of all {state.online} addresses with activated
+                  mining status support the upcoming changes:{' '}
+                  <b>{Math.round(state.online * 0.8)} required votes</b>
                 </p>
                 <p className="text_block">
-                  - more than <b>{Math.round(state.total * 0.6)}</b> addresses
-                  support the upcoming changes (60% of all {state.total}{' '}
-                  possible validators)
+                  - more than 60% of all {state.total} possible validators
+                  support the upcoming changes:{' '}
+                  <b>{Math.round(state.total * 0.6)} required votes</b>
                 </p>
               </ul>
             </div>
