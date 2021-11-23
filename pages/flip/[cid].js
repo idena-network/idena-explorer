@@ -475,13 +475,7 @@ function Flip() {
                               ? 'No answer'
                               : item.respAnswer}
                           </td>
-                          <td>
-                            {item.respAnswer === 'None'
-                              ? '-'
-                              : item.respWrongWords
-                              ? 'Reported'
-                              : '-'}
-                          </td>
+                          <td>{item.respWrongWords ? 'Reported' : '-'}</td>
                         </tr>
                       ))}
                   </tbody>
