@@ -42,7 +42,7 @@ export default function ShortAnswers({address, epoch, visible}) {
               let ico = item.respAnswer === 'None' ? '' : 'icon--micro_fail'
               let score = 0
 
-              if (item.flipWrongWords) {
+              if (item.flipWrongWords || !item.considered) {
                 score = '-'
                 ico = ''
               } else if (item.flipStatus === 'Qualified') {

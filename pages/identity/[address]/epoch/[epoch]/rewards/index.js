@@ -1042,7 +1042,7 @@ function getPreviousEpochSavedInvites(
   rewardedInvites,
   rewardsSummary
 ) {
-  if (!availableInvites) {
+  if (!availableInvites || !rewardsSummary) {
     return []
   }
   const available = availableInvites.find((x) => x.epoch === epoch - back)
