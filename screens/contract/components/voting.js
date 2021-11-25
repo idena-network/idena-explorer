@@ -158,28 +158,13 @@ function optionVotes(option, votes) {
   return item.count
 }
 
-export function Linkify({onClick, children}) {
+export function Linkify({children}) {
   if (!children) return null
 
   if (typeof children !== 'string') throw new Error('Only text nodes supported')
 
   const urls = getUrls(children, {stripWWW: false})
   const parts = urls.size > 0 ? splitMany(children, ...urls) : [children]
-
-  function splitMany(str, ...separators) {
-    const acc = []
-    let nextStr = str
-
-    for (const s of separators) {
-      const [s1, s2] = nextStr.split(s)
-      acc.push(s1, s)
-      nextStr = s2
-    }
-
-    acc.push(nextStr)
-
-    return acc
-  }
 
   return (
     <>
@@ -188,4 +173,19 @@ export function Linkify({onClick, children}) {
       )}
     </>
   )
+}
+
+function splitMany(str, ...separators) {
+  const acc = []
+  let nextStr = str
+
+  for (const s of separators) {
+    const [s1, s2] = nextStr.split(s)
+    acc.push(s1, s)
+    nextStr = s2
+  }
+
+  acc.push(nextStr)
+
+  return acc
 }
