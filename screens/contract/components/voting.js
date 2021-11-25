@@ -1,3 +1,4 @@
+import getUrls from 'get-urls'
 import {useQuery} from 'react-query'
 import {getOracleVotingContract} from '../../../shared/api'
 import {dnaFmt, hexToObject} from '../../../shared/utils/utils'
@@ -33,7 +34,7 @@ export default function VotingData({address}) {
                   className="text_block text_block--ellipsis"
                   style={{whiteSpace: 'pre-line', width: '100%'}}
                 >
-                  {(fact && fact.desc) || '-'}
+                  {fact ? <Linkify>{fact.desc}</Linkify> : '-'}
                 </div>
                 <hr />
               </div>
@@ -155,4 +156,36 @@ function optionVotes(option, votes) {
     return 0
   }
   return item.count
+}
+
+export function Linkify({children}) {
+  if (!children) return null
+
+  if (typeof children !== 'string') throw new Error('Only text nodes supported')
+
+  const urls = getUrls(children, {stripWWW: false})
+  const parts = urls.size > 0 ? splitMany(children, ...urls) : [children]
+
+  return (
+    <>
+      {parts.map((part) =>
+        part.startsWith('http') ? <a href={part}>{part}</a> : <>{part}</>
+      )}
+    </>
+  )
+}
+
+function splitMany(str, ...separators) {
+  const acc = []
+  let nextStr = str
+
+  for (const s of separators) {
+    const [s1, s2] = nextStr.split(s)
+    acc.push(s1, s)
+    nextStr = s2
+  }
+
+  acc.push(nextStr)
+
+  return acc
 }
