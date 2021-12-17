@@ -7,12 +7,14 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from 'recharts'
+import {dnaFmt, precise2} from '../../../shared/utils/utils'
 
 export default function DataAreaChart({
   chartData,
   valueName,
   xValueName,
   xReversed,
+  yAxisUnit = '',
 }) {
   function CustomTooltip({payload, label, active}) {
     if (active) {
@@ -29,7 +31,7 @@ export default function DataAreaChart({
           }}
         >
           <p className="label">{`${valueName}: ${
-            payload && payload[0] && payload[0].value
+            payload && payload[0] && dnaFmt(payload[0].value, '')
           }`}</p>
           <p className="label">{`${xValueName}: ${label}`}</p>
         </div>
@@ -84,7 +86,16 @@ export default function DataAreaChart({
               angle: -90,
               position: 'insideLeft',
             }}
-            domain={['auto', 'auto']}
+            type="number"
+            unit={yAxisUnit}
+            tickFormatter={(tick) =>
+              yAxisUnit === 'M'
+                ? precise2(tick / 1000000)
+                : yAxisUnit === 'K'
+                ? precise2(tick / 1000)
+                : tick
+            }
+            domain={['auto', 'dataMax']}
             tickLine={false}
             axisLine={false}
             strokeWidth={1}
