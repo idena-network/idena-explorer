@@ -1,4 +1,3 @@
-import CarouselIndicators from 'reactstrap/lib/CarouselIndicators'
 import {
   AreaChart,
   Area,
@@ -11,7 +10,7 @@ import {
 } from 'recharts'
 import {precise2} from '../../../shared/utils/utils'
 
-export default function DataAreaUnloadedFlipsChart({
+export default function DataAreaNonloadedFlipsChart({
   chartData,
   valueName,
   xValueName,
@@ -104,18 +103,18 @@ export default function DataAreaUnloadedFlipsChart({
 
           <Area
             type="monotone"
-            name="1 unloaded flip"
+            name="Participants with 1 non-loaded flip"
             stackId="1"
-            dataKey="unloaded1"
+            dataKey="nonloaded1"
             stroke={colors.blue}
             fill="url(#colorBlue)"
             activeDot={{stroke: `${colors.blue}`, strokeWidth: 2, r: 3}}
           />
           <Area
             type="monotone"
-            name="2 unloaded flips"
+            name="Participants with 2 non-loaded flips"
             stackId="1"
-            dataKey="unloaded2"
+            dataKey="nonloaded2"
             stroke={colors.green}
             fill="url(#colorGreen)"
             activeDot={{stroke: `${colors.green}`, strokeWidth: 2, r: 3}}
@@ -123,9 +122,9 @@ export default function DataAreaUnloadedFlipsChart({
 
           <Area
             type="monotone"
-            name="3+ unloaded flips"
+            name="Participants with 3+ non-loaded flips"
             stackId="1"
-            dataKey="unloaded3"
+            dataKey="nonloaded3"
             stroke={colors.red}
             fill="url(#colorRed)"
             activeDot={{stroke: `${colors.red}`, strokeWidth: 2, r: 3}}

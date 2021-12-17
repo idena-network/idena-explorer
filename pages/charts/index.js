@@ -33,6 +33,19 @@ const charts = [
         tooltip: 'Number of transactions by days',
       },
       {
+        title: 'Total Transactions',
+        ref: '/charts/totaltransactions',
+        img: '/static/images/charts/totaltransactions.png',
+        tooltip: 'Total number of transactions',
+      },
+
+      {
+        title: 'Total Fees',
+        ref: '/charts/fees',
+        img: '/static/images/charts/fees.png',
+        tooltip: 'Total amount of fees',
+      },
+      {
         title: 'Invites Activation Progress',
         ref: '/charts/inviteactivations',
         img: '/static/images/charts/inviteactivations.png',

@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react'
 
 import Layout from '../../../shared/components/layout'
-import DataAreaUnloadedFlipsChart from '../../../screens/charts/components/dataareaunloadedflips'
+import DataAreaNonloadedFlipsChart from '../../../screens/charts/components/dataareanonloadedflips'
 import {getUnloadedFlips} from '../../../shared/api'
 import ChartHeader from '../../../screens/charts/components/chartheader'
 import {precise2} from '../../../shared/utils/utils'
 
-function UnloadedFlips() {
+function NonloadedFlips() {
   const [chartData, setChartData] = useState([])
 
   useEffect(() => {
@@ -19,18 +19,18 @@ function UnloadedFlips() {
           .filter((item) => item.epoch > 62)
           .map((item) => ({
             epoch: item.epoch,
-            nounloaded: precise2(
-              item.participants && (item.nounloaded / item.participants) * 100
+            nonloaded: precise2(
+              item.participants && (item.unloaded / item.participants) * 100
             ),
-            unloaded1: precise2(
+            nonloaded1: precise2(
               item.participants && (item.unloaded1 / item.participants) * 100
             ),
 
-            unloaded2: precise2(
+            nonloaded2: precise2(
               item.participants && (item.unloaded2 / item.participants) * 100
             ),
 
-            unloaded3: precise2(
+            nonloaded3: precise2(
               item.participants &&
                 (item.unloaded3plus / item.participants) * 100
             ),
@@ -42,10 +42,10 @@ function UnloadedFlips() {
   }, [])
 
   return (
-    <Layout title="Unloaded Flips Chart">
+    <Layout title="Non-loaded Flips Chart">
       <ChartHeader
-        title="Unloaded flips"
-        descr="This chart shows the share of participants who had unloaded flips at validation."
+        title="Non-loaded flips"
+        descr="This chart shows the share of participants who had issues with non-loaded flips at validation."
         actualDate={chartData.date}
       />
 
@@ -53,9 +53,9 @@ function UnloadedFlips() {
         <div className="card">
           <div className="info_block">
             <div className="row">
-              <DataAreaUnloadedFlipsChart
+              <DataAreaNonloadedFlipsChart
                 chartData={chartData.data}
-                valueName="Share of participants with unloaded flips"
+                valueName="Share of participants"
                 xValueName="Epoch"
               />
             </div>
@@ -66,4 +66,4 @@ function UnloadedFlips() {
   )
 }
 
-export default UnloadedFlips
+export default NonloadedFlips
