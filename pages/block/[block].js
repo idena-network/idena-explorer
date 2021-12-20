@@ -2,9 +2,8 @@ import {useQuery} from 'react-query'
 import Link from 'next/link'
 import {NavItem, NavLink, TabContent, TabPane} from 'reactstrap'
 import {useRouter} from 'next/router'
-import {useEffect, useState} from 'react'
 import Layout from '../../shared/components/layout'
-import {getBlock, getEpochBlocks, getLastEpoch} from '../../shared/api'
+import {getBlock, getLastBlock} from '../../shared/api'
 import {PageLoading, PageError} from '../../shared/components/loading'
 import {dateTimeFmt, epochFmt} from '../../shared/utils/utils'
 import Transactions from '../../screens/block/components/transactions'
@@ -15,19 +14,10 @@ function Block() {
   const router = useRouter()
   const {block} = router.query
 
-  const [lastBlock, setLastBlock] = useState()
-
   const {data, error, status} = useQuery(block, getBlock)
 
-  useEffect(() => {
-    async function getData() {
-      const {epoch} = await getLastEpoch()
-      const blockData = await getEpochBlocks(epoch, 1)
-      const block = blockData && blockData[0] && blockData[0].height
-      setLastBlock(block)
-    }
-    getData()
-  }, [])
+  const {data: lastBlockData} = useQuery(['last', block], getLastBlock)
+  const lastBlock = lastBlockData && lastBlockData.height
 
   return (
     <Layout title={`Block ${block}`}>
@@ -94,6 +84,11 @@ function Block() {
 export default Block
 
 function BlockDetails(data) {
+  const isOfflineCommit = !!(
+    data &&
+    data.flags &&
+    data.flags.find((f) => f === 'OfflineCommit')
+  )
   return (
     <section className="section section_details">
       <h3>Details</h3>
@@ -210,6 +205,42 @@ function BlockDetails(data) {
                 )) ||
                   '-'}
               </div>
+
+              {data.offlineAddress && (
+                <>
+                  <hr />
+                  <div className="control-label" data-toggle="tooltip">
+                    <TooltipText
+                      tooltip={
+                        isOfflineCommit
+                          ? 'Offline address that was penalized'
+                          : 'Address that proposed for offline penalty'
+                      }
+                    >
+                      {isOfflineCommit ? 'Offline penalty' : 'Offline poposal'}:
+                    </TooltipText>
+                  </div>
+                  <div
+                    className="text_block text_block--ellipsis"
+                    style={{width: '70%'}}
+                  >
+                    <Link
+                      href="/identity/[address]"
+                      as={`/identity/${data.offlineAddress}`}
+                    >
+                      <a>
+                        <img
+                          className="user-pic"
+                          src={`https://robohash.idena.io/${data.offlineAddress.toLowerCase()}`}
+                          alt="pic"
+                          width="32"
+                        />
+                        <span>{data.offlineAddress}</span>
+                      </a>
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
