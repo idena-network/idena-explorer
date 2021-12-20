@@ -135,6 +135,10 @@ export async function getLastEpoch() {
   return getResponse(apiClient().get('epoch/last'))
 }
 
+export async function getLastBlock() {
+  return getResponse(apiClient().get('block/last'))
+}
+
 export async function getUpgradeVoting() {
   return getResponse(apiClient().get('UpgradeVoting'))
 }

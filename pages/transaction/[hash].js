@@ -109,6 +109,9 @@ function TxDetails(data) {
                   </div>
                 </>
               )}
+              <hr />
+              <div className="control-label">Nonce:</div>
+              <div className="text_block">{data.nonce}</div>
             </div>
           </div>
           <div className="col-12 col-sm-6">
