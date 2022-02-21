@@ -10,6 +10,16 @@ export default function VotingData({address}) {
   )
 
   const fact = votingInfo && hexToObject(votingInfo.fact)
+  const publishedVotes = (votingInfo && votingInfo.votesCount) || 0
+  const countedVotes =
+    (fact &&
+      fact.options &&
+      fact.options.reduce(
+        (result, entry) => result + optionVotes(entry.id, votingInfo.votes),
+        0
+      )) ||
+    0
+  const ignoredVotes = (publishedVotes || 0) - (countedVotes || 0)
 
   return (
     <>
@@ -103,9 +113,18 @@ export default function VotingData({address}) {
               </div>
               <div className="col-12 col-sm-4">
                 <div className="control-label">Votes published:</div>
-                <div className="text_block">
-                  {(votingInfo && votingInfo.votesCount) || '-'}
-                </div>
+                <div className="text_block">{publishedVotes || '-'}</div>
+              </div>
+              <div className="col-12">
+                <hr />
+              </div>
+              <div className="col-12 col-sm-4">
+                <div className="control-label">Counted votes:</div>
+                <div className="text_block">{countedVotes || '-'}</div>
+              </div>
+              <div className="col-12 col-sm-4">
+                <div className="control-label">Ignored votes (pools):</div>
+                <div className="text_block">{ignoredVotes || '-'}</div>
               </div>
             </div>
           </div>
