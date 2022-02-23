@@ -75,6 +75,12 @@ const charts = [
         tooltip: 'Number of identities that validated for the first time',
       },
       {
+        title: 'Reported Flips',
+        ref: '/charts/reportedflips',
+        img: '/static/images/charts/reportedflips.png',
+        tooltip: 'Number of reported flips by epochs',
+      },
+      {
         title: 'Success Ratio',
         ref: '/charts/successratio',
         img: '/static/images/charts/successratio.png',
