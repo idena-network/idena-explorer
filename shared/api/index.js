@@ -313,6 +313,10 @@ export async function getNewcomers() {
   return getResponse(apiClient().get(`Data/Newcomers`))
 }
 
+export async function getReportedFlips() {
+  return getResponse(apiClient().get(`Data/ReportedFlips`))
+}
+
 export async function getValidationFails() {
   return getResponse(apiClient().get(`Data/ValidationFails`))
 }
