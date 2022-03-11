@@ -59,7 +59,7 @@ function Contract() {
 
               {contractInfo && contractInfo.type === 'OracleVoting' && (
                 <a
-                  href={`dna://vote/v1?address=${address}`}
+                  href={`https://app.idena.io/dna/vote/v1?address=${address}`}
                   className="btn btn-small btn-secondary"
                 >
                   <i className="icon" />
