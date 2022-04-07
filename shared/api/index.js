@@ -551,6 +551,10 @@ export async function getOracleLockContract(address) {
   return getResponse(apiClient().get(`oracleLockContract/${address}`))
 }
 
+export async function getMultisigContract(address) {
+  return getResponse(apiClient().get(`multisigContract/${address}`))
+}
+
 export async function getOracleVotingContract(address) {
   return getResponse(apiClient().get(`oracleVotingContract/${address}`))
 }

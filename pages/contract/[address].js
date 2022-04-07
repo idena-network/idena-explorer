@@ -9,6 +9,7 @@ import Transfers from '../../screens/contract/components/transfers'
 import VotingData from '../../screens/contract/components/voting'
 import TimeLockData from '../../screens/contract/components/timelock'
 import OracleLockData from '../../screens/contract/components/oraclelock'
+import MultisigData from '../../screens/contract/components/multisig'
 
 function Contract() {
   const router = useRouter()
@@ -27,6 +28,7 @@ function Contract() {
   const isVoting = contractInfo && contractInfo.type === 'OracleVoting'
   const isTimeLock = contractInfo && contractInfo.type === 'TimeLock'
   const isOracleLock = contractInfo && contractInfo.type === 'OracleLock'
+  const isMultisig = contractInfo && contractInfo.type === 'Multisig'
 
   return (
     <Layout title={`Smart contract ${address}`}>
@@ -76,6 +78,7 @@ function Contract() {
       {isVoting && <VotingData address={address} />}
       {isTimeLock && <TimeLockData address={address} />}
       {isOracleLock && <OracleLockData address={address} />}
+      {isMultisig && <MultisigData address={address} />}
 
       <section className="section section_tabs">
         <div className="tabs">
