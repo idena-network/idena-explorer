@@ -26,7 +26,7 @@ export default function MultisigData({address}) {
           <div className="section__group">
             <div className="row">
               <div className="col-12 col-sm-4">
-                <div className="control-label">Required signers:</div>
+                <div className="control-label">Required voters:</div>
                 <div className="text_block">
                   {(multisigInfo && multisigInfo.maxVotes) || '-'}
                 </div>
@@ -46,15 +46,15 @@ export default function MultisigData({address}) {
         <section className="section section_info">
           <div className="row">
             <div className="col-12">
-              <h3>Signers</h3>
+              <h3>Voters</h3>
               <div className="card">
                 <div className="table-responsive">
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>Address</th>
-                        <th>Dest address</th>
-                        <th>Amount</th>
+                        <th>Voter address</th>
+                        <th>Vote for destination address</th>
+                        <th>Vote for amount</th>
                       </tr>
                     </thead>
                     <tbody>
