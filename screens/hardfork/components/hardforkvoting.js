@@ -62,9 +62,7 @@ export default function HardForkVoting({
 
   const votes = upd && upd.length > 0 && upd[0] ? upd[0].votes : null
 
-  const votesRequired = votes
-    ? Math.round(Math.max(state.online * 0.8, state.total * 0.6))
-    : null
+  const votesRequired = votes ? Math.round(state.online * 0.8) : null
   const missingVotes =
     status === 'Activated' ? 0 : Math.max(votesRequired - votes, 0)
   return (
@@ -124,18 +122,10 @@ export default function HardForkVoting({
                   is voting for the upcoming protocol changes.
                 </p>
                 <p className="text_block">
-                  3. The hard fork update will be activated only when both of
-                  the voting criteria are met:
-                </p>
-                <p className="text_block">
-                  - more than 80% of all {state.online} addresses with activated
-                  mining status support the upcoming changes:{' '}
+                  3. The hard fork update will be activated only when more than
+                  80% of all {state.online} addresses with activated mining
+                  status support the upcoming changes:{' '}
                   <b>{Math.round(state.online * 0.8)} required votes</b>
-                </p>
-                <p className="text_block">
-                  - more than 60% of all {state.total} possible validators
-                  support the upcoming changes:{' '}
-                  <b>{Math.round(state.total * 0.6)} required votes</b>
                 </p>
               </ul>
             </div>
