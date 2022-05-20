@@ -4,6 +4,7 @@ import {
   getOnlineValidatorsCount,
   getUpgradeVoting,
   getUpgradeData,
+  getUpgrades,
 } from '../../../shared/api'
 import HardForkHistory from './hardforkhistory'
 import TooltipText from '../../../shared/components/tooltip'
@@ -14,27 +15,33 @@ const initialState = {
   total: 0,
   upgradeVoting: [{upgrade: 8, votes: 1}],
   upgradeData: null,
+  upgrades: null,
 }
 
-export default function HardForkVoting({
-  upgrade = 8,
-  lastActivatedUpgrade = 5,
-}) {
+export default function HardForkVoting({upgrade = 8}) {
   const [state, setState] = useState(initialState)
 
   useEffect(() => {
     async function getData() {
-      const [online, total, upgradeVoting, upgradeData] = await Promise.all([
+      const [
+        online,
+        total,
+        upgradeVoting,
+        upgradeData,
+        upgrades,
+      ] = await Promise.all([
         getOnlineValidatorsCount(),
         getValidatorsCount(),
         getUpgradeVoting(),
         getUpgradeData(upgrade),
+        getUpgrades(1),
       ])
       setState({
         online,
         total,
         upgradeVoting,
         upgradeData,
+        upgrades,
       })
     }
     getData()
@@ -50,7 +57,12 @@ export default function HardForkVoting({
   const status =
     now < startDate
       ? 'Pending'
-      : upgrade === lastActivatedUpgrade
+      : upgrade <=
+        ((state &&
+          state.upgrades &&
+          state.upgrades.length &&
+          state.upgrades[0].upgrade) ||
+          0)
       ? 'Activated'
       : now < endDate
       ? 'Voting'

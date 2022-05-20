@@ -14,6 +14,7 @@ import {
   epochFmt,
   dateTimeFmt,
   identityStatusFmt,
+  flipGradeFmt,
 } from '../../shared/utils/utils'
 import TooltipText from '../../shared/components/tooltip'
 
@@ -475,7 +476,16 @@ function Flip() {
                               ? 'No answer'
                               : item.respAnswer}
                           </td>
-                          <td>{item.respWrongWords ? 'Reported' : '-'}</td>
+                          <td>
+                            {item.respGrade > 1 ? (
+                              <i className="icon icon--micro_success" />
+                            ) : item.respGrade === 1 ? (
+                              <i className="icon icon--micro_fail" />
+                            ) : (
+                              ''
+                            )}
+                            {flipGradeFmt(item.respGrade)}
+                          </td>
                         </tr>
                       ))}
                   </tbody>

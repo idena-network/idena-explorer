@@ -349,6 +349,10 @@ export async function getUpgradeData(upgrade) {
   return getResponse(apiClient().get(`upgrade/${upgrade}`))
 }
 
+export async function getUpgrades(limit) {
+  return getResponse(apiClient().get('upgrades', {params: {limit}}))
+}
+
 export async function getValidatorsCount() {
   return getResponse(apiClient().get('validators/count'))
 }
