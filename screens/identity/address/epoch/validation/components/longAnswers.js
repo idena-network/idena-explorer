@@ -3,6 +3,7 @@ import Link from 'next/link'
 import {getIdentityLongAnswersByEpoch} from '../../../../../../shared/api'
 import TooltipText from '../../../../../../shared/components/tooltip'
 import {SkeletonRows} from '../../../../../../shared/components/skeleton'
+import {flipGradeFmt} from '../../../../../../shared/utils/utils'
 
 export default function LongAnswers({address, epoch, visible}) {
   const {data: answers, status} = useQuery(
@@ -97,7 +98,16 @@ export default function LongAnswers({address, epoch, visible}) {
                     {item.respAnswer === 'None' ? '-' : item.respAnswer}
                   </td>
                   <td>{score}</td>
-                  <td>{item.respWrongWords ? 'Reported' : '-'}</td>
+                  <td>
+                    {item.respGrade > 1 ? (
+                      <i className="icon icon--micro_success" />
+                    ) : item.respGrade === 1 ? (
+                      <i className="icon icon--micro_fail" />
+                    ) : (
+                      ''
+                    )}
+                    {flipGradeFmt(item.respGrade)}
+                  </td>
                 </tr>
               )
             })}

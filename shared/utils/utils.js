@@ -40,6 +40,16 @@ export function txTypeFmt(txType, data) {
   if (txType === 'SubmitLongAnswersTx') return 'Long session answers'
   if (txType === 'SubmitAnswersHashTx') return 'Short answers proof'
   if (txType === 'DeleteFlipTx') return `Delete flip`
+  if (txType === 'DeployContractTx') return `Deploy contract`
+  if (txType === 'CallContractTx') return `Call contract`
+  if (txType === 'TerminateContractTx') return `Terminate contract`
+  if (txType === 'DelegateTx') return `Delegate`
+  if (txType === 'UndelegateTx') return `Undelegate`
+  if (txType === 'KillDelegatorTx') return `Kill delegator`
+  if (txType === 'StoreToIpfsTx') return `Store to ipfs`
+  if (txType === 'ReplenishStakeTx') return `Replenish stake`
+  if (txType === 'BurnTx') return `Burn`
+  if (txType === 'ChangeProfileTx') return `Change profile`
   return txType
 }
 
@@ -145,4 +155,14 @@ export function hexToObject(hex) {
   } catch {
     return {}
   }
+}
+
+export function flipGradeFmt(grade) {
+  if (grade === 1) {
+    return 'Reported'
+  }
+  if (grade > 1) {
+    return 'Approved'
+  }
+  return '-'
 }

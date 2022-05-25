@@ -181,15 +181,13 @@
 .icon--micro_success:before {
   content: '\e92e';
   color: limegreen;
+  padding-right: 5px;
 }
 
 .icon--micro_fail:before {
-  content: '\e925';
-  font-size: large;
-  top: 3px;
-  left: -2px;
-  position: relative;
+  content: '\e917';
   color: red;
+  padding-right: 5px;
 }
 
 .icon--right_arrow:before {

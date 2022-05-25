@@ -185,22 +185,33 @@ function BlockDetails(data) {
                 <TooltipText tooltip="Block flags">Flags:</TooltipText>
               </div>
               <div className="text_block">
-                {(data && data.flags && (
+                {(data && (data.flags || data.upgrade > 0) && (
                   <div
                     style={{
                       marginTop: '4px',
                     }}
                   >
-                    {data.flags.map((flag) => (
+                    {data.flags &&
+                      data.flags.map((flag) => (
+                        <span
+                          key={flag}
+                          style={{
+                            marginRight: '4px',
+                          }}
+                        >
+                          <BlockFlag flag={flag} />
+                        </span>
+                      ))}
+                    {data.upgrade > 0 && (
                       <span
-                        key={flag}
+                        key="upgrade"
                         style={{
                           marginRight: '4px',
                         }}
                       >
-                        <BlockFlag flag={flag} />
+                        <BlockFlag flag="HardForkUpdate" />
                       </span>
-                    ))}
+                    )}
                   </div>
                 )) ||
                   '-'}
