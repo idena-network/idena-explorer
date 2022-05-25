@@ -369,9 +369,9 @@ export async function getOnlineIdentitiesCount() {
   return getResponse(apiClient().get('onlineidentities/count'))
 }
 
-export async function getBalances(limit, continuationToken) {
+export async function getBalances(sortBy, limit, continuationToken) {
   return getResponse(
-    apiClient().get('balances', {params: {limit, continuationToken}})
+    apiClient().get('balances', {params: {sortBy, limit, continuationToken}})
   )
 }
 
