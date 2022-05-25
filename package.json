@@ -9,6 +9,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@radix-ui/colors": "^0.1.8",
+    "@radix-ui/react-dropdown-menu": "^0.1.6",
+    "@radix-ui/react-icons": "^1.1.1",
+    "@stitches/react": "^1.2.8",
     "@zeit/next-sass": "^1.0.1",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
