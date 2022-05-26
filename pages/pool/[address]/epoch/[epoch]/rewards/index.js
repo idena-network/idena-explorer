@@ -8,6 +8,7 @@ import Layout from '../../../../../../shared/components/layout'
 import {
   getDelegateeRewardsByAddress,
   getEpochDelegateeTotalReward,
+  getEpochRewardsSummary,
 } from '../../../../../../shared/api'
 import {
   epochFmt,
@@ -29,6 +30,15 @@ function Rewards() {
     address && epoch && ['epoch/totalRewards', address, epoch - 1],
     (_, address, epoch) => getEpochDelegateeTotalReward(address, epoch)
   )
+
+  const {data: rewardsSummary} = useQuery(
+    epoch && epoch - 1 >= 0 && ['epoch/rewardsSummary', epoch - 1],
+    (_, epoch) => getEpochRewardsSummary(epoch)
+  )
+  const validation =
+    rewardsSummary && rewardsSummary.validation && rewardsSummary.validation > 0
+  const staking =
+    rewardsSummary && rewardsSummary.staking && rewardsSummary.staking > 0
 
   const fetchRewards = (_, address, epoch, continuationToken = null) =>
     getDelegateeRewardsByAddress(address, epoch, LIMIT, continuationToken)
@@ -57,6 +67,10 @@ function Rewards() {
 
   const validationReward =
     (totalRewards && getReward(totalRewards.rewards, 'Validation')) || 0
+  const stakingReward =
+    (totalRewards && getReward(totalRewards.rewards, 'Staking')) || 0
+  const candidateReward =
+    (totalRewards && getReward(totalRewards.rewards, 'Candidate')) || 0
   const invitationsReward =
     (totalRewards &&
       getReward(totalRewards.rewards, 'Invitations') +
@@ -146,7 +160,7 @@ function Rewards() {
 
       <section className="section section_info">
         <div className="row">
-          <div className="col-12 col-sm-4">
+          <div className={`col-12 col-sm-${validation ? 4 : 3}`}>
             <h3>Total reward, iDNA</h3>
             <div className="card">
               <div className="info_block">
@@ -155,7 +169,11 @@ function Rewards() {
                     <h3 className="info_block__accent">
                       <span>
                         {dnaFmt(
-                          validationReward + flipsReward + invitationsReward,
+                          validationReward +
+                            flipsReward +
+                            invitationsReward +
+                            stakingReward +
+                            candidateReward,
                           ''
                         )}
                       </span>
@@ -173,24 +191,54 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="col-12 col-sm-8">
+          <div className={`col-12 col-sm-${validation ? 8 : 9}`}>
             <h3>Rewards paid, iDNA </h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
-                  <div className="col-12 col-sm-3 bordered-col">
-                    <h3 className="info_block__accent">
-                      {dnaFmt(validationReward, '')}
-                    </h3>
-                    <TooltipText
-                      className="control-label"
-                      data-toggle="tooltip"
-                      tooltip="Reward for succesfull validation"
-                    >
-                      Validation
-                    </TooltipText>
-                  </div>
-                  <div className="col-12 col-sm-3 bordered-col">
+                  {validation && (
+                    <div className="bordered-col col">
+                      <h3 className="info_block__accent">
+                        {dnaFmt(validationReward, '')}
+                      </h3>
+                      <TooltipText
+                        className="control-label"
+                        data-toggle="tooltip"
+                        tooltip="Reward for successful validation"
+                      >
+                        Validation
+                      </TooltipText>
+                    </div>
+                  )}
+                  {staking && (
+                    <>
+                      <div className="bordered-col col">
+                        <h3 className="info_block__accent">
+                          {dnaFmt(stakingReward, '')}
+                        </h3>
+                        <TooltipText
+                          className="control-label"
+                          data-toggle="tooltip"
+                          tooltip="Quadratic staking reward"
+                        >
+                          Staking
+                        </TooltipText>
+                      </div>
+                      <div className="bordered-col col">
+                        <h3 className="info_block__accent">
+                          {dnaFmt(candidateReward, '')}
+                        </h3>
+                        <TooltipText
+                          className="control-label"
+                          data-toggle="tooltip"
+                          tooltip="Reward for the first successful validation"
+                        >
+                          Candidate
+                        </TooltipText>
+                      </div>
+                    </>
+                  )}
+                  <div className="bordered-col col">
                     <h3 className="info_block__accent">
                       {dnaFmt(flipsReward, '')}
                     </h3>
@@ -202,7 +250,7 @@ function Rewards() {
                       Flips
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-3 bordered-col">
+                  <div className="bordered-col col">
                     <h3 className="info_block__accent">
                       {dnaFmt(invitationsReward, '')}
                     </h3>
@@ -214,7 +262,7 @@ function Rewards() {
                       Invitations
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-3 bordered-col">
+                  <div className="bordered-col col">
                     <h3 className="info_block__accent">
                       {dnaFmt(reportsReward, '')}
                     </h3>
@@ -260,13 +308,33 @@ function Rewards() {
                       status
                     </th>
                     <th>Status</th>
-                    <th style={{width: 80}}>
-                      Validation
-                      <br />
-                      reward,
-                      <br />
-                      iDNA
-                    </th>
+                    {validation && (
+                      <th style={{width: 80}}>
+                        Validation
+                        <br />
+                        reward,
+                        <br />
+                        iDNA
+                      </th>
+                    )}
+                    {staking && (
+                      <>
+                        <th style={{width: 80}}>
+                          Staking
+                          <br />
+                          reward,
+                          <br />
+                          iDNA
+                        </th>
+                        <th style={{width: 80}}>
+                          Candidate
+                          <br />
+                          reward,
+                          <br />
+                          iDNA
+                        </th>
+                      </>
+                    )}
                     <th style={{width: 80}}>
                       Flip
                       <br />
@@ -298,7 +366,9 @@ function Rewards() {
                   </tr>
                 </thead>
                 <tbody>
-                  {status === 'loading' && <SkeletonRows cols={8} />}
+                  {status === 'loading' && (
+                    <SkeletonRows cols={validation ? 8 : staking ? 9 : 7} />
+                  )}
                   {data &&
                     data.map((page, i) => (
                       <Fragment key={i}>
@@ -307,6 +377,14 @@ function Rewards() {
                             const validationReward = getReward(
                               item.rewards,
                               'Validation'
+                            )
+                            const stakingReward = getReward(
+                              item.rewards,
+                              'Staking'
+                            )
+                            const candidateReward = getReward(
+                              item.rewards,
+                              'Candidate'
                             )
                             const invitaionReward =
                               getReward(item.rewards, 'Invitations') +
@@ -344,7 +422,15 @@ function Rewards() {
                                 </td>
                                 <td>{identityStatusFmt(item.prevState)}</td>
                                 <td>{identityStatusFmt(item.state)}</td>
-                                <td>{precise6(validationReward) || '-'}</td>
+                                {validation && (
+                                  <td>{precise6(validationReward) || '-'}</td>
+                                )}
+                                {staking && (
+                                  <>
+                                    <td>{precise6(stakingReward) || '-'}</td>
+                                    <td>{precise6(candidateReward) || '-'}</td>
+                                  </>
+                                )}
                                 <td>{precise6(flipsReward) || '-'}</td>
                                 <td>{precise6(invitaionReward) || '-'}</td>
                                 <td>{precise6(reportsReward) || '-'}</td>

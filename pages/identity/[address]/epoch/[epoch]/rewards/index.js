@@ -19,6 +19,7 @@ import {
   iconToSrc,
   flipQualificationStatusFmt,
   isIdentityPassed,
+  precise1,
 } from '../../../../../../shared/utils/utils'
 import TooltipText from '../../../../../../shared/components/tooltip'
 import {
@@ -41,6 +42,10 @@ function Reward() {
     address && epoch && ['epoch/rewardsSummary', epoch - 1],
     (_, epoch) => getEpochRewardsSummary(epoch)
   )
+  const validation =
+    rewardsSummary && rewardsSummary.validation && rewardsSummary.validation > 0
+  const staking =
+    rewardsSummary && rewardsSummary.staking && rewardsSummary.staking > 0
 
   const {data: rewardedFlips} = useQuery(
     address && epoch && ['epoch/identity/rewardedFlips', address, epoch - 1],
@@ -102,6 +107,20 @@ function Reward() {
       validationSummary.rewards.validation.earned * 1) ||
     0
 
+  const getStakingReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.staking &&
+      validationSummary.rewards.staking.earned * 1) ||
+    0
+
+  const getCandidateReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.candidate &&
+      validationSummary.rewards.candidate.earned * 1) ||
+    0
+
   const getFlipsReward = () =>
     (validationSummary &&
       validationSummary.rewards &&
@@ -121,6 +140,20 @@ function Reward() {
       validationSummary.rewards &&
       validationSummary.rewards.validation &&
       validationSummary.rewards.validation.missed * 1) ||
+    0
+
+  const getMissingStakingReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.staking &&
+      validationSummary.rewards.staking.missed * 1) ||
+    0
+
+  const getMissingCandidateReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.candidate &&
+      validationSummary.rewards.candidate.missed * 1) ||
     0
 
   const getMissingFlipsReward = () =>
@@ -180,6 +213,19 @@ function Reward() {
     validationPenalty,
     identityInfo
   )
+
+  const stake =
+    (validationSummary &&
+      validationSummary.stake &&
+      validationSummary.stake * 1) ||
+    0
+  const epy = (stake && getStakingReward() / stake) || 0
+  const epochDays =
+    (rewardsSummary &&
+      rewardsSummary.epochDuration &&
+      rewardsSummary.epochDuration / 4320) ||
+    0
+  const apy = (epochDays && (epy / epochDays) * 366) || 0
 
   return (
     <Layout title={`Identity rewards ${address} for epoch ${epochFmt(epoch)}`}>
@@ -291,6 +337,16 @@ function Reward() {
                     </div>
                   </>
                 )}
+
+                {staking && (
+                  <>
+                    <hr />
+                    <div className="control-label">Staking APY:</div>
+                    <div className="text_block">
+                      {apy ? `${precise1(apy * 100)}%` : '-'}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className="col-12 col-sm-6">
@@ -353,7 +409,7 @@ function Reward() {
 
       <section className="section section_info">
         <div className="row">
-          <div className="col-12 col-sm-4">
+          <div className={`col-12 col-sm-${validation ? 4 : 3}`}>
             <h3>Total reward, iDNA</h3>
             <div className="card">
               <div className="info_block">
@@ -365,7 +421,9 @@ function Reward() {
                           getValidationReward() +
                             getFlipsReward() +
                             getInvitationsReward() +
-                            getReportsReward(),
+                            getReportsReward() +
+                            getStakingReward() +
+                            getCandidateReward(),
                           ''
                         )}
                       </span>
@@ -383,24 +441,56 @@ function Reward() {
             </div>
           </div>
 
-          <div className="col-12 col-sm-8">
+          <div className={`col-12 col-sm-${validation ? 8 : 9}`}>
             <h3>Rewards paid, iDNA </h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
-                  <div className="col-12 col-sm-3 bordered-col">
-                    <h3 className="info_block__accent">
-                      {dnaFmt(getValidationReward(), '')}
-                    </h3>
-                    <TooltipText
-                      className="control-label"
-                      data-toggle="tooltip"
-                      tooltip="Reward for succesfull validation"
-                    >
-                      Validation
-                    </TooltipText>
-                  </div>
-                  <div className="col-12 col-sm-3 bordered-col">
+                  {validation && (
+                    <div className="bordered-col col">
+                      <h3 className="info_block__accent">
+                        {dnaFmt(getValidationReward(), '')}
+                      </h3>
+                      <TooltipText
+                        className="control-label"
+                        data-toggle="tooltip"
+                        tooltip="Reward for successful validation"
+                      >
+                        Validation
+                      </TooltipText>
+                    </div>
+                  )}
+                  {staking && (
+                    <>
+                      <div className="bordered-col col">
+                        <h3 className="info_block__accent">
+                          {dnaFmt(getStakingReward(), '')}
+                        </h3>
+                        <TooltipText
+                          className="control-label"
+                          data-toggle="tooltip"
+                          tooltip="Quadratic staking reward"
+                        >
+                          Staking
+                        </TooltipText>
+                      </div>
+                      {identityInfo && identityInfo.prevState === 'Candidate' && (
+                        <div className="bordered-col col">
+                          <h3 className="info_block__accent">
+                            {dnaFmt(getCandidateReward(), '')}
+                          </h3>
+                          <TooltipText
+                            className="control-label"
+                            data-toggle="tooltip"
+                            tooltip="Reward for the first successful validation"
+                          >
+                            Candidate
+                          </TooltipText>
+                        </div>
+                      )}
+                    </>
+                  )}
+                  <div className="bordered-col col">
                     <h3 className="info_block__accent">
                       {dnaFmt(getFlipsReward(), '')}
                     </h3>
@@ -412,7 +502,7 @@ function Reward() {
                       Flips
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-3 bordered-col">
+                  <div className="bordered-col col">
                     <h3 className="info_block__accent">
                       {dnaFmt(getInvitationsReward(), '')}
                     </h3>
@@ -424,7 +514,7 @@ function Reward() {
                       Invitations
                     </div>
                   </div>
-                  <div className="col-12 col-sm-3 bordered-col">
+                  <div className="bordered-col col">
                     <h3 className="info_block__accent">
                       {dnaFmt(getReportsReward(), '')}
                     </h3>
@@ -445,7 +535,7 @@ function Reward() {
 
       <section className="section section_info">
         <div className="row">
-          <div className="col-12 col-sm-4">
+          <div className={`col-12 col-sm-${validation ? 4 : 3}`}>
             <h3>Missed rewards, iDNA</h3>
             <div className="card">
               <div className="info_block">
@@ -459,7 +549,9 @@ function Reward() {
                             getMissingValidationReward() +
                               getMissingFlipsReward() +
                               getMissingInvitationsReward() +
-                              getMissingReportsReward(),
+                              getMissingReportsReward() +
+                              getMissingStakingReward() +
+                              getMissingCandidateReward(),
                             ''
                           )) ||
                           '-'}
@@ -478,24 +570,62 @@ function Reward() {
             </div>
           </div>
 
-          <div className="col-12 col-sm-8">
+          <div className={`col-12 col-sm-${validation ? 8 : 9}`}>
             <h3>Rewards not paid, iDNA</h3>
             <div className="card">
               <div className="info_block">
                 <div className="row">
-                  <div className="col-12 col-sm-3 bordered-col">
-                    <h3 className="info_block__accent" style={{color: 'red'}}>
-                      {dnaFmt(getMissingValidationReward(), '')}
-                    </h3>
-                    <TooltipText
-                      className="control-label"
-                      data-toggle="tooltip"
-                      tooltip="Missed reward for succesfull validation"
-                    >
-                      Validation
-                    </TooltipText>
-                  </div>
-                  <div className="col-12 col-sm-3 bordered-col">
+                  {validation && (
+                    <div className="bordered-col col">
+                      <h3 className="info_block__accent" style={{color: 'red'}}>
+                        {dnaFmt(getMissingValidationReward(), '')}
+                      </h3>
+                      <TooltipText
+                        className="control-label"
+                        data-toggle="tooltip"
+                        tooltip="Missed reward for successful validation"
+                      >
+                        Validation
+                      </TooltipText>
+                    </div>
+                  )}
+                  {staking && (
+                    <>
+                      <div className="bordered-col col">
+                        <h3
+                          className="info_block__accent"
+                          style={{color: 'red'}}
+                        >
+                          {dnaFmt(getMissingStakingReward(), '')}
+                        </h3>
+                        <TooltipText
+                          className="control-label"
+                          data-toggle="tooltip"
+                          tooltip="Missed quadratic staking reward"
+                        >
+                          Staking
+                        </TooltipText>
+                      </div>
+                      {identityInfo && identityInfo.prevState === 'Candidate' && (
+                        <div className="bordered-col col">
+                          <h3
+                            className="info_block__accent"
+                            style={{color: 'red'}}
+                          >
+                            {dnaFmt(getMissingCandidateReward(), '')}
+                          </h3>
+                          <TooltipText
+                            className="control-label"
+                            data-toggle="tooltip"
+                            tooltip="Missed reward for the first successful validation"
+                          >
+                            Candidate
+                          </TooltipText>
+                        </div>
+                      )}
+                    </>
+                  )}
+                  <div className="bordered-col col">
                     <h3 className="info_block__accent" style={{color: 'red'}}>
                       {dnaFmt(getMissingFlipsReward(), '')}
                     </h3>
@@ -507,7 +637,7 @@ function Reward() {
                       Flips
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-3 bordered-col">
+                  <div className="bordered-col col">
                     <h3 className="info_block__accent" style={{color: 'red'}}>
                       {dnaFmt(getMissingInvitationsReward(), '')}
                     </h3>
@@ -519,7 +649,7 @@ function Reward() {
                       Invitations
                     </TooltipText>
                   </div>
-                  <div className="col-12 col-sm-3 bordered-col">
+                  <div className="bordered-col col">
                     <h3 className="info_block__accent" style={{color: 'red'}}>
                       {dnaFmt(getMissingReportsReward(), '')}
                     </h3>

@@ -3,7 +3,7 @@ import {Fragment} from 'react'
 import Link from 'next/link'
 import {getPoolTotalRewards} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
-import {epochFmt, precise6} from '../../../shared/utils/utils'
+import {epochFmt, precise2} from '../../../shared/utils/utils'
 
 const LIMIT = 30
 
@@ -37,6 +37,20 @@ export default function Rewards({address, visible}) {
           <tr>
             <th>Epoch</th>
             <th>Delegators</th>
+            <th>
+              Staking
+              <br />
+              rewards,
+              <br />
+              iDNA
+            </th>
+            <th>
+              Candidate
+              <br />
+              rewards,
+              <br />
+              iDNA
+            </th>
             <th>
               Validation
               <br />
@@ -75,7 +89,7 @@ export default function Rewards({address, visible}) {
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={7} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={9} />)}
           {data &&
             data.map((page, i) => (
               <Fragment key={i}>
@@ -85,6 +99,8 @@ export default function Rewards({address, visible}) {
                       item.rewards,
                       'Validation'
                     )
+                    const stakingReward = getReward(item.rewards, 'Staking')
+                    const candidateReward = getReward(item.rewards, 'Candidate')
                     const invitaionReward =
                       getReward(item.rewards, 'Invitations') +
                       getReward(item.rewards, 'Invitations2') +
@@ -109,12 +125,14 @@ export default function Rewards({address, visible}) {
                           </div>
                         </td>
                         <td>{item.delegators}</td>
-                        <td>{precise6(validationReward) || '-'}</td>
-                        <td>{precise6(flipsReward) || '-'}</td>
-                        <td>{precise6(invitaionReward) || '-'}</td>
-                        <td>{precise6(reportsReward) || '-'}</td>
+                        <td>{precise2(stakingReward) || '-'}</td>
+                        <td>{precise2(candidateReward) || '-'}</td>
+                        <td>{precise2(validationReward) || '-'}</td>
+                        <td>{precise2(flipsReward) || '-'}</td>
+                        <td>{precise2(invitaionReward) || '-'}</td>
+                        <td>{precise2(reportsReward) || '-'}</td>
                         <td>
-                          {precise6(
+                          {precise2(
                             item.rewards.reduce(
                               (prev, cur) => prev + cur.balance * 1,
                               0
