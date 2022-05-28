@@ -1,13 +1,26 @@
 import Link from 'next/link'
-import {useInfiniteQuery} from 'react-query'
+import {useInfiniteQuery, useQuery} from 'react-query'
 import {Fragment} from 'react'
-import {getEpochDelegateeTotalRewards} from '../../../../shared/api'
-import {precise6} from '../../../../shared/utils/utils'
+import {
+  getEpochDelegateeTotalRewards,
+  getEpochRewardsSummary,
+} from '../../../../shared/api'
+import {precise2} from '../../../../shared/utils/utils'
 import {SkeletonRows} from '../../../../shared/components/skeleton'
 
 const LIMIT = 30
 
 export default function Pools({epoch, visible}) {
+  const {data: rewardsSummary} = useQuery(
+    epoch && epoch >= 0 && ['epoch/rewardsSummary', epoch],
+    (_, epoch) => getEpochRewardsSummary(epoch)
+  )
+  const validation =
+    rewardsSummary && rewardsSummary.validation && rewardsSummary.validation > 0
+  const staking =
+    rewardsSummary && rewardsSummary.staking && rewardsSummary.staking > 0
+  const cols = validation ? 7 : staking ? 8 : 6
+
   const fetchRewards = (_, epoch, continuationToken = null) =>
     getEpochDelegateeTotalRewards(epoch, LIMIT, continuationToken)
 
@@ -37,13 +50,33 @@ export default function Pools({epoch, visible}) {
           <tr>
             <th>Address</th>
             <th>Delegators</th>
-            <th style={{width: 80}}>
-              Validation
-              <br />
-              rewards,
-              <br />
-              iDNA
-            </th>
+            {validation && (
+              <th style={{width: 80}}>
+                Validation
+                <br />
+                rewards,
+                <br />
+                iDNA
+              </th>
+            )}
+            {staking && (
+              <>
+                <th style={{width: 80}}>
+                  Staking
+                  <br />
+                  rewards,
+                  <br />
+                  iDNA
+                </th>
+                <th style={{width: 80}}>
+                  Candidate
+                  <br />
+                  rewards,
+                  <br />
+                  iDNA
+                </th>
+              </>
+            )}
             <th style={{width: 80}}>
               Flip
               <br />
@@ -75,7 +108,7 @@ export default function Pools({epoch, visible}) {
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={7} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={cols} />)}
           {data &&
             data.map((page, i) => (
               <Fragment key={i}>
@@ -85,6 +118,8 @@ export default function Pools({epoch, visible}) {
                       item.rewards,
                       'Validation'
                     )
+                    const stakingReward = getReward(item.rewards, 'Staking')
+                    const candidateReward = getReward(item.rewards, 'Candidate')
                     const invitationsReward =
                       getReward(item.rewards, 'Invitations') +
                       getReward(item.rewards, 'Invitations2') +
@@ -121,12 +156,20 @@ export default function Pools({epoch, visible}) {
                           </div>
                         </td>
                         <td>{item.delegators}</td>
-                        <td>{precise6(validationReward) || '-'}</td>
-                        <td>{precise6(flipsReward) || '-'}</td>
-                        <td>{precise6(invitationsReward) || '-'}</td>
-                        <td>{precise6(reportsReward) || '-'}</td>
+                        {validation && (
+                          <td>{precise2(validationReward) || '-'}</td>
+                        )}
+                        {staking && (
+                          <>
+                            <td>{precise2(stakingReward) || '-'}</td>
+                            <td>{precise2(candidateReward) || '-'}</td>
+                          </>
+                        )}
+                        <td>{precise2(flipsReward) || '-'}</td>
+                        <td>{precise2(invitationsReward) || '-'}</td>
+                        <td>{precise2(reportsReward) || '-'}</td>
                         <td>
-                          {precise6(
+                          {precise2(
                             item.rewards.reduce(
                               (prev, cur) => prev + cur.balance * 1,
                               0

@@ -4,13 +4,24 @@ import {Fragment} from 'react'
 import {
   getEpochIdentityRewards,
   getEpochIdentityRewardsCount,
+  getEpochRewardsSummary,
 } from '../../../../shared/api'
-import {identityStatusFmt, precise2, precise6} from '../../../../shared/utils/utils'
+import {identityStatusFmt, precise2} from '../../../../shared/utils/utils'
 import {SkeletonRows} from '../../../../shared/components/skeleton'
 
 const LIMIT = 30
 
 export default function Distribution({epoch, visible}) {
+  const {data: rewardsSummary} = useQuery(
+    epoch && epoch >= 0 && ['epoch/rewardsSummary', epoch],
+    (_, epoch) => getEpochRewardsSummary(epoch)
+  )
+  const validation =
+    rewardsSummary && rewardsSummary.validation && rewardsSummary.validation > 0
+  const staking =
+    rewardsSummary && rewardsSummary.staking && rewardsSummary.staking > 0
+  const cols = validation ? 8 : staking ? 9 : 7
+
   const fetchRewards = (_, epoch, continuationToken = null) =>
     getEpochIdentityRewards(epoch, LIMIT, continuationToken)
 
@@ -51,13 +62,33 @@ export default function Distribution({epoch, visible}) {
               status
             </th>
             <th>Status</th>
-            <th style={{width: 80}}>
-              Validation
-              <br />
-              reward,
-              <br />
-              iDNA
-            </th>
+            {validation && (
+              <th style={{width: 80}}>
+                Validation
+                <br />
+                reward,
+                <br />
+                iDNA
+              </th>
+            )}
+            {staking && (
+              <>
+                <th style={{width: 80}}>
+                  Staking
+                  <br />
+                  reward,
+                  <br />
+                  iDNA
+                </th>
+                <th style={{width: 80}}>
+                  Candidate
+                  <br />
+                  reward,
+                  <br />
+                  iDNA
+                </th>
+              </>
+            )}
             <th style={{width: 80}}>
               Flip
               <br />
@@ -89,12 +120,14 @@ export default function Distribution({epoch, visible}) {
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={8} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={cols} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
                 page.map((item) => {
                   const validationReward = getReward(item.rewards, 'Validation')
+                  const stakingReward = getReward(item.rewards, 'Staking')
+                  const candidateReward = getReward(item.rewards, 'Candidate')
                   const invitaionReward =
                     getReward(item.rewards, 'Invitations') +
                     getReward(item.rewards, 'Invitations2') +
@@ -130,7 +163,15 @@ export default function Distribution({epoch, visible}) {
                       </td>
                       <td>{identityStatusFmt(item.prevState)}</td>
                       <td>{identityStatusFmt(item.state)}</td>
-                      <td>{precise2(validationReward) || '-'}</td>
+                      {validation && (
+                        <td>{precise2(validationReward) || '-'}</td>
+                      )}
+                      {staking && (
+                        <>
+                          <td>{precise2(stakingReward) || '-'}</td>
+                          <td>{precise2(candidateReward) || '-'}</td>
+                        </>
+                      )}
                       <td>
                         {precise2(flipsReward) ||
                           (item.prevState === 'Newbie' ||

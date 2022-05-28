@@ -8,7 +8,6 @@ import {
   epochFmt,
   dateFmt,
   dnaFmt,
-  precise1,
   precise0,
 } from '../../../../shared/utils/utils'
 import TooltipText from '../../../../shared/components/tooltip'
@@ -146,19 +145,23 @@ function Rewards() {
 
 function RewardsData({epoch}) {
   const {data: rewardsSummary} = useQuery(
-    epoch && ['epoch/rewardsSummary', epoch],
+    epoch && epoch >= 0 && ['epoch/rewardsSummary', epoch],
     (_, epoch) => getEpochRewardsSummary(epoch)
   )
+  const validation =
+    rewardsSummary && rewardsSummary.validation && rewardsSummary.validation > 0
+  const staking =
+    rewardsSummary && rewardsSummary.staking && rewardsSummary.staking > 0
 
   return (
     <section className="section section_info">
       <div className="row">
-        <div className="col-12 col-sm-4">
-          <h3>Total reward fund, iDNA</h3>
+        <div className={`col-12 col-sm-${validation ? 4 : 3}`}>
+          <h3>Reward fund, iDNA</h3>
           <div className="card">
             <div className="info_block">
               <div className="row">
-                <div className="col-12 col-sm-12 bordered-col">
+                <div className="bordered-col col">
                   <h3 className="info_block__accent">
                     {(rewardsSummary &&
                       dnaFmt(precise0(rewardsSummary.total), '')) ||
@@ -167,7 +170,7 @@ function RewardsData({epoch}) {
                   <TooltipText
                     className="control-label"
                     data-toggle="tooltip"
-                    tooltip="Total reward fund (including the fundation reward and zero wallet)"
+                    tooltip="Total reward fund (including the foundation reward and zero wallet)"
                   >
                     Total
                   </TooltipText>
@@ -177,26 +180,49 @@ function RewardsData({epoch}) {
           </div>
         </div>
 
-        <div className="col-12 col-sm-8">
+        <div className={`col-12 col-sm-${validation ? 8 : 9}`}>
           <h3>Rewards, iDNA</h3>
           <div className="card">
             <div className="info_block">
               <div className="row">
-                <div className="col-12 col-sm-3 bordered-col">
+                <div className="bordered-col col">
                   <h3 className="info_block__accent">
-                    {(rewardsSummary &&
-                      dnaFmt(precise0(rewardsSummary.validation), '')) ||
-                      '-'}
+                    {validation &&
+                      dnaFmt(precise0(rewardsSummary.validation), '')}
+                    {staking && dnaFmt(precise0(rewardsSummary.staking), '')}
+                    {!validation && !staking && '-'}
                   </h3>
                   <TooltipText
                     className="control-label"
                     data-toggle="tooltip"
-                    tooltip="Fund for succesfull validation"
+                    tooltip={
+                      validation
+                        ? 'Fund for successful validation'
+                        : staking
+                        ? 'Fund for quadratic staking'
+                        : ''
+                    }
                   >
-                    Validation
+                    {validation ? 'Validation' : staking ? 'Staking' : '-'}
                   </TooltipText>
                 </div>
-                <div className="col-12 col-sm-3 bordered-col">
+                {staking && (
+                  <div className="bordered-col col">
+                    <h3 className="info_block__accent">
+                      {(rewardsSummary &&
+                        dnaFmt(precise0(rewardsSummary.candidate), '')) ||
+                        '-'}
+                    </h3>
+                    <TooltipText
+                      className="control-label"
+                      data-toggle="tooltip"
+                      tooltip="Fund for the first successful validation"
+                    >
+                      Candidates
+                    </TooltipText>
+                  </div>
+                )}
+                <div className="bordered-col col">
                   <h3 className="info_block__accent">
                     {(rewardsSummary &&
                       dnaFmt(precise0(rewardsSummary.flips), '')) ||
@@ -210,7 +236,7 @@ function RewardsData({epoch}) {
                     Flips
                   </TooltipText>
                 </div>
-                <div className="col-12 col-sm-3 bordered-col">
+                <div className="bordered-col col">
                   <h3 className="info_block__accent">
                     {(rewardsSummary &&
                       dnaFmt(precise0(rewardsSummary.invitations), '')) ||
@@ -224,7 +250,7 @@ function RewardsData({epoch}) {
                     Invitations
                   </TooltipText>
                 </div>
-                <div className="col-12 col-sm-3 bordered-col">
+                <div className="bordered-col col">
                   <h3 className="info_block__accent">
                     {(rewardsSummary &&
                       dnaFmt(precise0(rewardsSummary.reports), '')) ||
