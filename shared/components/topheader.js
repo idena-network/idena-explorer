@@ -162,19 +162,15 @@ export default function TopHeader() {
               tooltip={`Epoch mining rewards per user (${epochData.epochDuration} days)`}
             />
             <Card
-              name="Validation rewards"
+              name="Validation reward"
               value={
-                rewardsData.minRewardPaid &&
-                rewardsData.maxRewardPaid &&
-                marketData.price
+                rewardsData.maxRewardPaid && marketData.price
                   ? `${usdFmt(
-                      precise1(rewardsData.minRewardPaid * marketData.price)
-                    )} - ${usdFmt(
                       precise1(rewardsData.maxRewardPaid * marketData.price)
                     )}`
                   : '-'
               }
-              tooltip="Last validation rewards paid per user"
+              tooltip="Max reward paid per user for the last validation"
               href={`/epoch/${epoch + 1}/rewards`}
             />
             <Card
