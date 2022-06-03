@@ -88,7 +88,7 @@ export default function DataAreaCoinsChart({chartData, valueName, xValueName}) {
               position: 'insideLeft',
             }}
             unit="M"
-            tickFormatter={(tick) => Math.round(tick / 1000000)}
+            tickFormatter={(tick) => Math.round(tick / 100000) / 10}
             domain={['auto', 'auto']}
             tickLine={false}
             axisLine={false}
