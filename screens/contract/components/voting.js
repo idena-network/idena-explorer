@@ -1,5 +1,5 @@
-import getUrls from 'get-urls'
 import {useQuery} from 'react-query'
+import urlRegex from 'url-regex-safe'
 import {getOracleVotingContract} from '../../../shared/api'
 import {dnaFmt, hexToObject} from '../../../shared/utils/utils'
 
@@ -28,14 +28,12 @@ export default function VotingData({address}) {
         <div className="card">
           <div className="section__group">
             <div className="row">
-              <div className="col-12 col-sm-6">
+              <div className="col-12 col-sm-12" style={{paddingBottom: 0}}>
                 <div className="control-label">State:</div>
                 <div className="text_block">
                   {(votingInfo && votingInfo.state) || '-'}
                 </div>
                 <hr />
-              </div>
-              <div className="col-12 col-sm-12">
                 <div className="control-label">Title:</div>
                 <div className="text_block">{(fact && fact.title) || '-'}</div>
                 <hr />
@@ -48,19 +46,48 @@ export default function VotingData({address}) {
                 </div>
                 <hr />
               </div>
-              <div className="col-12 col-sm-4">
+              <div className="col-12 col-sm-4" style={{paddingTop: 0}}>
                 <div className="control-label">Committee size:</div>
                 <div className="text_block">
                   {(votingInfo && votingInfo.committeeSize) || '-'}
                 </div>
+                <hr />
+                <div className="control-label">Majority threshold:</div>
+                <div className="text_block">
+                  {(votingInfo && votingInfo.winnerThreshold) || '-'}%
+                </div>
+                <hr />
+                <div className="control-label">Total votes:</div>
+                <div className="text_block">
+                  {(votingInfo &&
+                    (votingInfo.secretVotesCount || 0) +
+                      (votingInfo.votesCount || 0)) ||
+                    '-'}
+                </div>
+                <hr />
+                <div className="control-label">Counted votes:</div>
+                <div className="text_block">{countedVotes || '-'}</div>
               </div>
-              <div className="col-12 col-sm-4">
+              <div className="col-12 col-sm-4" style={{paddingTop: 0}}>
                 <div className="control-label">Quorum required:</div>
                 <div className="text_block">
                   {(votingInfo && votingInfo.quorum) || '-'}%
                 </div>
+                <hr />
+                <div className="control-label">Voting deposit:</div>
+                <div className="text_block">
+                  {votingInfo && dnaFmt(votingInfo.minPayment, '')} iDNA
+                </div>
+                <hr />
+                <div className="control-label">Secret votes:</div>
+                <div className="text_block">
+                  {(votingInfo && votingInfo.secretVotesCount) || '-'}
+                </div>
+                <hr />
+                <div className="control-label">Ignored votes (pools):</div>
+                <div className="text_block">{ignoredVotes || '-'}</div>
               </div>
-              <div className="col-12 col-sm-4">
+              <div className="col-12 col-sm-4" style={{paddingTop: 0}}>
                 <div className="control-label">Votes required:</div>
                 <div className="text_block">
                   {(votingInfo &&
@@ -71,60 +98,15 @@ export default function VotingData({address}) {
                     )) ||
                     '-'}
                 </div>
-              </div>
-              <div className="col-12">
                 <hr />
-              </div>
-              <div className="col-12 col-sm-4">
-                <div className="control-label">Majority threshold:</div>
-                <div className="text_block">
-                  {(votingInfo && votingInfo.winnerThreshold) || '-'}%
-                </div>
-              </div>
-              <div className="col-12 col-sm-4">
-                <div className="control-label">Voting deposit:</div>
-                <div className="text_block">
-                  {votingInfo && dnaFmt(votingInfo.minPayment, '')} iDNA
-                </div>
-              </div>
-              <div className="col-12 col-sm-4">
                 <div className="control-label">Owner fee:</div>
                 <div className="text_block">
                   {(votingInfo && votingInfo.ownerFee) || '-'}%
                 </div>
-              </div>
-              <div className="col-12">
                 <hr />
-              </div>
-              <div className="col-12 col-sm-4">
-                <div className="control-label">Total votes:</div>
-                <div className="text_block">
-                  {(votingInfo &&
-                    (votingInfo.secretVotesCount || 0) +
-                      (votingInfo.votesCount || 0)) ||
-                    '-'}
-                </div>
-              </div>
-              <div className="col-12 col-sm-4">
-                <div className="control-label">Secret votes:</div>
-                <div className="text_block">
-                  {(votingInfo && votingInfo.secretVotesCount) || '-'}
-                </div>
-              </div>
-              <div className="col-12 col-sm-4">
                 <div className="control-label">Votes published:</div>
                 <div className="text_block">{publishedVotes || '-'}</div>
-              </div>
-              <div className="col-12">
                 <hr />
-              </div>
-              <div className="col-12 col-sm-4">
-                <div className="control-label">Counted votes:</div>
-                <div className="text_block">{countedVotes || '-'}</div>
-              </div>
-              <div className="col-12 col-sm-4">
-                <div className="control-label">Ignored votes (pools):</div>
-                <div className="text_block">{ignoredVotes || '-'}</div>
               </div>
             </div>
           </div>
@@ -182,8 +164,8 @@ export function Linkify({children}) {
 
   if (typeof children !== 'string') throw new Error('Only text nodes supported')
 
-  const urls = getUrls(children, {stripWWW: false})
-  const parts = urls.size > 0 ? splitMany(children, ...urls) : [children]
+  const urls = getUrls(children)
+  const parts = urls.length > 0 ? splitMany(children, ...urls) : [children]
 
   return (
     <>
@@ -192,6 +174,10 @@ export function Linkify({children}) {
       )}
     </>
   )
+}
+
+function getUrls(text) {
+  return text.match(urlRegex()) || []
 }
 
 function splitMany(str, ...separators) {
