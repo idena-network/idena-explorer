@@ -36,7 +36,11 @@ export default function Rewards({address, visible}) {
         <thead>
           <tr>
             <th>Epoch</th>
-            <th>Delegators</th>
+            <th>
+              Rewarded
+              <br />
+              identities
+            </th>
             <th>
               Staking
               <br />
