@@ -1,10 +1,9 @@
 import {useEffect, useState} from 'react'
 import {
-  getValidatorsCount,
-  getOnlineValidatorsCount,
   getUpgradeVoting,
   getUpgradeData,
   getUpgrades,
+  getForkCommitteeCount,
 } from '../../../shared/api'
 import HardForkHistory from './hardforkhistory'
 import TooltipText from '../../../shared/components/tooltip'
@@ -12,7 +11,6 @@ import {dateTimeFmt} from '../../../shared/utils/utils'
 
 const initialState = {
   online: 0,
-  total: 0,
   upgradeVoting: [{upgrade: 9, votes: 1}],
   upgradeData: null,
   upgrades: null,
@@ -23,22 +21,14 @@ export default function HardForkVoting({upgrade = 9}) {
 
   useEffect(() => {
     async function getData() {
-      const [
-        online,
-        total,
-        upgradeVoting,
-        upgradeData,
-        upgrades,
-      ] = await Promise.all([
-        getOnlineValidatorsCount(),
-        getValidatorsCount(),
+      const [online, upgradeVoting, upgradeData, upgrades] = await Promise.all([
+        getForkCommitteeCount(),
         getUpgradeVoting(),
         getUpgradeData(upgrade),
         getUpgrades(1),
       ])
       setState({
         online,
-        total,
         upgradeVoting,
         upgradeData,
         upgrades,
@@ -102,7 +92,7 @@ export default function HardForkVoting({upgrade = 9}) {
                     <hr />
 
                     <div className="control-label" data-toggle="tooltip">
-                      <TooltipText tooltip="The date on which the voting will be stopped if the fork activation critera are not met">
+                      <TooltipText tooltip="The date on which the voting will be stopped if the fork activation criteria are not met">
                         Voting deadline:
                       </TooltipText>
                     </div>
@@ -126,18 +116,18 @@ export default function HardForkVoting({upgrade = 9}) {
               <h3>Hard fork activation criteria</h3>
               <ul>
                 <p className="text_block">
-                  1. Only addresses with <b>activated mining status</b> can
-                  vote. Delegated addresses are excluded.
+                  1. Only Idena validators with <b>activated mining status</b>{' '}
+                  vote. Running the new node version means that the validator
+                  supports the upcoming changes.
                 </p>
                 <p className="text_block">
-                  2. Running the new version of the node means that the address
-                  is voting for the upcoming protocol changes.
+                  2. Newbies and delegated identities can not vote. Pool owners
+                  are counted once.
                 </p>
                 <p className="text_block">
                   3. The hard fork update will be activated only when more than
-                  80% of all {state.online} addresses with activated mining
-                  status support the upcoming changes:{' '}
-                  <b>{Math.round(state.online * 0.8)} required votes</b>
+                  80% of {state.online} validators support the upcoming changes:{' '}
+                  <b>{Math.round(state.online * 0.8)} votes required</b>.
                 </p>
               </ul>
             </div>

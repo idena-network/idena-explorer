@@ -353,8 +353,8 @@ export async function getUpgrades(limit) {
   return getResponse(apiClient().get('upgrades', {params: {limit}}))
 }
 
-export async function getValidatorsCount() {
-  return getResponse(apiClient().get('validators/count'))
+export async function getForkCommitteeCount() {
+  return getResponse(apiClient().get('forkCommittee/count'))
 }
 
 export async function getOnlineValidatorsCount() {
