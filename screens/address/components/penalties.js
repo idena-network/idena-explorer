@@ -1,6 +1,11 @@
 import Link from 'next/link'
 import {useInfiniteQuery, useQuery} from 'react-query'
-import {dateTimeFmt, epochFmt, dnaFmt} from '../../../shared/utils/utils'
+import {
+  dateTimeFmt,
+  epochFmt,
+  dnaFmt,
+  humanizeDuration,
+} from '../../../shared/utils/utils'
 import {getPenalties, getPenaltiesCount} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 
@@ -36,7 +41,7 @@ export default function Penalties({address, visible}) {
             <th style={{width: 100}}>Epoch</th>
             <th>Block</th>
             <th>Timestamp</th>
-            <th>Penalty, iDNA</th>
+            <th>Penalty</th>
           </tr>
         </thead>
         <tbody>
@@ -67,7 +72,11 @@ export default function Penalties({address, visible}) {
                     </div>
                   </td>
                   <td>{dateTimeFmt(item.timestamp)}</td>
-                  <td align="right">{dnaFmt(item.penalty)}</td>
+                  <td align="right">
+                    {item.penaltySeconds
+                      ? humanizeDuration(item.penaltySeconds)
+                      : dnaFmt(item.penalty)}
+                  </td>
                 </tr>
               ))
           )}

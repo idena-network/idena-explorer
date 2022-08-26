@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import {useInfiniteQuery, useQuery} from 'react-query'
 import {Fragment} from 'react'
-import {precise2, lastSeenFmt} from '../../../shared/utils/utils'
+import {
+  precise2,
+  lastSeenFmt,
+  humanizeDuration,
+  dnaFmt,
+} from '../../../shared/utils/utils'
 import {
   getOnlineIdentities,
   getOnlineIdentitiesCount,
@@ -44,9 +49,7 @@ export default function Miners({visible}) {
             </th>
             <th style={{width: 150}}>Miner status</th>
             <th>
-              <TooltipText tooltip="Mining penalty left">
-                Penalty, iDNA
-              </TooltipText>
+              <TooltipText tooltip="Mining penalty left">Penalty</TooltipText>
             </th>
           </tr>
         </thead>
@@ -76,7 +79,13 @@ export default function Miners({visible}) {
                     </td>
                     <td>{lastSeenFmt(item.lastActivity)}</td>
                     <td>{item.online ? 'Mining' : 'Offline'}</td>
-                    <td>{item.penalty === 0 ? '-' : precise2(item.penalty)}</td>
+                    <td>
+                      {item.penalty * 1 === 0 && item.penaltySeconds === 0
+                        ? '-'
+                        : item.penaltySeconds === 0
+                        ? dnaFmt(precise2(item.penalty))
+                        : humanizeDuration(item.penaltySeconds)}
+                    </td>
                   </tr>
                 ))}
             </Fragment>

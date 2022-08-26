@@ -1,3 +1,10 @@
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(duration)
+dayjs.extend(relativeTime)
+
 export function precise0(x) {
   return Math.round(x)
 }
@@ -166,3 +173,6 @@ export function flipGradeFmt(grade) {
   }
   return '-'
 }
+
+export const humanizeDuration = (d, unit = 's') =>
+  dayjs.duration(d, unit).humanize()

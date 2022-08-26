@@ -14,6 +14,7 @@ import {
   identityStatusFmt,
   dateTimeFmt,
   precise6,
+  humanizeDuration,
 } from '../../shared/utils/utils'
 import FlipsStatus from '../../screens/identity/components/flipsStatus'
 import ValidationStatus from '../../screens/identity/components/validationStatus'
@@ -268,8 +269,10 @@ function IdentityData({addressInfo, identityInfo, onlineStatus, identityAge}) {
                   </TooltipText>
                   <div className="text_block">
                     {(onlineStatus &&
-                      onlineStatus.penalty * 1 &&
-                      dnaFmt(precise6(onlineStatus.penalty))) ||
+                      ((onlineStatus.penalty * 1 &&
+                        dnaFmt(precise6(onlineStatus.penalty))) ||
+                        (onlineStatus.penaltySeconds &&
+                          humanizeDuration(onlineStatus.penaltySeconds)))) ||
                       '-'}
                   </div>
                 </div>
