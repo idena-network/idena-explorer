@@ -53,9 +53,9 @@ export default function BalanceHistory({address, visible}) {
               iDNA
             </th>
             <th>
-              Mining penalty/
+              Mining penalty,
               <br />
-              change, iDNA
+              iDNA
             </th>
             <th>Details</th>
           </tr>
@@ -91,11 +91,15 @@ export default function BalanceHistory({address, visible}) {
                     />
                   </td>
                   <td>
-                    <ValueChange
-                      newValue={item.penaltyNew}
-                      oldValue={item.penaltyOld}
-                      isNegativeChange
-                    />
+                    {!item.penaltySecondsOld && !item.penaltySecondsNew ? (
+                      <ValueChange
+                        newValue={item.penaltyNew}
+                        oldValue={item.penaltyOld}
+                        isNegativeChange
+                      />
+                    ) : (
+                      <PenaltyChange penaltyPayment={item.penaltyPayment} />
+                    )}
                   </td>
                   <td>
                     <div
@@ -183,6 +187,21 @@ function ValueChange({oldValue, newValue, isNegativeChange = false}) {
       {!changeValue && (
         <span style={{color: '#96999e'}}>{precise2(newValue)}</span>
       )}
+    </div>
+  )
+}
+
+function PenaltyChange({penaltyPayment}) {
+  const payment = Math.round(penaltyPayment * 10000) / 10000
+  return (
+    <div>
+      <span
+        style={{
+          color: `${payment !== 0 ? '#ff6666' : '#96999e'}`,
+        }}
+      >
+        {payment}
+      </span>
     </div>
   )
 }

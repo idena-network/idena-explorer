@@ -37,7 +37,8 @@
     "recharts": "^2.0.8",
     "sass-rem": "^2.0.1",
     "url-regex-safe": "^3.0.0",
-    "uuid": "^8.0.0"
+    "uuid": "^8.0.0",
+    "dayjs": "^1.8.14"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
