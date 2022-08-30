@@ -615,3 +615,7 @@ export async function getDelegateeRewardsByAddress(
     })
   )
 }
+
+export async function getStaking() {
+  return getResponse(apiClient().get(`staking`))
+}

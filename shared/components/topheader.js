@@ -3,18 +3,20 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import {useEffect, useState} from 'react'
 import Link from 'next/link'
+import {useQuery} from 'react-query'
 import TooltipText from './tooltip'
-import {usdFmt, precise1, precise2} from '../utils/utils'
+import {precise1, precise2, usdFmt} from '../utils/utils'
 
 import {
-  getOnlineIdentitiesCount,
   getCoingeckoData,
-  getOnlineMinersCount,
-  getEpochRewardsSummary,
-  getLastEpoch,
   getEpoch,
   getEpochIdentitiesSummary,
   getEpochRewardBounds,
+  getEpochRewardsSummary,
+  getLastEpoch,
+  getOnlineIdentitiesCount,
+  getOnlineMinersCount,
+  getStaking,
 } from '../api'
 
 export default function TopHeader() {
@@ -137,6 +139,21 @@ export default function TopHeader() {
     getData()
   }, [])
 
+  const {data: stakingData} = useQuery('staking', getStaking)
+  const maxMinerWeight = (stakingData && stakingData.maxMinerWeight) || 0
+  const estimatedMiningReward =
+    (stakingData &&
+      stakingData.averageMinerWeight &&
+      maxMinerWeight &&
+      nodesData &&
+      nodesData.onlineCount &&
+      calculateEstimatedMiningReward(
+        maxMinerWeight,
+        stakingData.averageMinerWeight,
+        nodesData.onlineCount
+      )) ||
+    0
+
   return (
     <div>
       <div className="topheader">
@@ -153,13 +170,16 @@ export default function TopHeader() {
 
             <Card
               name="Epoch mining"
-              value={usdFmt(
-                precise1(
-                  (marketData.price * 25920 * epochData.epochDuration) /
-                    nodesData.onlineCount
-                )
-              )}
-              tooltip={`Epoch mining rewards per user (${epochData.epochDuration} days)`}
+              value={usdFmt(precise1(marketData.price * estimatedMiningReward))}
+              tooltip={`Max epoch mining rewards per user (${epochData.epochDuration} days)`}
+              href={
+                maxMinerWeight
+                  ? `https://www.idena.io/staking?amount=${
+                      maxMinerWeight ** (1 / 0.9)
+                    }`
+                  : ''
+              }
+              blank
             />
             <Card
               name="Validation reward"
@@ -254,5 +274,41 @@ function Card({
         </div>
       </div>
     </TooltipText>
+  )
+}
+
+function calculateEstimatedMiningReward(
+  stakeWeight,
+  averageMinerWeight,
+  onlineMinersCount
+) {
+  const proposerOnlyReward =
+    (6 * stakeWeight * 20) / (stakeWeight * 20 + averageMinerWeight * 100)
+
+  const committeeOnlyReward =
+    (6 * stakeWeight) / (stakeWeight + averageMinerWeight * 119)
+
+  const proposerAndCommitteeReward =
+    (6 * stakeWeight * 21) / (stakeWeight * 21 + averageMinerWeight * 99)
+
+  const proposerProbability = 1 / onlineMinersCount
+
+  const committeeProbability =
+    Math.min(100, onlineMinersCount) / onlineMinersCount
+
+  const proposerOnlyProbability =
+    proposerProbability * (1 - committeeProbability)
+
+  const committeeOnlyProbability =
+    committeeProbability * (1 - proposerProbability)
+
+  const proposerAndCommitteeProbability =
+    proposerOnlyProbability * committeeOnlyProbability
+
+  return (
+    85000 *
+    (proposerOnlyProbability * proposerOnlyReward +
+      committeeOnlyProbability * committeeOnlyReward +
+      proposerAndCommitteeProbability * proposerAndCommitteeReward)
   )
 }
