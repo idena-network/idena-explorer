@@ -1,5 +1,6 @@
 import {useQuery} from 'react-query'
 import urlRegex from 'url-regex-safe'
+import Link from 'next/link'
 import {getOracleVotingContract} from '../../../shared/api'
 import {dnaFmt, hexToObject} from '../../../shared/utils/utils'
 
@@ -20,6 +21,14 @@ export default function VotingData({address}) {
       )) ||
     0
   const ignoredVotes = (publishedVotes || 0) - (countedVotes || 0)
+
+  const ownerAddress =
+    (votingInfo && (votingInfo.refundRecipient || votingInfo.author)) || ''
+
+  const oracleTotalReward =
+    (votingInfo &&
+      (votingInfo.totalReward || votingInfo.estimatedTotalReward)) ||
+    0
 
   return (
     <>
@@ -57,6 +66,15 @@ export default function VotingData({address}) {
                   {(votingInfo && votingInfo.winnerThreshold) || '-'}%
                 </div>
                 <hr />
+                {votingInfo && votingInfo.ownerDeposit && (
+                  <>
+                    <div className="control-label">Owner deposit:</div>
+                    <div className="text_block">
+                      {votingInfo && dnaFmt(votingInfo.ownerDeposit)}
+                    </div>
+                    <hr />
+                  </>
+                )}
                 <div className="control-label">Total votes:</div>
                 <div className="text_block">
                   {(votingInfo &&
@@ -79,6 +97,31 @@ export default function VotingData({address}) {
                   {votingInfo && dnaFmt(votingInfo.minPayment, '')} iDNA
                 </div>
                 <hr />
+                {votingInfo && votingInfo.ownerDeposit && (
+                  <>
+                    <div className="control-label">Owner address:</div>
+                    <div
+                      className="text_block text_block--ellipsis"
+                      style={{width: 190}}
+                    >
+                      <Link
+                        href="/address/[address]"
+                        as={`/address/${ownerAddress}`}
+                      >
+                        <a>
+                          <img
+                            alt="user-pic"
+                            className="user-pic"
+                            width="32"
+                            src={`https://robohash.idena.io/${ownerAddress.toLowerCase()}`}
+                          />
+                          <span>{ownerAddress}</span>
+                        </a>
+                      </Link>
+                    </div>
+                    <hr />
+                  </>
+                )}
                 <div className="control-label">Secret votes:</div>
                 <div className="text_block">
                   {(votingInfo && votingInfo.secretVotesCount) || '-'}
@@ -104,6 +147,15 @@ export default function VotingData({address}) {
                   {(votingInfo && votingInfo.ownerFee) || '-'}%
                 </div>
                 <hr />
+                {votingInfo && votingInfo.ownerDeposit && (
+                  <>
+                    <div className="control-label">Oracles rewards:</div>
+                    <div className="text_block">
+                      {votingInfo && dnaFmt(oracleTotalReward)}
+                    </div>
+                    <hr />
+                  </>
+                )}
                 <div className="control-label">Votes published:</div>
                 <div className="text_block">{publishedVotes || '-'}</div>
                 <hr />
