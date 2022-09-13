@@ -42,6 +42,11 @@ export default function Rewards({address, visible}) {
               identities
             </th>
             <th>
+              Penalized
+              <br />
+              identities
+            </th>
+            <th>
               Staking
               <br />
               rewards,
@@ -93,7 +98,7 @@ export default function Rewards({address, visible}) {
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={9} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={10} />)}
           {data &&
             data.map((page, i) => (
               <Fragment key={i}>
@@ -129,6 +134,7 @@ export default function Rewards({address, visible}) {
                           </div>
                         </td>
                         <td>{item.delegators}</td>
+                        <td>{item.penalizedDelegators}</td>
                         <td>{precise2(stakingReward) || '-'}</td>
                         <td>{precise2(candidateReward) || '-'}</td>
                         <td>{precise2(validationReward) || '-'}</td>
