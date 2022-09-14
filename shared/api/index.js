@@ -107,6 +107,14 @@ export async function getRewardsCount(address) {
   return getResponse(apiClient().get(`identity/${address}/epochrewards/count`))
 }
 
+export async function getMiningRewards(address, limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`address/${address}/miningRewardSummaries`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
 export async function getPenalties(address, limit, continuationToken) {
   return getResponse(
     apiClient().get(`address/${address}/penalties`, {

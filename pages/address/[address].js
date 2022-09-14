@@ -17,6 +17,7 @@ import Penalties from '../../screens/address/components/penalties'
 import BalanceHistory from '../../screens/address/components/balances'
 import {useHash, useHashChange} from '../../shared/utils/useHashChange'
 import TooltipText from '../../shared/components/tooltip'
+import Mining from '../../screens/address/components/mining'
 
 const DEFAULT_TAB = '#transactions'
 
@@ -94,7 +95,16 @@ function Address() {
                           active={hashReady && hash === '#rewards'}
                           href="#rewards"
                         >
-                          <h3>Rewards</h3>
+                          <h3>Validation rewards</h3>
+                        </NavLink>
+                      </NavItem>
+
+                      <NavItem>
+                        <NavLink
+                          active={hashReady && hash === '#mining'}
+                          href="#mining"
+                        >
+                          <h3>Mining rewards</h3>
                         </NavLink>
                       </NavItem>
 
@@ -135,6 +145,14 @@ function Address() {
                 <Rewards
                   address={address}
                   visible={hashReady && hash === '#rewards'}
+                />
+              </div>
+            </TabPane>
+            <TabPane tabId="#mining">
+              <div className="card">
+                <Mining
+                  address={address}
+                  visible={hashReady && hash === '#mining'}
                 />
               </div>
             </TabPane>
