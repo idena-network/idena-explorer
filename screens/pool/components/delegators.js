@@ -2,7 +2,7 @@ import Link from 'next/link'
 import {useInfiniteQuery} from 'react-query'
 import {getPoolDelegators} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
-import {identityStatusFmt} from '../../../shared/utils/utils'
+import {dnaFmt, identityStatusFmt, precise2} from '../../../shared/utils/utils'
 
 const LIMIT = 30
 
@@ -28,12 +28,13 @@ export default function Delegators({address, visible}) {
         <thead>
           <tr>
             <th>Address</th>
+            <th>Stake, iDna</th>
             <th>Status</th>
             <th>Age</th>
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={3} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={4} />)}
           {data.map(
             (page) =>
               page &&
@@ -58,6 +59,7 @@ export default function Delegators({address, visible}) {
                         </Link>
                       </div>
                     </td>
+                    <td>{dnaFmt(delegatorInfo.stake, '')}</td>
                     <td>{identityStatusFmt(delegatorInfo.state)}</td>
                     <td>{delegatorInfo.age}</td>
                   </tr>
