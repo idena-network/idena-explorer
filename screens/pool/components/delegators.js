@@ -28,7 +28,7 @@ export default function Delegators({address, visible}) {
         <thead>
           <tr>
             <th>Address</th>
-            <th>Stake, iDna</th>
+            <th>Stake, iDNA</th>
             <th>Status</th>
             <th>Age</th>
           </tr>
