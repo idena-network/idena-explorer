@@ -127,7 +127,9 @@ export default function VotingData({address}) {
                   {(votingInfo && votingInfo.secretVotesCount) || '-'}
                 </div>
                 <hr />
-                <div className="control-label">Ignored votes (pools):</div>
+                <div className="control-label">
+                  Ignored votes (pools and newbies):
+                </div>
                 <div className="text_block">{ignoredVotes || '-'}</div>
               </div>
               <div className="col-12 col-sm-4" style={{paddingTop: 0}}>
@@ -176,6 +178,7 @@ export default function VotingData({address}) {
                     <tr>
                       <th style={{width: 300}}>Option</th>
                       <th>Votes</th>
+                      <th>Ignored votes (pools and newbies)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -186,6 +189,10 @@ export default function VotingData({address}) {
                           <td>{item.value}</td>
                           <td>
                             {optionVotes(item.id, votingInfo.votes) || '-'}
+                          </td>
+                          <td>
+                            {optionIgnoredVotes(item.id, votingInfo.votes) ||
+                              '-'}
                           </td>
                         </tr>
                       ))}
@@ -209,6 +216,17 @@ function optionVotes(option, votes) {
     return 0
   }
   return item.count
+}
+
+function optionIgnoredVotes(option, votes) {
+  if (!votes) {
+    return 0
+  }
+  const item = votes.find((x) => x.option === option)
+  if (!item) {
+    return 0
+  }
+  return item.allCount - item.count
 }
 
 export function Linkify({children}) {

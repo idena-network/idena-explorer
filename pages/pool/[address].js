@@ -7,6 +7,8 @@ import {getPool} from '../../shared/api'
 import Delegators from '../../screens/pool/components/delegators'
 import {useHash, useHashChange} from '../../shared/utils/useHashChange'
 import Rewards from '../../screens/pool/components/rewards'
+import {dnaFmt} from '../../shared/utils/utils'
+import TooltipText from '../../shared/components/tooltip'
 
 const DEFAULT_TAB = '#delegators'
 
@@ -126,6 +128,34 @@ function PoolData({poolInfo}) {
                 <div className="control-label">Size:</div>
                 <div className="text_block">
                   {(poolInfo && poolInfo.size) || '-'}
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-sm-4">
+              <div className="section__group">
+                <TooltipText
+                  className="control-label"
+                  data-toggle="tooltip"
+                  tooltip="Sum of delegated accounts stakes"
+                >
+                  Total stake:
+                </TooltipText>
+                <div className="text_block">
+                  {(poolInfo && dnaFmt(poolInfo.totalStake)) || '-'}
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-sm-4">
+              <div className="section__group">
+                <TooltipText
+                  className="control-label"
+                  data-toggle="tooltip"
+                  tooltip="Sum of stakes of validated accounts delegated to the pool"
+                >
+                  Validators' stake:
+                </TooltipText>
+                <div className="text_block">
+                  {(poolInfo && dnaFmt(poolInfo.totalValidatedStake)) || '-'}
                 </div>
               </div>
             </div>
