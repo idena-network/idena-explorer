@@ -30,7 +30,7 @@ export default function Mining({address, visible}) {
           <tr>
             <th>Epoch</th>
             <th>Mined, iDNA</th>
-            <th>Burnt, iDNA</th>
+            <th>Burnt (penalty), iDNA</th>
           </tr>
         </thead>
         <tbody>
