@@ -40,10 +40,11 @@ export default function HardForks({visible, limit = 10}) {
             <th>Consensus version</th>
             <th>Block</th>
             <th>Timestamp</th>
+            <th>Changes</th>
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={3} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={4} />)}
           {data.map(
             (page) =>
               page &&
@@ -63,6 +64,18 @@ export default function HardForks({visible, limit = 10}) {
                     </Link>
                   </td>
                   <td>{timeSince(item.timestamp, false)}</td>
+                  <td>
+                    {item.url && (
+                      <div
+                        className="text_block text_block--ellipsis"
+                        style={{width: 200}}
+                      >
+                        <Link href={item.url}>
+                          <a target="_blank">{item.url}</a>
+                        </Link>
+                      </div>
+                    )}
+                  </td>
                 </tr>
               ))
           )}
