@@ -1,29 +1,22 @@
 import Link from 'next/link'
-import {useEffect, useState} from 'react'
-import {useInfiniteQuery} from 'react-query'
-import {
-  precise6,
-  dnaFmt,
-  txTypeFmt,
-  identityStatusFmt,
-  timeSince,
-} from '../../../shared/utils/utils'
-import {
-  getMempoolTxs,
-  getPoolDelegators,
-  getUpgrades,
-} from '../../../shared/api'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {dateTimeFmt} from '../../../shared/utils/utils'
+import {getUpgrades, getUpgradeVotings} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
-import {WarningTooltip} from '../../../shared/components/tooltip'
 
 export default function HardForks({visible, limit = 10}) {
-  const fetchDelegators = (_, continuationToken = null) =>
+  const {data: upgradeVotings, upgradeVotingsStatus} = useQuery(
+    visible && 'upgradeVotings',
+    (_) => getUpgradeVotings(1)
+  )
+
+  const fetchUpgrades = (_, continuationToken = null) =>
     getUpgrades(limit, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
     visible && `upgrades`,
     [],
-    fetchDelegators,
+    fetchUpgrades,
     {
       getFetchMore: (lastGroup) =>
         lastGroup && lastGroup.continuationToken
@@ -32,53 +25,110 @@ export default function HardForks({visible, limit = 10}) {
     }
   )
 
+  const upgradeVoting =
+    upgradeVotings &&
+    upgradeVotings.length &&
+    data &&
+    (!data.length ||
+      !data[0] ||
+      !data[0].length ||
+      upgradeVotings[0].upgrade !== data[0][0].upgrade) &&
+    upgradeVotings[0]
+
+  if (upgradeVoting) {
+    const startDate = new Date(upgradeVoting.startActivationDate)
+    const endDate = new Date(upgradeVoting.endActivationDate)
+    const now = new Date()
+    upgradeVoting.status =
+      now < startDate ? 'Pending' : now < endDate ? 'Voting' : 'Finished'
+  }
+
   return (
     <div className="table-responsive">
       <table className="table">
         <thead>
           <tr>
             <th>Consensus version</th>
+            <th>Status</th>
             <th>Block</th>
             <th>Timestamp</th>
             <th>Changes</th>
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={4} />)}
-          {data.map(
-            (page) =>
-              page &&
-              page.map((item) => (
-                <tr key={item.upgrade}>
+          {!visible ||
+            ((status === 'loading' || upgradeVotingsStatus === 'loading') && (
+              <SkeletonRows cols={5} />
+            ))}
+          {!(status === 'loading' || upgradeVotingsStatus === 'loading') &&
+            upgradeVoting && (
+              <>
+                <tr key={upgradeVoting.upgrade}>
                   <td>
                     <Link
                       href="/hardfork/[upgrade]"
-                      as={`/hardfork/${item.upgrade}`}
+                      as={`/hardfork/${upgradeVoting.upgrade}`}
                     >
-                      <a>{item.upgrade}</a>
+                      <a>#{upgradeVoting.upgrade}</a>
                     </Link>
                   </td>
+                  <td>{upgradeVoting.status}</td>
+                  <td>-</td>
                   <td>
-                    <Link href="/block/[block]" as={`/block/${item.height}`}>
-                      <a>{item.height}</a>
-                    </Link>
+                    {dateTimeFmt(upgradeVoting.startActivationDate)} -{' '}
+                    {dateTimeFmt(upgradeVoting.endActivationDate)}
                   </td>
-                  <td>{timeSince(item.timestamp, false)}</td>
                   <td>
-                    {item.url && (
+                    {upgradeVoting.url && (
                       <div
                         className="text_block text_block--ellipsis"
-                        style={{width: 200}}
+                        style={{width: 300}}
                       >
-                        <Link href={item.url}>
-                          <a target="_blank">{item.url}</a>
+                        <Link href={upgradeVoting.url}>
+                          <a target="_blank">{upgradeVoting.url}</a>
                         </Link>
                       </div>
                     )}
                   </td>
                 </tr>
-              ))
-          )}
+              </>
+            )}
+          {!(status === 'loading' || upgradeVotingsStatus === 'loading') &&
+            data.map(
+              (page) =>
+                page &&
+                page.map((item) => (
+                  <tr key={item.upgrade}>
+                    <td>
+                      <Link
+                        href="/hardfork/[upgrade]"
+                        as={`/hardfork/${item.upgrade}`}
+                      >
+                        <a>#{item.upgrade}</a>
+                      </Link>
+                    </td>
+                    <td>Activated</td>
+                    <td>
+                      <Link href="/block/[block]" as={`/block/${item.height}`}>
+                        <a>{item.height}</a>
+                      </Link>
+                    </td>
+                    <td>{dateTimeFmt(item.timestamp)}</td>
+                    <td>
+                      {item.url && (
+                        <div
+                          className="text_block text_block--ellipsis"
+                          style={{width: 300}}
+                        >
+                          <Link href={item.url}>
+                            <a target="_blank">{item.url}</a>
+                          </Link>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+            )}
         </tbody>
       </table>
       <div
