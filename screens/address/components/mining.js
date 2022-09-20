@@ -2,7 +2,7 @@ import Link from 'next/link'
 import {useInfiniteQuery} from 'react-query'
 import {Fragment} from 'react'
 import {getMiningRewards} from '../../../shared/api'
-import {dnaFmt, epochFmt} from '../../../shared/utils/utils'
+import {dnaFmt, epochFmt, precise2} from '../../../shared/utils/utils'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 
 const LIMIT = 30
@@ -28,13 +28,13 @@ export default function Mining({address, visible}) {
       <table className="table">
         <thead>
           <tr>
-            <th>Epoch</th>
-            <th>Mined, iDNA</th>
-            <th>Burnt (penalty), iDNA</th>
+            <th style={{width: '55%'}}>Epoch</th>
+            <th style={{width: '10%'}}>Mined, iDNA</th>
+            <th style={{width: '15%'}}>Burnt (penalty), iDNA</th>
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={4} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={3} />)}
           {data.map((page, i) => (
             <Fragment key={i}>
               {page &&
@@ -51,19 +51,14 @@ export default function Mining({address, visible}) {
                       <div
                         className="text_block text_block--ellipsis"
                         align="right"
-                        style={{width: 150}}
+                        style={{width: 100}}
                       >
-                        {dnaFmt(item.amount, '')}
+                        {dnaFmt(precise2(item.amount), '')}
                       </div>
                     </td>
-                    <td>
-                      <div
-                        className="text_block text_block--ellipsis"
-                        align="right"
-                        style={{width: 150}}
-                      >
-                        {dnaFmt(item.penalty, '')}
-                      </div>
+                    <td align="right">
+
+                        {dnaFmt(precise2(item.penalty), '')}
                     </td>
                   </tr>
                 ))}
