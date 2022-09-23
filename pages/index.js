@@ -17,6 +17,7 @@ import Transactions from '../screens/epoch/components/transactions'
 import {getLastEpoch, getUpgradeVoting} from '../shared/api'
 import {useHash, useHashChange} from '../shared/utils/useHashChange'
 import Pools from '../screens/index/components/pools'
+import HardForks from '../screens/index/components/hardforks'
 
 const DEFAULT_TAB = '#transactions'
 
@@ -125,6 +126,15 @@ function Home() {
                       <h3>Mempool</h3>
                     </NavLink>
                   </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#hardforks'}
+                      href="#hardforks"
+                    >
+                      <h3>Hardforks</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
@@ -178,9 +188,17 @@ function Home() {
             <TabPane tabId="#mempool">
               <div className="card">
                 <Mempool
-                  epoch={50}
                   limit={10}
                   visible={hashReady && hash === '#mempool'}
+                />
+              </div>
+            </TabPane>
+
+            <TabPane tabId="#hardforks">
+              <div className="card">
+                <HardForks
+                  limit={10}
+                  visible={hashReady && hash === '#hardforks'}
                 />
               </div>
             </TabPane>

@@ -1,4 +1,3 @@
-import {useEffect, useState} from 'react'
 import {
   AreaChart,
   Area,
@@ -9,25 +8,15 @@ import {
   ReferenceLine,
   ResponsiveContainer,
 } from 'recharts'
-import {getHardForkVotingHistory} from '../../../shared/api'
 import {dateTimeFmt} from '../../../shared/utils/utils'
 
-export default function HardForkHistory({upgrade = 0, votesRequired = 0}) {
-  const [chartData, setChartData] = useState([])
-
-  useEffect(() => {
-    async function getData() {
-      const result = await getHardForkVotingHistory(upgrade)
-      const data =
-        result &&
-        result.map((item) => ({
-          votes: item.votes,
-          timestamp: dateTimeFmt(item.timestamp),
-        }))
-      setChartData(data)
-    }
-    getData()
-  }, [upgrade])
+export default function HardForkHistory({votesRequired = 0, votingHistory}) {
+  const chartData =
+    votingHistory &&
+    votingHistory.map((item) => ({
+      votes: item.votes,
+      timestamp: dateTimeFmt(item.timestamp),
+    }))
 
   function CustomTooltip({payload, label, active}) {
     if (active) {
