@@ -357,8 +357,10 @@ export async function getUpgradeData(upgrade) {
   return getResponse(apiClient().get(`upgrade/${upgrade}`))
 }
 
-export async function getUpgrades(limit) {
-  return getResponse(apiClient().get('upgrades', {params: {limit}}))
+export async function getUpgrades(limit, continuationToken) {
+  return getResponse(
+    apiClient().get('upgrades', {params: {limit, continuationToken}})
+  )
 }
 
 export async function getForkCommitteeCount() {

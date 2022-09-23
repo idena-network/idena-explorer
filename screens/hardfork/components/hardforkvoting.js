@@ -4,6 +4,7 @@ import {
   getUpgradeData,
   getUpgrades,
   getForkCommitteeCount,
+  getHardForkVotingHistory,
 } from '../../../shared/api'
 import HardForkHistory from './hardforkhistory'
 import TooltipText from '../../../shared/components/tooltip'
@@ -14,6 +15,7 @@ const initialState = {
   upgradeVoting: [{upgrade: 9, votes: 1}],
   upgradeData: null,
   upgrades: null,
+  votingHistory: null,
 }
 
 export default function HardForkVoting({upgrade = 9}) {
@@ -21,17 +23,25 @@ export default function HardForkVoting({upgrade = 9}) {
 
   useEffect(() => {
     async function getData() {
-      const [online, upgradeVoting, upgradeData, upgrades] = await Promise.all([
+      const [
+        online,
+        upgradeVoting,
+        upgradeData,
+        upgrades,
+        votingHistory,
+      ] = await Promise.all([
         getForkCommitteeCount(),
         getUpgradeVoting(),
         getUpgradeData(upgrade),
         getUpgrades(1),
+        getHardForkVotingHistory(upgrade),
       ])
       setState({
         online,
         upgradeVoting,
         upgradeData,
         upgrades,
+        votingHistory,
       })
     }
     getData()
@@ -172,12 +182,19 @@ export default function HardForkVoting({upgrade = 9}) {
       )}
       <div>
         <br />
-        <h3>Voting progress</h3>
-        <p className="text_block">
-          Nodes with activated mining status supporting the fork
-        </p>
-        <HardForkHistory upgrade={upgrade} votesRequired={votesRequired} />
-        <br />
+        {state && state.votingHistory && state.votingHistory.length && (
+          <>
+            <h3>Voting progress</h3>
+            <p className="text_block">
+              Nodes with activated mining status supporting the fork
+            </p>
+            <HardForkHistory
+              votesRequired={votesRequired}
+              votingHistory={state.votingHistory}
+            />
+            <br />
+          </>
+        )}
       </div>
     </div>
   )
