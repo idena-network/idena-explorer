@@ -34,7 +34,7 @@
     "react-icons": "^3.11.0",
     "react-query": "^1.2.9",
     "reactstrap": "^8.4.1",
-    "recharts": "^2.0.8",
+    "recharts": "^2.1.14",
     "sass-rem": "^2.0.1",
     "url-regex-safe": "^3.0.0",
     "uuid": "^8.0.0",
