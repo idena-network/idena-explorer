@@ -147,10 +147,13 @@ export default function TopHeader() {
       maxMinerWeight &&
       nodesData &&
       nodesData.onlineCount &&
+      epochData &&
+      epochData.epochDuration &&
       calculateEstimatedMiningReward(
         maxMinerWeight,
         stakingData.averageMinerWeight,
-        nodesData.onlineCount
+        nodesData.onlineCount,
+        epochData.epochDuration
       )) ||
     0
 
@@ -280,7 +283,8 @@ function Card({
 function calculateEstimatedMiningReward(
   stakeWeight,
   averageMinerWeight,
-  onlineMinersCount
+  onlineMinersCount,
+  epochDays
 ) {
   const proposerOnlyReward =
     (6 * stakeWeight * 20) / (stakeWeight * 20 + averageMinerWeight * 100)
@@ -306,7 +310,7 @@ function calculateEstimatedMiningReward(
     proposerOnlyProbability * committeeOnlyProbability
 
   return (
-    85000 *
+    ((85000 * epochDays) / 21.0) *
     (proposerOnlyProbability * proposerOnlyReward +
       committeeOnlyProbability * committeeOnlyReward +
       proposerAndCommitteeProbability * proposerAndCommitteeReward)
