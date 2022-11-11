@@ -165,13 +165,18 @@ export function hexToObject(hex) {
 }
 
 export function flipGradeFmt(grade) {
-  if (grade === 1) {
-    return 'Reported'
-  }
-  if (grade > 1) {
-    return 'Approved'
-  }
+  if (grade === 1) return 'Reported'
+  if (grade === 2) return 'Approved'
+  if (grade > 2) return 'Best flip'
   return '-'
+}
+
+export function flipRewardMultiplier(grade) {
+  if (grade === 2) return 1
+  if (grade === 3) return 2
+  if (grade === 4) return 4
+  if (grade === 5) return 8
+  return 0
 }
 
 export const humanizeDuration = (d, unit = 's') =>

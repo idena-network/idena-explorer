@@ -99,10 +99,12 @@ export default function LongAnswers({address, epoch, visible}) {
                   </td>
                   <td>{score}</td>
                   <td>
-                    {item.respGrade > 1 ? (
-                      <i className="icon icon--micro_success" />
+                    {item.respGrade > 2 ? (
+                      <i className="icon icon--micro_best" />
                     ) : item.respGrade === 1 ? (
                       <i className="icon icon--micro_fail" />
+                    ) : item.respGrade === 2 ? (
+                      <i className="icon icon--micro_success" />
                     ) : (
                       ''
                     )}

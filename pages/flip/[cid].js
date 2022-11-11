@@ -15,6 +15,7 @@ import {
   dateTimeFmt,
   identityStatusFmt,
   flipGradeFmt,
+  flipRewardMultiplier,
 } from '../../shared/utils/utils'
 import TooltipText from '../../shared/components/tooltip'
 
@@ -183,6 +184,8 @@ function Flip() {
                       className={
                         flip.wrongWords || flip.status === 'QualifiedByNone'
                           ? 'icon icon--micro_fail'
+                          : flip.grade > 2
+                          ? 'icon icon--micro_best'
                           : 'icon icon--micro_success'
                       }
                     />
@@ -190,6 +193,10 @@ function Flip() {
                       ? flip.status === 'QualifiedByNone'
                         ? 'The flip was not available for the network during the validation'
                         : 'The flip was reported as irrelevant to keywords or having inappropriate content, labels on top of the images showing the right order or text needed to solve the flip'
+                      : flip.grade > 2
+                      ? `This flip is rewarded with ${flipRewardMultiplier(
+                          flip.grade
+                        )} times the basic reward, as it is marked as the best flip by the committee members`
                       : 'Flip is relevant to the keywords'}
                   </p>
                 )}
@@ -477,10 +484,12 @@ function Flip() {
                               : item.respAnswer}
                           </td>
                           <td>
-                            {item.respGrade > 1 ? (
-                              <i className="icon icon--micro_success" />
+                            {item.respGrade > 2 ? (
+                              <i className="icon icon--micro_best" />
                             ) : item.respGrade === 1 ? (
                               <i className="icon icon--micro_fail" />
+                            ) : item.respGrade === 2 ? (
+                              <i className="icon icon--micro_success" />
                             ) : (
                               ''
                             )}
