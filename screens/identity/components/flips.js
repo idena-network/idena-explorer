@@ -110,6 +110,8 @@ export default function Flips({address, visible}) {
                         {item.wrongWords ||
                         item.status === 'QualifiedByNone' ? (
                           <i className="icon icon--micro_fail" />
+                        ) : item.grade > 2 ? (
+                          <i className="icon icon--micro_best" />
                         ) : (
                           <i className="icon icon--micro_success" />
                         )}

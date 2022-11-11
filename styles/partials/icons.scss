@@ -190,6 +190,13 @@
   padding-right: 5px;
 }
 
+.icon--micro_best:before {
+  content: '\2605';
+  color: #ffd502;
+  padding-right: 5px;
+  font-weight: 600;
+}
+
 .icon--right_arrow:before {
   content: '\e92f';
 }
