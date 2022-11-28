@@ -23,7 +23,7 @@ export default function Rewards({address, visible}) {
   )
 
   const getReward = (arr, type) => {
-    const item = arr.find((x) => x.type === type)
+    const item = arr && arr.find((x) => x.type === type)
     if (!item) {
       return 0
     }
@@ -143,10 +143,12 @@ export default function Rewards({address, visible}) {
                         <td>{precise2(reportsReward) || '-'}</td>
                         <td>
                           {precise2(
-                            item.rewards.reduce(
-                              (prev, cur) => prev + cur.balance * 1,
+                            (item.rewards &&
+                              item.rewards.reduce(
+                                (prev, cur) => prev + cur.balance * 1,
+                                0
+                              )) ||
                               0
-                            )
                           )}
                         </td>
                       </tr>
