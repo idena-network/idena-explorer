@@ -10,6 +10,7 @@ import VotingData from '../../screens/contract/components/voting'
 import TimeLockData from '../../screens/contract/components/timelock'
 import OracleLockData from '../../screens/contract/components/oraclelock'
 import MultisigData from '../../screens/contract/components/multisig'
+import RefundableOracleLockData from '../../screens/contract/components/refundableoraclelock'
 
 function Contract() {
   const router = useRouter()
@@ -28,6 +29,8 @@ function Contract() {
   const isVoting = contractInfo && contractInfo.type === 'OracleVoting'
   const isTimeLock = contractInfo && contractInfo.type === 'TimeLock'
   const isOracleLock = contractInfo && contractInfo.type === 'OracleLock'
+  const isRefundableOracleLock =
+    contractInfo && contractInfo.type === 'RefundableOracleLock'
   const isMultisig = contractInfo && contractInfo.type === 'Multisig'
 
   return (
@@ -78,6 +81,7 @@ function Contract() {
       {isVoting && <VotingData address={address} />}
       {isTimeLock && <TimeLockData address={address} />}
       {isOracleLock && <OracleLockData address={address} />}
+      {isRefundableOracleLock && <RefundableOracleLockData address={address} />}
       {isMultisig && <MultisigData address={address} />}
 
       <section className="section section_tabs">
