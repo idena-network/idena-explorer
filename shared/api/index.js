@@ -565,6 +565,10 @@ export async function getOracleLockContract(address) {
   return getResponse(apiClient().get(`oracleLockContract/${address}`))
 }
 
+export async function getRefundableOracleLockContract(address) {
+  return getResponse(apiClient().get(`refundableOracleLockContract/${address}`))
+}
+
 export async function getMultisigContract(address) {
   return getResponse(apiClient().get(`multisigContract/${address}`))
 }
