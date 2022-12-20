@@ -4,7 +4,11 @@ import {
   getRefundableOracleLockContract,
   getOracleVotingContract,
 } from '../../../shared/api'
-import {dateTimeFmt, hexToObject} from '../../../shared/utils/utils'
+import {
+  dateTimeFmt,
+  hexToObject,
+  humanizeDuration,
+} from '../../../shared/utils/utils'
 
 export default function RefundableOracleLockData({address}) {
   const zeroAddress = '0x0000000000000000000000000000000000000000'
@@ -26,6 +30,19 @@ export default function RefundableOracleLockData({address}) {
     fact &&
     fact.options &&
     fact.options.find((item) => item.id === refundableOracleLockInfo.value)
+
+  const BLOCK_SECONDS = 20
+  const refundBlock =
+    refundableOracleLockInfo && refundableOracleLockInfo.refundBlock
+  const refundDelayBlocks =
+    refundableOracleLockInfo && refundableOracleLockInfo.refundDelay
+  const refundDelay =
+    refundDelayBlocks && humanizeDuration(refundDelayBlocks * BLOCK_SECONDS)
+  const refundDelayBlocksLeft =
+    refundableOracleLockInfo && refundableOracleLockInfo.refundDelayLeft
+  const refundDelayLeft =
+    refundDelayBlocksLeft &&
+    humanizeDuration(refundDelayBlocksLeft * BLOCK_SECONDS)
 
   return (
     <section className="section section_details">
@@ -172,6 +189,21 @@ export default function RefundableOracleLockData({address}) {
                 {refundableOracleLockInfo
                   ? `${refundableOracleLockInfo.oracleVotingFee} %`
                   : '-'}
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div className="row">
+            <div className="col">
+              <div className="control-label">Refund delay:</div>
+              <div className="text_block">
+                {refundBlock
+                  ? refundDelayBlocksLeft
+                    ? `${refundDelayBlocksLeft} (${refundDelayLeft})`
+                    : 0
+                  : refundDelayBlocks
+                  ? `${refundDelayBlocks} (${refundDelay})`
+                  : 0}
               </div>
             </div>
           </div>
