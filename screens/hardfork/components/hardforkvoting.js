@@ -12,13 +12,13 @@ import {dateTimeFmt} from '../../../shared/utils/utils'
 
 const initialState = {
   online: 0,
-  upgradeVoting: [{upgrade: 9, votes: 1}],
+  upgradeVoting: [{upgrade: 10, votes: 1}],
   upgradeData: null,
   upgrades: null,
   votingHistory: null,
 }
 
-export default function HardForkVoting({upgrade = 9}) {
+export default function HardForkVoting({upgrade = 10}) {
   const [state, setState] = useState(initialState)
 
   useEffect(() => {
