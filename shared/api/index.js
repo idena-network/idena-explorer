@@ -427,6 +427,12 @@ export async function getIdentityRewardedInvitesByEpoch(address, epoch) {
   )
 }
 
+export async function getIdentityRewardedInviteeByEpoch(address, epoch) {
+  return getResponse(
+    apiClient().get(`epoch/${epoch}/identity/${address}/rewardedInvitee`)
+  )
+}
+
 export async function getIdentityAvailableInvitesByEpoch(address, epoch) {
   return getResponse(
     apiClient().get(`epoch/${epoch}/identity/${address}/availableInvites`)
