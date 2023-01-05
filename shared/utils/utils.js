@@ -132,6 +132,10 @@ export function rewardTypeFmt(s) {
   if (s === 'Invitations3') return 'Invitation (3rd validation)'
   if (s === 'SavedInvite') return 'Non-spent invitation'
   if (s === 'SavedInviteWin') return 'Non-spent invitation with lottery reward'
+  if (s === 'ExtraFlips') return 'Extra flips'
+  if (s === 'Invitee') return 'Invitee (1st validation)'
+  if (s === 'Invitee2') return 'Invitee (2nd validation)'
+  if (s === 'Invitee3') return 'Invitee (3rd validation)'
   return s
 }
 

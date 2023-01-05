@@ -77,11 +77,17 @@ function Rewards() {
         getReward(totalRewards.rewards, 'Invitations2') +
         getReward(totalRewards.rewards, 'Invitations3') +
         getReward(totalRewards.rewards, 'SavedInvite') +
-        getReward(totalRewards.rewards, 'SavedInviteWin')) ||
+        getReward(totalRewards.rewards, 'SavedInviteWin') +
+        getReward(totalRewards.rewards, 'Invitee') +
+        getReward(totalRewards.rewards, 'Invitee2') +
+        getReward(totalRewards.rewards, 'Invitee3')) ||
     0
 
   const flipsReward =
-    (totalRewards && getReward(totalRewards.rewards, 'Flips')) || 0
+    (totalRewards &&
+      getReward(totalRewards.rewards, 'Flips') +
+        getReward(totalRewards.rewards, 'ExtraFlips')) ||
+    0
 
   const reportsReward =
     (totalRewards && getReward(totalRewards.rewards, 'Reports')) || 0
@@ -389,9 +395,14 @@ function Rewards() {
                             const invitaionReward =
                               getReward(item.rewards, 'Invitations') +
                               getReward(item.rewards, 'Invitations2') +
-                              getReward(item.rewards, 'Invitations3')
+                              getReward(item.rewards, 'Invitations3') +
+                              getReward(item.rewards, 'Invitee') +
+                              getReward(item.rewards, 'Invitee2') +
+                              getReward(item.rewards, 'Invitee3')
 
-                            const flipsReward = getReward(item.rewards, 'Flips')
+                            const flipsReward =
+                              getReward(item.rewards, 'Flips') +
+                              getReward(item.rewards, 'ExtraFlips')
 
                             const reportsReward = getReward(
                               item.rewards,

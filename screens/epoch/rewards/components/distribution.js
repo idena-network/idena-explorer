@@ -131,9 +131,14 @@ export default function Distribution({epoch, visible}) {
                   const invitaionReward =
                     getReward(item.rewards, 'Invitations') +
                     getReward(item.rewards, 'Invitations2') +
-                    getReward(item.rewards, 'Invitations3')
+                    getReward(item.rewards, 'Invitations3') +
+                    getReward(item.rewards, 'Invitee') +
+                    getReward(item.rewards, 'Invitee2') +
+                    getReward(item.rewards, 'Invitee3')
 
-                  const flipsReward = getReward(item.rewards, 'Flips')
+                  const flipsReward =
+                    getReward(item.rewards, 'Flips') +
+                    getReward(item.rewards, 'ExtraFlips')
 
                   const reportsReward = getReward(item.rewards, 'Reports')
 

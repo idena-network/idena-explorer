@@ -225,7 +225,11 @@ function RewardsData({epoch}) {
                 <div className="bordered-col col">
                   <h3 className="info_block__accent">
                     {(rewardsSummary &&
-                      dnaFmt(precise0(rewardsSummary.flips), '')) ||
+                      dnaFmt(
+                        precise0(rewardsSummary.flips) +
+                          precise0(rewardsSummary.extraFlips),
+                        ''
+                      )) ||
                       '-'}
                   </h3>
                   <TooltipText
