@@ -115,7 +115,9 @@ export default function Rewards({address, visible}) {
                       getReward(item.rewards, 'Invitations2') +
                       getReward(item.rewards, 'Invitations3')
 
-                    const flipsReward = getReward(item.rewards, 'Flips')
+                    const flipsReward =
+                      getReward(item.rewards, 'Flips') +
+                      getReward(item.rewards, 'ExtraFlips')
 
                     const reportsReward = getReward(item.rewards, 'Reports')
 
