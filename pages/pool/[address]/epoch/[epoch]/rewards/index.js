@@ -179,7 +179,8 @@ function Rewards() {
                             flipsReward +
                             invitationsReward +
                             stakingReward +
-                            candidateReward,
+                            candidateReward +
+                            reportsReward,
                           ''
                         )}
                       </span>
