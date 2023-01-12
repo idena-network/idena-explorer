@@ -144,6 +144,13 @@ function Reward() {
       validationSummary.rewards.flips.earned * 1) ||
     0
 
+  const getExtraFlipsReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.extraFlips &&
+      validationSummary.rewards.extraFlips.earned * 1) ||
+    0
+
   const getReportsReward = () =>
     (validationSummary &&
       validationSummary.rewards &&
@@ -256,6 +263,25 @@ function Reward() {
       rewardsSummary.epochDuration / 4320) ||
     0
   const apy = (epochDays && (epy / epochDays) * 366) || 0
+
+  const flipsOld =
+    rewardedFlips &&
+    rewardsSummary &&
+    mapFlips(rewardedFlips, rewardsSummary, stakeWeight, extraFlips, false)
+  const flipsNew =
+    rewardedFlips &&
+    rewardsSummary &&
+    mapFlips(rewardedFlips, rewardsSummary, stakeWeight, extraFlips, true)
+
+  const totalFlipsRewardOld =
+    (flipsOld && flipsOld.reduce((total, item) => total + item.earned, 0)) || 0
+  const totalFlipsRewardNew =
+    (flipsNew && flipsNew.reduce((total, item) => total + item.earned, 0)) || 0
+  const flips =
+    Math.abs(getFlipsReward() + getExtraFlipsReward() - totalFlipsRewardOld) >
+    Math.abs(getFlipsReward() + getExtraFlipsReward() - totalFlipsRewardNew)
+      ? flipsNew
+      : flipsOld
 
   return (
     <Layout title={`Identity rewards ${address} for epoch ${epochFmt(epoch)}`}>
@@ -450,6 +476,7 @@ function Reward() {
                         {dnaFmt(
                           getValidationReward() +
                             getFlipsReward() +
+                            getExtraFlipsReward() +
                             getInvitationsReward() +
                             getInviteeReward() +
                             getReportsReward() +
@@ -523,7 +550,7 @@ function Reward() {
                   )}
                   <div className="bordered-col col">
                     <h3 className="info_block__accent">
-                      {dnaFmt(getFlipsReward(), '')}
+                      {dnaFmt(getFlipsReward() + getExtraFlipsReward(), '')}
                     </h3>
                     <TooltipText
                       className="control-label"
@@ -803,101 +830,69 @@ function Reward() {
                             </td>
                           </tr>
                         ))}
-                      {rewardedFlips &&
-                        rewardedFlips
-                          .sort(function (a, b) {
-                            return a.grade - b.grade
-                          })
-                          .map(function (item, idx) {
-                            const isExtra =
-                              extraFlips &&
-                              rewardedFlips.length > 3 &&
-                              idx < rewardedFlips.length - 3
-                            return (
-                              <tr key={item.cid}>
-                                <td>
-                                  <div className="user-pic">
-                                    <img
-                                      src={
-                                        item.icon
-                                          ? iconToSrc(item.icon)
-                                          : '/static/images/flip_icn.png'
-                                      }
-                                      alt="pic"
-                                      width="44"
-                                      height="44"
-                                    />
-                                  </div>
-                                  <div
-                                    className="text_block text_block--ellipsis"
-                                    style={{width: 200}}
+                      {flips &&
+                        flips.map(function (item) {
+                          return (
+                            <tr key={item.cid}>
+                              <td>
+                                <div className="user-pic">
+                                  <img
+                                    src={
+                                      item.icon
+                                        ? iconToSrc(item.icon)
+                                        : '/static/images/flip_icn.png'
+                                    }
+                                    alt="pic"
+                                    width="44"
+                                    height="44"
+                                  />
+                                </div>
+                                <div
+                                  className="text_block text_block--ellipsis"
+                                  style={{width: 200}}
+                                >
+                                  <Link
+                                    href="/flip/[cid]"
+                                    as={`/flip/${item.cid}`}
                                   >
-                                    <Link
-                                      href="/flip/[cid]"
-                                      as={`/flip/${item.cid}`}
-                                    >
-                                      <a>{item.cid}</a>
-                                    </Link>
-                                  </div>
-                                </td>
-                                <td>
-                                  {item.words ? (
-                                    <>
-                                      {item.wrongWords ||
-                                      item.status === 'QualifiedByNone' ? (
-                                        <i className="icon icon--micro_fail" />
-                                      ) : item.grade > 2 ? (
-                                        <i className="icon icon--micro_best" />
-                                      ) : (
-                                        <i className="icon icon--micro_success" />
-                                      )}
-                                      <span>
-                                        {`${item.words.word1.name}/${item.words.word2.name}`}
-                                      </span>
-                                    </>
-                                  ) : (
-                                    '-'
-                                  )}
-                                </td>
-                                <td>
-                                  {item.status
-                                    ? flipQualificationStatusFmt(item.status)
-                                    : '-'}
-                                </td>
-                                <td>
-                                  {dnaFmt(
-                                    rewardsSummary &&
-                                      item.rewarded &&
-                                      ((!isExtra &&
-                                        rewardsSummary.flipsShare *
-                                          getFlipGradeRewardCoef(item.grade)) ||
-                                        (isExtra &&
-                                          rewardsSummary.extraFlipsShare *
-                                            getFlipGradeRewardCoef(item.grade) *
-                                            stakeWeight)),
-                                    ''
-                                  )}
-                                </td>
-                                <td style={{color: 'red'}}>
-                                  {dnaFmt(
-                                    rewardsSummary &&
-                                      !item.rewarded &&
-                                      ((!isExtra &&
-                                        rewardsSummary.flipsShare) ||
-                                        (isExtra &&
-                                          rewardsSummary.extraFlipsShare *
-                                            stakeWeight)),
-                                    ''
-                                  )}
-                                </td>
-                                <td>
-                                  {validationPenalty
-                                    ? 'Validation penalty'
-                                    : '-'}
-                                </td>
-                              </tr>
-                            )
-                          })}
+                                    <a>{item.cid}</a>
+                                  </Link>
+                                </div>
+                              </td>
+                              <td>
+                                {item.words ? (
+                                  <>
+                                    {item.wrongWords ||
+                                    item.status === 'QualifiedByNone' ? (
+                                      <i className="icon icon--micro_fail" />
+                                    ) : item.grade > 2 ? (
+                                      <i className="icon icon--micro_best" />
+                                    ) : (
+                                      <i className="icon icon--micro_success" />
+                                    )}
+                                    <span>
+                                      {`${item.words.word1.name}/${item.words.word2.name}`}
+                                    </span>
+                                  </>
+                                ) : (
+                                  '-'
+                                )}
+                              </td>
+                              <td>
+                                {item.status
+                                  ? flipQualificationStatusFmt(item.status)
+                                  : '-'}
+                              </td>
+                              <td>{dnaFmt(item.earned, '')}</td>
+                              <td style={{color: 'red'}}>
+                                {dnaFmt(item.missed, '')}
+                              </td>
+                              <td>
+                                {validationPenalty ? 'Validation penalty' : '-'}
+                              </td>
+                            </tr>
+                          )
+                        })}
                     </tbody>
                   </table>
                 </div>
@@ -1512,6 +1507,45 @@ function getInviteeRewardData(rewardedInvitee, validationSummary) {
     missingReward,
     reason: humanizeReason,
   }
+}
+
+function mapFlips(
+  rewardedFlips,
+  rewardsSummary,
+  stakeWeight,
+  withExtraFlips,
+  withBaseRewardForExtraFlip
+) {
+  let rewardedCnt = 0
+  return rewardedFlips
+    .sort(function (a, b) {
+      return b.grade - a.grade
+    })
+    .map(function (item) {
+      if (item.rewarded) {
+        rewardedCnt += 1
+      }
+      const isExtra = withExtraFlips && rewardedCnt > 3
+      const earned =
+        ((item.rewarded &&
+          (!isExtra || withBaseRewardForExtraFlip) &&
+          rewardsSummary.flipsShare * getFlipGradeRewardCoef(item.grade)) ||
+          0) +
+        ((isExtra &&
+          rewardsSummary.extraFlipsShare *
+            getFlipGradeRewardCoef(item.grade) *
+            stakeWeight) ||
+          0)
+      const missed =
+        !item.rewarded &&
+        ((!isExtra && rewardsSummary.flipsShare) ||
+          (isExtra && rewardsSummary.extraFlipsShare * stakeWeight))
+      return {
+        ...item,
+        earned,
+        missed,
+      }
+    })
 }
 
 export default Reward
