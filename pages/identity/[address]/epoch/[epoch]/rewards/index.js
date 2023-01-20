@@ -186,6 +186,13 @@ function Reward() {
       validationSummary.rewards.flips.missed * 1) ||
     0
 
+  const getMissingExtraFlipsReward = () =>
+    (validationSummary &&
+      validationSummary.rewards &&
+      validationSummary.rewards.extraFlips &&
+      validationSummary.rewards.extraFlips.missed * 1) ||
+    0
+
   const getMissingInvitationsReward = () =>
     (validationSummary &&
       validationSummary.rewards &&
@@ -606,6 +613,7 @@ function Reward() {
                           dnaFmt(
                             getMissingValidationReward() +
                               getMissingFlipsReward() +
+                              getMissingExtraFlipsReward() +
                               getMissingInvitationsReward() +
                               getMissingInviteeReward() +
                               getMissingReportsReward() +
@@ -686,7 +694,10 @@ function Reward() {
                   )}
                   <div className="bordered-col col">
                     <h3 className="info_block__accent" style={{color: 'red'}}>
-                      {dnaFmt(getMissingFlipsReward(), '')}
+                      {dnaFmt(
+                        getMissingFlipsReward() + getMissingExtraFlipsReward(),
+                        ''
+                      )}
                     </h3>
                     <TooltipText
                       className="control-label"
@@ -1516,26 +1527,22 @@ function mapFlips(
   withExtraFlips,
   withBaseRewardForExtraFlip
 ) {
-  let rewardedCnt = 0
   return rewardedFlips
     .sort(function (a, b) {
-      return b.grade - a.grade
+      return (a.rewarded && !b.rewarded) || b.grade - a.grade
     })
-    .map(function (item) {
-      if (item.rewarded) {
-        rewardedCnt += 1
-      }
-      const isExtra = withExtraFlips && rewardedCnt > 3
-      const earned =
-        ((item.rewarded &&
-          (!isExtra || withBaseRewardForExtraFlip) &&
-          rewardsSummary.flipsShare * getFlipGradeRewardCoef(item.grade)) ||
-          0) +
-        ((isExtra &&
-          rewardsSummary.extraFlipsShare *
-            getFlipGradeRewardCoef(item.grade) *
-            stakeWeight) ||
-          0)
+    .map(function (item, idx) {
+      const isExtra = withExtraFlips && idx >= 3
+      const earned = item.rewarded
+        ? (((!isExtra || withBaseRewardForExtraFlip) &&
+            rewardsSummary.flipsShare * getFlipGradeRewardCoef(item.grade)) ||
+            0) +
+          ((isExtra &&
+            rewardsSummary.extraFlipsShare *
+              getFlipGradeRewardCoef(item.grade) *
+              stakeWeight) ||
+            0)
+        : 0
       const missed =
         !item.rewarded &&
         ((!isExtra && rewardsSummary.flipsShare) ||
