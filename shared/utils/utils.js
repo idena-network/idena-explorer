@@ -23,7 +23,15 @@ export function precise6(x) {
 
 export function dnaFmt(amount, curency = ' iDNA') {
   if (!amount || amount === 0) return '-'
-  return `${Number(amount).toLocaleString()}${curency}`
+  let value
+  if (amount !== precise6(amount)) {
+    value = precise2(amount)
+  } else {
+    value = amount
+  }
+  return `${Number(value).toLocaleString(undefined, {
+    maximumFractionDigits: 6,
+  })}${curency}`
 }
 
 export function usdFmt(amount, curency = '$') {
