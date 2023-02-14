@@ -46,13 +46,17 @@ export default function Transfers({address}) {
     }
     const method = contractMethodFmt(item)
     let amount = transferAmount(item)
-    const from = amount > 0 ? contractAddress : item.address
+    let from = amount > 0 ? contractAddress : item.address
     let to = amount <= 0 ? contractAddress : item.address
     if (
       from.toLowerCase() === contractAddress.toLowerCase() &&
       to.toLowerCase() === contractAddress.toLowerCase()
     ) {
-      to = ''
+      if (amount > 0) {
+        from = ''
+      } else {
+        to = ''
+      }
     }
     const fee = txFee(item)
     amount = Math.abs(amount)
@@ -98,31 +102,38 @@ export default function Transfers({address}) {
                       </div>
                     </td>
                     <td>
-                      <div className="user-pic">
-                        <img
-                          src={`https://robohash.org/${
-                            transferInfo.from && transferInfo.from.toLowerCase()
-                          }`}
-                          alt="pic"
-                          width="32"
-                        />
-                      </div>
-                      <div
-                        className="text_block text_block--ellipsis"
-                        style={{width: 100}}
-                      >
-                        {address.toLowerCase() ===
-                        transferInfo.from.toLowerCase() ? (
-                          transferInfo.from
-                        ) : (
-                          <Link
-                            href="/address/[address]"
-                            as={`/address/${transferInfo.from}`}
+                      {transferInfo.from ? (
+                        <>
+                          <div className="user-pic">
+                            <img
+                              src={`https://robohash.org/${
+                                transferInfo.from &&
+                                transferInfo.from.toLowerCase()
+                              }`}
+                              alt="pic"
+                              width="32"
+                            />
+                          </div>
+                          <div
+                            className="text_block text_block--ellipsis"
+                            style={{width: 100}}
                           >
-                            <a>{transferInfo.from}</a>
-                          </Link>
-                        )}
-                      </div>
+                            {address.toLowerCase() ===
+                            transferInfo.from.toLowerCase() ? (
+                              transferInfo.from
+                            ) : (
+                              <Link
+                                href="/address/[address]"
+                                as={`/address/${transferInfo.from}`}
+                              >
+                                <a>{transferInfo.from}</a>
+                              </Link>
+                            )}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text_block text_block--ellipsis">-</div>
+                      )}
                     </td>
                     <td>
                       {transferInfo.to ? (
