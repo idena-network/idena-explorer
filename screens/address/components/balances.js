@@ -30,7 +30,7 @@ export default function BalanceHistory({address, visible}) {
     if (reason === 'FailedValidation') return 'Validation failed'
     if (reason === 'Penalty') return 'Mining penalty'
     if (reason === 'EpochPenaltyReset') return 'New epoch'
-    if (reason === 'EmbeddedContract') return 'Smart contract'
+    if (reason === 'Contract') return 'Smart contract'
     if (reason === 'DustClearing') return 'Clean small balance'
     if (reason === 'Initial') return 'Initial balance'
     return reason
@@ -107,6 +107,19 @@ export default function BalanceHistory({address, visible}) {
                       style={{width: 180}}
                     >
                       {reasonFmt(item.reason)}
+
+                      {item.data && item.data.contractAddress && (
+                        <span>
+                          &nbsp;
+                          <Link
+                            href="/contract/[address]"
+                            as={`/contract/${item.data.contractAddress}`}
+                          >
+                            <a>{item.data.contractAddress}</a>
+                          </Link>
+                        </span>
+                      )}
+
                       {item.data && item.data.blocksCount && (
                         <span>
                           <br />
@@ -114,15 +127,18 @@ export default function BalanceHistory({address, visible}) {
                         </span>
                       )}
                       {item.data && item.data.txHash && (
-                        <span>
-                          <br />
-                          <Link
-                            href="/transaction/[hash]"
-                            as={`/transaction/${item.data.txHash}`}
-                          >
-                            <a>{item.data.txHash}</a>
-                          </Link>
-                        </span>
+                        <>
+                          <span>
+                            <br />
+                            {item.data.contractAddress && 'Transaction '}
+                            <Link
+                              href="/transaction/[hash]"
+                              as={`/transaction/${item.data.txHash}`}
+                            >
+                              <a>{item.data.txHash}</a>
+                            </Link>
+                          </span>
+                        </>
                       )}
 
                       {item.reason === 'ProposerReward' && (
