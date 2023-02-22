@@ -180,7 +180,7 @@ export function flipGradeFmt(grade) {
   if (grade === 1) return 'Reported'
   if (grade === 2) return 'Approved'
   if (grade > 2) return 'Best flip'
-  return '-'
+  return 'Abstained'
 }
 
 export function flipRewardMultiplier(grade) {

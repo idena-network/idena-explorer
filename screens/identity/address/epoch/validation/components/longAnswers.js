@@ -100,15 +100,34 @@ export default function LongAnswers({address, epoch, visible}) {
                   <td>{score}</td>
                   <td>
                     {item.respGrade > 2 ? (
-                      <i className="icon icon--micro_best" />
+                      <i
+                        className={`icon icon--micro_best${
+                          item.gradeIgnored ? '_gray' : ''
+                        }`}
+                      />
                     ) : item.respGrade === 1 ? (
-                      <i className="icon icon--micro_fail" />
+                      <i
+                        className={`icon icon--micro_fail${
+                          item.gradeIgnored ? '_gray' : ''
+                        }`}
+                      />
                     ) : item.respGrade === 2 ? (
-                      <i className="icon icon--micro_success" />
+                      <i
+                        className={`icon icon--micro_success${
+                          item.gradeIgnored ? '_gray' : ''
+                        }`}
+                      />
                     ) : (
-                      ''
+                      <i
+                        className={`icon icon--micro_abstain${
+                          item.gradeIgnored ? '_gray' : ''
+                        }`}
+                      />
                     )}
-                    {flipGradeFmt(item.respGrade)}
+                    {flipGradeFmt(item.respGrade)}{' '}
+                    {item.respGrade === 0 || item.gradeIgnored
+                      ? '(ignored)'
+                      : ''}
                   </td>
                 </tr>
               )
