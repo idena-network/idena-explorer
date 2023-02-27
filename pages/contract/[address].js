@@ -11,6 +11,7 @@ import TimeLockData from '../../screens/contract/components/timelock'
 import OracleLockData from '../../screens/contract/components/oraclelock'
 import MultisigData from '../../screens/contract/components/multisig'
 import RefundableOracleLockData from '../../screens/contract/components/refundableoraclelock'
+import WasmData from '../../screens/contract/components/wasm';
 
 function Contract() {
   const router = useRouter()
@@ -32,6 +33,7 @@ function Contract() {
   const isRefundableOracleLock =
     contractInfo && contractInfo.type === 'RefundableOracleLock'
   const isMultisig = contractInfo && contractInfo.type === 'Multisig'
+  const isWasm = contractInfo && contractInfo.type === 'Contract'
 
   return (
     <Layout title={`Smart contract ${address}`}>
@@ -83,6 +85,7 @@ function Contract() {
       {isOracleLock && <OracleLockData address={address} />}
       {isRefundableOracleLock && <RefundableOracleLockData address={address} />}
       {isMultisig && <MultisigData address={address} />}
+      {isWasm && <WasmData contractInfo={contractInfo} />}
 
       <section className="section section_tabs">
         <div className="tabs">
