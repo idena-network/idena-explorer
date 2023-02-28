@@ -184,7 +184,7 @@ function Flip() {
                       className={
                         flip.wrongWords || flip.status === 'QualifiedByNone'
                           ? 'icon icon--micro_fail'
-                          : flip.grade > 2
+                          : flip.grade > 2 || flip.gradeScore >= 2.5
                           ? 'icon icon--micro_best'
                           : 'icon icon--micro_success'
                       }
@@ -193,9 +193,10 @@ function Flip() {
                       ? flip.status === 'QualifiedByNone'
                         ? 'The flip was not available for the network during the validation'
                         : 'The flip was reported as irrelevant to keywords or having inappropriate content, labels on top of the images showing the right order or text needed to solve the flip'
-                      : flip.grade > 2
+                      : flip.grade > 2 || flip.gradeScore >= 2.5
                       ? `This flip is rewarded with ${flipRewardMultiplier(
-                          flip.grade
+                          flip.grade,
+                          flip.gradeScore
                         )} times the basic reward, as it is marked as the best flip by the committee members`
                       : 'Flip is relevant to the keywords'}
                   </p>
