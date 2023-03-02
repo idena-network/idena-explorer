@@ -21,6 +21,7 @@ import {
   flipQualificationStatusFmt,
   isIdentityPassed,
   precise1,
+  flipRewardMultiplier,
 } from '../../../../../../shared/utils/utils'
 import TooltipText from '../../../../../../shared/components/tooltip'
 import {
@@ -876,7 +877,8 @@ function Reward() {
                                     {item.wrongWords ||
                                     item.status === 'QualifiedByNone' ? (
                                       <i className="icon icon--micro_fail" />
-                                    ) : item.grade > 2 ? (
+                                    ) : item.grade > 2 ||
+                                      item.gradeScore >= 2.5 ? (
                                       <i className="icon icon--micro_best" />
                                     ) : (
                                       <i className="icon icon--micro_success" />
@@ -1419,7 +1421,11 @@ function getReportRewardsData(
       } else if (!isIdentityPassed(identityInfo.state)) {
         details = 'My validation failed'
       } else if (item.grade === 1) {
-        details = 'Flip with no reward'
+        if (identityInfo.wrongGrades) {
+          details = 'Votes ignored'
+        } else {
+          details = 'Flip with no reward'
+        }
       } else {
         details = 'Did not report'
       }
@@ -1435,13 +1441,6 @@ function getReportRewardsData(
       words: item.words,
     }
   })
-}
-
-function getFlipGradeRewardCoef(grade) {
-  if (!grade || grade <= 1 || grade > 5) {
-    return 0
-  }
-  return 2 ** (grade - 2)
 }
 
 function getInviteeRewardData(rewardedInvitee, validationSummary) {
@@ -1529,17 +1528,22 @@ function mapFlips(
 ) {
   return rewardedFlips
     .sort(function (a, b) {
-      return (a.rewarded && !b.rewarded) || b.grade - a.grade
+      return (
+        (a.rewarded && !b.rewarded) ||
+        b.grade - a.grade ||
+        b.gradeScore - a.gradeScore
+      )
     })
     .map(function (item, idx) {
       const isExtra = withExtraFlips && idx >= 3
       const earned = item.rewarded
         ? (((!isExtra || withBaseRewardForExtraFlip) &&
-            rewardsSummary.flipsShare * getFlipGradeRewardCoef(item.grade)) ||
+            rewardsSummary.flipsShare *
+              flipRewardMultiplier(item.grade, item.gradeScore)) ||
             0) +
           ((isExtra &&
             rewardsSummary.extraFlipsShare *
-              getFlipGradeRewardCoef(item.grade) *
+              flipRewardMultiplier(item.grade, item.gradeScore) *
               stakeWeight) ||
             0)
         : 0

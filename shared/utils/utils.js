@@ -180,10 +180,22 @@ export function flipGradeFmt(grade) {
   if (grade === 1) return 'Reported'
   if (grade === 2) return 'Approved'
   if (grade > 2) return 'Best flip'
-  return '-'
+  return 'Abstained'
 }
 
-export function flipRewardMultiplier(grade) {
+export function flipRewardMultiplier(grade, gradeScore) {
+  if (gradeScore) {
+    if (gradeScore >= 4.5) {
+      return 8
+    }
+    if (gradeScore >= 3.5) {
+      return 4
+    }
+    if (gradeScore >= 2.5) {
+      return 2
+    }
+    return 1
+  }
   if (grade === 2) return 1
   if (grade === 3) return 2
   if (grade === 4) return 4

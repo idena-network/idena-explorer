@@ -184,7 +184,7 @@ function Flip() {
                       className={
                         flip.wrongWords || flip.status === 'QualifiedByNone'
                           ? 'icon icon--micro_fail'
-                          : flip.grade > 2
+                          : flip.grade > 2 || flip.gradeScore >= 2.5
                           ? 'icon icon--micro_best'
                           : 'icon icon--micro_success'
                       }
@@ -193,9 +193,10 @@ function Flip() {
                       ? flip.status === 'QualifiedByNone'
                         ? 'The flip was not available for the network during the validation'
                         : 'The flip was reported as irrelevant to keywords or having inappropriate content, labels on top of the images showing the right order or text needed to solve the flip'
-                      : flip.grade > 2
+                      : flip.grade > 2 || flip.gradeScore >= 2.5
                       ? `This flip is rewarded with ${flipRewardMultiplier(
-                          flip.grade
+                          flip.grade,
+                          flip.gradeScore
                         )} times the basic reward, as it is marked as the best flip by the committee members`
                       : 'Flip is relevant to the keywords'}
                   </p>
@@ -485,15 +486,34 @@ function Flip() {
                           </td>
                           <td>
                             {item.respGrade > 2 ? (
-                              <i className="icon icon--micro_best" />
+                              <i
+                                className={`icon icon--micro_best${
+                                  item.gradeIgnored ? '_gray' : ''
+                                }`}
+                              />
                             ) : item.respGrade === 1 ? (
-                              <i className="icon icon--micro_fail" />
+                              <i
+                                className={`icon icon--micro_fail${
+                                  item.gradeIgnored ? '_gray' : ''
+                                }`}
+                              />
                             ) : item.respGrade === 2 ? (
-                              <i className="icon icon--micro_success" />
+                              <i
+                                className={`icon icon--micro_success${
+                                  item.gradeIgnored ? '_gray' : ''
+                                }`}
+                              />
                             ) : (
-                              ''
+                              <i
+                                className={`icon icon--micro_abstain${
+                                  item.gradeIgnored ? '_gray' : ''
+                                }`}
+                              />
                             )}
-                            {flipGradeFmt(item.respGrade)}
+                            {flipGradeFmt(item.respGrade)}{' '}
+                            {item.respGrade === 0 || item.gradeIgnored
+                              ? '(ignored)'
+                              : ''}
                           </td>
                         </tr>
                       ))}

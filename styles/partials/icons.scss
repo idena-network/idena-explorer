@@ -184,9 +184,21 @@
   padding-right: 5px;
 }
 
+.icon--micro_success_gray:before {
+  content: '\e92e';
+  color: gray;
+  padding-right: 5px;
+}
+
 .icon--micro_fail:before {
   content: '\e917';
   color: red;
+  padding-right: 5px;
+}
+
+.icon--micro_fail_gray:before {
+  content: '\e917';
+  color: gray;
   padding-right: 5px;
 }
 
@@ -195,6 +207,27 @@
   color: #ffd502;
   padding-right: 5px;
   font-weight: 600;
+}
+
+.icon--micro_best_gray:before {
+  content: '\2605';
+  color: gray;
+  padding-right: 5px;
+  font-weight: 600;
+}
+
+.icon--micro_abstain:before {
+  content: '\25cf';
+  color: #0467d8;
+  padding-left: 2px;
+  padding-right: 7px;
+}
+
+.icon--micro_abstain_gray:before {
+  content: '\25cf';
+  color: gray;
+  padding-left: 2px;
+  padding-right: 7px;
 }
 
 .icon--right_arrow:before {
