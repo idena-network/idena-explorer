@@ -511,9 +511,7 @@ function Flip() {
                               />
                             )}
                             {flipGradeFmt(item.respGrade)}{' '}
-                            {item.respGrade === 0 || item.gradeIgnored
-                              ? '(ignored)'
-                              : ''}
+                            {item.gradeIgnored ? '(ignored)' : ''}
                           </td>
                         </tr>
                       ))}
