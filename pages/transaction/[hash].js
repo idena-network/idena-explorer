@@ -9,6 +9,7 @@ import {
   dateTimeFmt,
   epochFmt,
   txTypeFmt,
+  isContractTx,
 } from '../../shared/utils/utils'
 
 function Tx() {
@@ -31,6 +32,10 @@ function Tx() {
       {status === 'loading' && <PageLoading />}
       {error && status !== 'loading' && <PageError />}
       {txData && TxDetails(txData)}
+      {txData &&
+        txData.txReceipt &&
+        isContractTx(txData.type) &&
+        ContractTxDetails(txData)}
       {rawTxData && RawTxDetails(rawTxData)}
     </Layout>
   )
@@ -95,20 +100,6 @@ function TxDetails(data) {
               <hr />
               <div className="control-label">Size, bytes:</div>
               <div className="text_block">{data.size}</div>
-              {data.txReceipt && (
-                <>
-                  <hr />
-                  <div className="control-label">Smart contract call:</div>
-                  <div
-                    className="text_block"
-                    style={{
-                      color: `${data.txReceipt.success ? 'inherit' : 'red'}`,
-                    }}
-                  >
-                    {data.txReceipt.success ? 'Success' : 'Error'}
-                  </div>
-                </>
-              )}
               <hr />
               <div className="control-label">Nonce:</div>
               <div className="text_block">{data.nonce}</div>
@@ -155,37 +146,77 @@ function TxDetails(data) {
               <hr />
               <div className="control-label">Fee limit:</div>
               <div className="text_block">{data.maxFee}</div>
-              {data.txReceipt && data.txReceipt.errorMsg && (
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ContractTxDetails(data) {
+  return (
+    <section className="section section_details">
+      <h3>{`${txTypeFmt(data.type, data.data)}`} details</h3>
+      <div className="card">
+        <div className="row">
+          <div className="col-12 col-sm-6">
+            <div className="section__group">
+              <div className="control-label">Contract:</div>
+              <div
+                className="text_block text_block--ellipsis"
+                style={{width: '80%'}}
+              >
+                {data.txReceipt.contractAddress ? (
+                  <Link
+                    href="/contract/[address]"
+                    as={`/contract/${data.txReceipt.contractAddress}`}
+                  >
+                    <a>
+                      <img
+                        className="user-pic"
+                        src={`https://robohash.idena.io/${data.txReceipt.contractAddress.toLowerCase()}`}
+                        alt="pic"
+                        width="32"
+                      />
+                      <span>{data.txReceipt.contractAddress}</span>
+                    </a>
+                  </Link>
+                ) : (
+                  '-'
+                )}
+              </div>
+
+              <hr />
+              <div className="control-label">Gas used:</div>
+              <div className="text_block">{data.txReceipt.gasUsed}</div>
+
+              <hr />
+              <div className="control-label">Result:</div>
+              <div
+                className="text_block"
+                style={{
+                  color: `${data.txReceipt.success ? 'inherit' : 'red'}`,
+                }}
+              >
+                {data.txReceipt.success ? 'Success' : 'Error'}
+              </div>
+            </div>
+          </div>
+          <div className="col-12 col-sm-6">
+            <div className="section__group">
+              <div className="control-label">Method:</div>
+              <div className="text_block">{data.txReceipt.method || '-'}</div>
+
+              <hr />
+              <div className="control-label">Gas cost:</div>
+              <div className="text_block">{dnaFmt(data.txReceipt.gasCost)}</div>
+
+              <hr />
+              {data.txReceipt.errorMsg && (
                 <>
-                  <hr />
                   <div className="control-label">Error:</div>
                   <div className="text_block">{data.txReceipt.errorMsg}</div>
-                </>
-              )}
-              {data.txReceipt && data.txReceipt.contractAddress && (
-                <>
-                  <hr />
-                  <div className="control-label">Contract:</div>
-
-                  <div
-                    className="text_block text_block--ellipsis"
-                    style={{width: '80%'}}
-                  >
-                    <Link
-                      href="/contract/[address]"
-                      as={`/contract/${data.txReceipt.contractAddress}`}
-                    >
-                      <a>
-                        <img
-                          className="user-pic"
-                          src={`https://robohash.idena.io/${data.txReceipt.contractAddress.toLowerCase()}`}
-                          alt="pic"
-                          width="32"
-                        />
-                        <span>{data.txReceipt.contractAddress}</span>
-                      </a>
-                    </Link>
-                  </div>
                 </>
               )}
             </div>
