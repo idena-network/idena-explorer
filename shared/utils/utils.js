@@ -55,9 +55,9 @@ export function txTypeFmt(txType, data) {
   if (txType === 'SubmitLongAnswersTx') return 'Long session answers'
   if (txType === 'SubmitAnswersHashTx') return 'Short answers proof'
   if (txType === 'DeleteFlipTx') return `Delete flip`
-  if (txType === 'DeployContractTx') return `Deploy contract`
-  if (txType === 'CallContractTx') return `Call contract`
-  if (txType === 'TerminateContractTx') return `Terminate contract`
+  if (txType === 'DeployContract') return `Deploy contract`
+  if (txType === 'CallContract') return `Call contract`
+  if (txType === 'TerminateContract') return `Terminate contract`
   if (txType === 'DelegateTx') return `Delegate`
   if (txType === 'UndelegateTx') return `Undelegate`
   if (txType === 'KillDelegatorTx') return `Kill delegator`
@@ -66,6 +66,14 @@ export function txTypeFmt(txType, data) {
   if (txType === 'BurnTx') return `Burn`
   if (txType === 'ChangeProfileTx') return `Change profile`
   return txType
+}
+
+export function isContractTx(txType) {
+  return (
+    txType === 'DeployContract' ||
+    txType === 'CallContract' ||
+    txType === 'TerminateContract'
+  )
 }
 
 export function epochFmt(epoch) {
