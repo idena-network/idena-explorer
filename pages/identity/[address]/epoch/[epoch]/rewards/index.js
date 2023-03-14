@@ -31,6 +31,7 @@ import {
 
 const DEFAULT_TAB = '#flips'
 const REPORT_REWARD_FUND_FIRST_EPOCH = 75
+const BASE_REWARD_FOR_EXTRA_FLIP_FIRST_EPOCH = 103
 
 function Reward() {
   const router = useRouter()
@@ -271,41 +272,21 @@ function Reward() {
       rewardsSummary.epochDuration / 4320) ||
     0
   const apy = (epochDays && (epy / epochDays) * 366) || 0
+  const withBaseRewardForExtraFlip =
+    epoch - 1 >= BASE_REWARD_FOR_EXTRA_FLIP_FIRST_EPOCH
 
-  const flipsOld =
-    rewardedFlips &&
-    rewardsSummary &&
-    identityInfo &&
-    mapFlips(
-      rewardedFlips,
-      rewardsSummary,
-      stakeWeight,
-      extraFlips,
-      false,
-      identityInfo.availableFlips - 3
-    )
-  const flipsNew =
-    rewardedFlips &&
-    rewardsSummary &&
-    identityInfo &&
-    mapFlips(
-      rewardedFlips,
-      rewardsSummary,
-      stakeWeight,
-      extraFlips,
-      true,
-      identityInfo.availableFlips - 3
-    )
-
-  const totalFlipsRewardOld =
-    (flipsOld && flipsOld.reduce((total, item) => total + item.earned, 0)) || 0
-  const totalFlipsRewardNew =
-    (flipsNew && flipsNew.reduce((total, item) => total + item.earned, 0)) || 0
   const flips =
-    Math.abs(getFlipsReward() + getExtraFlipsReward() - totalFlipsRewardOld) >
-    Math.abs(getFlipsReward() + getExtraFlipsReward() - totalFlipsRewardNew)
-      ? flipsNew
-      : flipsOld
+    rewardedFlips &&
+    rewardsSummary &&
+    identityInfo &&
+    mapFlips(
+      rewardedFlips,
+      rewardsSummary,
+      stakeWeight,
+      extraFlips,
+      withBaseRewardForExtraFlip,
+      identityInfo.madeFlips - 3
+    )
 
   return (
     <Layout title={`Identity rewards ${address} for epoch ${epochFmt(epoch)}`}>
@@ -849,7 +830,13 @@ function Reward() {
                             <td style={{color: 'red'}}>
                               {dnaFmt(
                                 rewardsSummary &&
-                                  rewardsSummary.extraFlipsShare * stakeWeight,
+                                  (idx < identityInfo.availableFlips - 3
+                                    ? rewardsSummary.extraFlipsShare *
+                                      stakeWeight
+                                    : 0) +
+                                    (idx > 1 || withBaseRewardForExtraFlip
+                                      ? rewardsSummary.flipsShare * 1
+                                      : 0),
                                 ''
                               )}
                             </td>
@@ -1554,7 +1541,7 @@ function mapFlips(
         b.gradeScore - a.gradeScore
       )
     })
-    .map(function (item, idx) {
+    .map(function (item) {
       if (item.rewarded) {
         rewardedFlipCnt += 1
       }
