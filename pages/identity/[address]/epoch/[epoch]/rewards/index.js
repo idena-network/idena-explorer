@@ -275,11 +275,27 @@ function Reward() {
   const flipsOld =
     rewardedFlips &&
     rewardsSummary &&
-    mapFlips(rewardedFlips, rewardsSummary, stakeWeight, extraFlips, false)
+    identityInfo &&
+    mapFlips(
+      rewardedFlips,
+      rewardsSummary,
+      stakeWeight,
+      extraFlips,
+      false,
+      identityInfo.availableFlips - 3
+    )
   const flipsNew =
     rewardedFlips &&
     rewardsSummary &&
-    mapFlips(rewardedFlips, rewardsSummary, stakeWeight, extraFlips, true)
+    identityInfo &&
+    mapFlips(
+      rewardedFlips,
+      rewardsSummary,
+      stakeWeight,
+      extraFlips,
+      true,
+      identityInfo.availableFlips - 3
+    )
 
   const totalFlipsRewardOld =
     (flipsOld && flipsOld.reduce((total, item) => total + item.earned, 0)) || 0
@@ -1524,8 +1540,12 @@ function mapFlips(
   rewardsSummary,
   stakeWeight,
   withExtraFlips,
-  withBaseRewardForExtraFlip
+  withBaseRewardForExtraFlip,
+  availableExtraFlips
 ) {
+  let rewardedFlipCnt = 0
+  let rewardedExtraFlipCnt = 0
+  let extraFlips = availableExtraFlips
   return rewardedFlips
     .sort(function (a, b) {
       return (
@@ -1535,7 +1555,13 @@ function mapFlips(
       )
     })
     .map(function (item, idx) {
-      const isExtra = withExtraFlips && idx >= 3
+      if (item.rewarded) {
+        rewardedFlipCnt += 1
+      }
+      const isExtra = withExtraFlips && rewardedFlipCnt >= 4
+      if (isExtra && item.rewarded) {
+        rewardedExtraFlipCnt += 1
+      }
       const earned = item.rewarded
         ? (((!isExtra || withBaseRewardForExtraFlip) &&
             rewardsSummary.flipsShare *
@@ -1547,16 +1573,30 @@ function mapFlips(
               stakeWeight) ||
             0)
         : 0
-      const missed =
+      const missedBase =
         !item.rewarded &&
-        ((!isExtra && rewardsSummary.flipsShare) ||
-          (isExtra && rewardsSummary.extraFlipsShare * stakeWeight))
+        ((!isExtra && rewardsSummary.flipsShare * 1) ||
+          (isExtra &&
+            (withBaseRewardForExtraFlip ? rewardsSummary.flipsShare * 1 : 0)))
       return {
         ...item,
         earned,
-        missed,
+        missed: missedBase,
       }
     })
+    .reverse()
+    .map(function (item) {
+      if (!item.rewarded && extraFlips - rewardedExtraFlipCnt > 0) {
+        extraFlips -= 1
+        item.missed =
+          (item.missed ? item.missed : 0) +
+          rewardsSummary.extraFlipsShare * stakeWeight
+      }
+      return {
+        ...item,
+      }
+    })
+    .reverse()
 }
 
 export default Reward
