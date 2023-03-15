@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
+import {useRouter} from 'next/router'
 import Supply from '../screens/index/components/supply'
 import Identities from '../screens/index/components/identities'
 import Nodes from '../screens/index/components/nodes'
@@ -25,6 +26,8 @@ function Home() {
   const {hash, setHash, hashReady} = useHash()
   useHashChange((hash) => setHash(hash))
 
+  const router = useRouter()
+
   const {data} = useQuery('last-epoch', getLastEpoch)
 
   const isHardForkData = useQuery('hard-fork', getUpgradeVoting)
@@ -35,6 +38,30 @@ function Home() {
     <Layout>
       <section className="section section_info">
         <div className="row">
+          <Link
+            href={`/signin?callback_url=${encodeURIComponent(
+              router.pathname === '/signin'
+                ? router.query.callback_url || '/'
+                : router.asPath
+            )}&attempt=${parseInt(router.query.attempt || 0) + 1}`}
+          >
+            <a className="btn btn-signin">
+              <img
+                alt="signin"
+                className={`icon icon-logo-white-small ${
+                  false ? 'hidden' : ''
+                }`}
+                width="24px"
+              />
+              <div className={`spinner ${false ? '' : 'hidden'}`}>
+                <div className="small progress">
+                  <div />
+                </div>
+              </div>
+
+              <span>Sign-in with Idena</span>
+            </a>
+          </Link>
           <Epoch epochData={data} />
           <Stats />
           <Invites epoch={data && data.epoch} />

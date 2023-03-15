@@ -189,33 +189,7 @@ function Layout({children, title = '', signinLoading = false}) {
         </div>
       </header>
       <main className="main">
-        <Container>
-          <Link
-            href={`/signin?callback_url=${encodeURIComponent(
-              router.pathname === '/signin'
-                ? router.query.callback_url || '/'
-                : router.asPath
-            )}&attempt=${parseInt(router.query.attempt || 0) + 1}`}
-          >
-            <a className="btn btn-signin">
-              <img
-                alt="signin"
-                className={`icon icon-logo-white-small ${
-                  signinLoading ? 'hidden' : ''
-                }`}
-                width="24px"
-              />
-              <div className={`spinner ${signinLoading ? '' : 'hidden'}`}>
-                <div className="small progress">
-                  <div />
-                </div>
-              </div>
-
-              <span>Sign-in with Idena</span>
-            </a>
-          </Link>
-          {children}
-        </Container>
+        <Container>{children}</Container>
       </main>
     </>
   )
