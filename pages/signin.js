@@ -17,7 +17,7 @@ function Signin({baseUrl, callbackUrl, attempt}) {
     const startSession = new URL('/api/auth/session', baseUrl)
     const authenticate = new URL('/api/auth/authenticate', baseUrl)
 
-    const dnaUrl = `https://app.idena.io/dna/signin/v1?callback_url=${encodeURIComponent(
+    const dnaUrl = `https://idena-web-git-try-fix-safari-window-open-idena.vercel.app/dna/signin/v1?callback_url=${encodeURIComponent(
       callback.href
     )}&token=${token}&nonce_endpoint=${encodeURIComponent(
       startSession.href
