@@ -65,7 +65,9 @@ function Signin({baseUrl, callbackUrl, attempt}) {
     alert(
       `X:${new URL(callbackUrl, baseUrl)}, Y: ${
         new URL(callbackUrl, baseUrl).href
-      }, Z: ${encodeURIComponent(new URL(callbackUrl, baseUrl).href)}`
+      }, Z: ${encodeURIComponent(
+        new URL(callbackUrl, baseUrl).href
+      )}, dd: ${generateDnaUrl('token', baseUrl, callbackUrl)}`
     )
   }
 
