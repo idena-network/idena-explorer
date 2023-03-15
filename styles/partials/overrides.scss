@@ -338,7 +338,7 @@ p {
     margin: 0 1px;
   }
 
-  display: none;
+  display: block;
   @media (#{$min_phones--big}) {
     display: block;
   }
