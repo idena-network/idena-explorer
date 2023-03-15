@@ -38,30 +38,6 @@ function Home() {
     <Layout>
       <section className="section section_info">
         <div className="row">
-          <Link
-            href={`/signin?callback_url=${encodeURIComponent(
-              router.pathname === '/signin'
-                ? router.query.callback_url || '/'
-                : router.asPath
-            )}&attempt=${parseInt(router.query.attempt || 0) + 1}`}
-          >
-            <a className="btn btn-signin">
-              <img
-                alt="signin"
-                className={`icon icon-logo-white-small ${
-                  false ? 'hidden' : ''
-                }`}
-                width="24px"
-              />
-              <div className={`spinner ${false ? '' : 'hidden'}`}>
-                <div className="small progress">
-                  <div />
-                </div>
-              </div>
-
-              <span>Sign-in with Idena</span>
-            </a>
-          </Link>
           <Epoch epochData={data} />
           <Stats />
           <Invites epoch={data && data.epoch} />
@@ -170,6 +146,30 @@ function Home() {
           <TabContent activeTab={hashReady ? hash || DEFAULT_TAB : ''}>
             <TabPane tabId={DEFAULT_TAB}>
               <div className="card">
+                <Link
+                  href={`/signin?callback_url=${encodeURIComponent(
+                    router.pathname === '/signin'
+                      ? router.query.callback_url || '/'
+                      : router.asPath
+                  )}&attempt=${parseInt(router.query.attempt || 0) + 1}`}
+                >
+                  <a className="btn btn-signin">
+                    <img
+                      alt="signin"
+                      className={`icon icon-logo-white-small ${
+                        false ? 'hidden' : ''
+                      }`}
+                      width="24px"
+                    />
+                    <div className={`spinner ${false ? '' : 'hidden'}`}>
+                      <div className="small progress">
+                        <div />
+                      </div>
+                    </div>
+
+                    <span>Sign-in with Idena</span>
+                  </a>
+                </Link>
                 <Transactions
                   epoch={data && data.epoch}
                   limit={10}
