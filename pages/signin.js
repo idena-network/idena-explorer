@@ -37,7 +37,7 @@ function Signin({baseUrl, callbackUrl, attempt}) {
     if (tokenResult && !(sessionResult && sessionResult.authenticated)) {
       const url = generateDnaUrl(tokenResult.token, baseUrl, callbackUrl)
       // eslint-disable-next-line no-restricted-globals
-      location.href = url
+      // location.href = url
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenResult])
@@ -65,6 +65,9 @@ function Signin({baseUrl, callbackUrl, attempt}) {
     <Layout title="Sign-in with Idena app" signinLoading={state === LOADING}>
       <div className="container">
         <div className="card" style={{textAlign: 'center', height: '70vh'}}>
+          {callbackUrl}
+          <br />
+          {baseUrl}
           <div>
             <img
               alt="icon"
