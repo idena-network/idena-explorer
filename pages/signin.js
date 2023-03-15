@@ -61,15 +61,19 @@ function Signin({baseUrl, callbackUrl, attempt}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionResult])
 
+  const cl = () => {
+    alert(
+      `X:${new URL(callbackUrl, baseUrl)}, Y: ${
+        new URL(callbackUrl, baseUrl).href
+      }, Z: ${encodeURIComponent(new URL(callbackUrl, baseUrl).href)}`
+    )
+  }
+
   return (
     <Layout title="Sign-in with Idena app" signinLoading={state === LOADING}>
       <div className="container">
         <div className="card" style={{textAlign: 'center', height: '70vh'}}>
-          {new URL(callbackUrl, baseUrl)}
-          <br />
-          {new URL(callbackUrl, baseUrl).href}
-          <br />
-          {encodeURIComponent(new URL(callbackUrl, baseUrl).href)}
+          <button onClick={cl}>asdasd</button>
           <div>
             <img
               alt="icon"
