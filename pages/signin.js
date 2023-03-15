@@ -47,7 +47,6 @@ function Signin({baseUrl, callbackUrl, attempt}) {
 
   useEffect(() => {
     if (tokenResult && !(sessionResult && sessionResult.authenticated)) {
-      alert(url)
       // eslint-disable-next-line no-restricted-globals
       location.href = url
     }
