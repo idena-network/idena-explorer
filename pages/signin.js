@@ -34,11 +34,15 @@ function Signin({baseUrl, callbackUrl, attempt}) {
   )
 
   const url = useMemo(() => {
-    if (tokenResult.token) {
-      const {token} = tokenResult
-      return generateDnaUrl(token, baseUrl, callbackUrl)
+    try {
+      if (tokenResult.token) {
+        const {token} = tokenResult
+        return generateDnaUrl(token, baseUrl, callbackUrl)
+      }
+      return ''
+    } catch {
+      return ''
     }
-    return ''
   }, [tokenResult, baseUrl, callbackUrl])
 
   useEffect(() => {
