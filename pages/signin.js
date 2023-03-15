@@ -48,7 +48,7 @@ function Signin({baseUrl, callbackUrl, attempt}) {
   useEffect(() => {
     if (tokenResult && !(sessionResult && sessionResult.authenticated)) {
       // eslint-disable-next-line no-restricted-globals
-      location.href = url
+      // location.href = url
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenResult, baseUrl])
