@@ -65,9 +65,11 @@ function Signin({baseUrl, callbackUrl, attempt}) {
     <Layout title="Sign-in with Idena app" signinLoading={state === LOADING}>
       <div className="container">
         <div className="card" style={{textAlign: 'center', height: '70vh'}}>
-          {callbackUrl}
+          {new URL(callbackUrl, baseUrl)}
           <br />
-          {baseUrl}
+          {new URL(callbackUrl, baseUrl).href}
+          <br />
+          {encodeURIComponent(new URL(callbackUrl, baseUrl).href)}
           <div>
             <img
               alt="icon"
