@@ -31,6 +31,7 @@ import {
 
 const DEFAULT_TAB = '#flips'
 const REPORT_REWARD_FUND_FIRST_EPOCH = 75
+const BASE_REWARD_FOR_EXTRA_FLIP_FIRST_EPOCH = 103
 
 function Reward() {
   const router = useRouter()
@@ -271,25 +272,21 @@ function Reward() {
       rewardsSummary.epochDuration / 4320) ||
     0
   const apy = (epochDays && (epy / epochDays) * 366) || 0
+  const withBaseRewardForExtraFlip =
+    epoch - 1 >= BASE_REWARD_FOR_EXTRA_FLIP_FIRST_EPOCH
 
-  const flipsOld =
-    rewardedFlips &&
-    rewardsSummary &&
-    mapFlips(rewardedFlips, rewardsSummary, stakeWeight, extraFlips, false)
-  const flipsNew =
-    rewardedFlips &&
-    rewardsSummary &&
-    mapFlips(rewardedFlips, rewardsSummary, stakeWeight, extraFlips, true)
-
-  const totalFlipsRewardOld =
-    (flipsOld && flipsOld.reduce((total, item) => total + item.earned, 0)) || 0
-  const totalFlipsRewardNew =
-    (flipsNew && flipsNew.reduce((total, item) => total + item.earned, 0)) || 0
   const flips =
-    Math.abs(getFlipsReward() + getExtraFlipsReward() - totalFlipsRewardOld) >
-    Math.abs(getFlipsReward() + getExtraFlipsReward() - totalFlipsRewardNew)
-      ? flipsNew
-      : flipsOld
+    rewardedFlips &&
+    rewardsSummary &&
+    identityInfo &&
+    mapFlips(
+      rewardedFlips,
+      rewardsSummary,
+      stakeWeight,
+      extraFlips,
+      withBaseRewardForExtraFlip,
+      identityInfo.madeFlips - 3
+    )
 
   return (
     <Layout title={`Identity rewards ${address} for epoch ${epochFmt(epoch)}`}>
@@ -833,7 +830,13 @@ function Reward() {
                             <td style={{color: 'red'}}>
                               {dnaFmt(
                                 rewardsSummary &&
-                                  rewardsSummary.extraFlipsShare * stakeWeight,
+                                  (idx < identityInfo.availableFlips - 3
+                                    ? rewardsSummary.extraFlipsShare *
+                                      stakeWeight
+                                    : 0) +
+                                    (idx > 1 || withBaseRewardForExtraFlip
+                                      ? rewardsSummary.flipsShare * 1
+                                      : 0),
                                 ''
                               )}
                             </td>
@@ -1524,8 +1527,12 @@ function mapFlips(
   rewardsSummary,
   stakeWeight,
   withExtraFlips,
-  withBaseRewardForExtraFlip
+  withBaseRewardForExtraFlip,
+  availableExtraFlips
 ) {
+  let rewardedFlipCnt = 0
+  let rewardedExtraFlipCnt = 0
+  let extraFlips = availableExtraFlips
   return rewardedFlips
     .sort(function (a, b) {
       return (
@@ -1534,8 +1541,14 @@ function mapFlips(
         b.gradeScore - a.gradeScore
       )
     })
-    .map(function (item, idx) {
-      const isExtra = withExtraFlips && idx >= 3
+    .map(function (item) {
+      if (item.rewarded) {
+        rewardedFlipCnt += 1
+      }
+      const isExtra = withExtraFlips && rewardedFlipCnt >= 4
+      if (isExtra && item.rewarded) {
+        rewardedExtraFlipCnt += 1
+      }
       const earned = item.rewarded
         ? (((!isExtra || withBaseRewardForExtraFlip) &&
             rewardsSummary.flipsShare *
@@ -1547,16 +1560,30 @@ function mapFlips(
               stakeWeight) ||
             0)
         : 0
-      const missed =
+      const missedBase =
         !item.rewarded &&
-        ((!isExtra && rewardsSummary.flipsShare) ||
-          (isExtra && rewardsSummary.extraFlipsShare * stakeWeight))
+        ((!isExtra && rewardsSummary.flipsShare * 1) ||
+          (isExtra &&
+            (withBaseRewardForExtraFlip ? rewardsSummary.flipsShare * 1 : 0)))
       return {
         ...item,
         earned,
-        missed,
+        missed: missedBase,
       }
     })
+    .reverse()
+    .map(function (item) {
+      if (!item.rewarded && extraFlips - rewardedExtraFlipCnt > 0) {
+        extraFlips -= 1
+        item.missed =
+          (item.missed ? item.missed : 0) +
+          rewardsSummary.extraFlipsShare * stakeWeight
+      }
+      return {
+        ...item,
+      }
+    })
+    .reverse()
 }
 
 export default Reward
