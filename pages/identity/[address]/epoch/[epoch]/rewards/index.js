@@ -1272,11 +1272,20 @@ function getRewardedData(
       let missingInvitationReward
       let reason
 
+      let {epochDuration} = rewardsSummary
+      if (
+        item.epoch < epoch &&
+        rewardsSummary.prevEpochDurations &&
+        rewardsSummary.prevEpochDurations.length >= epoch - item.epoch
+      ) {
+        epochDuration =
+          rewardsSummary.prevEpochDurations[
+            rewardsSummary.prevEpochDurations.length - (epoch - item.epoch)
+          ]
+      }
+
       const maxInvitationReward = rewardsSummary.invitationsShare * rewardCoef
-      let coef =
-        (rewardsSummary.epochDuration &&
-          item.epochHeight / rewardsSummary.epochDuration) ||
-        0
+      let coef = (epochDuration && item.epochHeight / epochDuration) || 0
       if (coef > 1) {
         coef = 1
       }
