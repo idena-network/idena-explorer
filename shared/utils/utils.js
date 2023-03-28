@@ -257,3 +257,13 @@ export function contractVerificationFmt(verification) {
   }
   return verification
 }
+
+export function tokenNameFmt(token) {
+  if (!token) {
+    return ''
+  }
+  return (
+    (token.name ? token.name : token.contractAddress) +
+    (token.symbol ? ` (${token.symbol})` : '')
+  )
+}

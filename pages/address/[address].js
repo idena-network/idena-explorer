@@ -1,16 +1,26 @@
 import Link from 'next/link'
-import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
+import {
+  NavItem,
+  NavLink,
+  TabPane,
+  TabContent,
+  DropdownToggle,
+  UncontrolledButtonDropdown,
+  DropdownMenu,
+} from 'reactstrap'
 import {useQuery} from 'react-query'
 import {useRouter} from 'next/router'
+import {ChevronDownIcon} from '@radix-ui/react-icons'
 import Layout from '../../shared/components/layout'
 import {
   getIdentity,
   getAddressInfo,
   getContract,
   getAddressChangesSummary,
+  getAddressTokens,
   getPoolInfo,
 } from '../../shared/api'
-import {dnaFmt, identityStatusFmt} from '../../shared/utils/utils'
+import {dnaFmt, identityStatusFmt, tokenNameFmt} from '../../shared/utils/utils'
 import Transactions from '../../screens/address/components/transactions'
 import Rewards from '../../screens/address/components/rewards'
 import Penalties from '../../screens/address/components/penalties'
@@ -52,6 +62,11 @@ function Address() {
     (_, address) => getAddressChangesSummary(address)
   )
 
+  const {data: tokens} = useQuery(
+    address && ['tokens', address],
+    (_, address) => getAddressTokens(address, 10)
+  )
+
   return (
     <Layout title={`Address ${address}`}>
       <section className="section">
@@ -64,11 +79,13 @@ function Address() {
       </section>
 
       <AddressData
+        address={address}
         addressInfo={addressInfo}
         identityInfo={identityInfo}
         contractInfo={contractInfo}
         poolInfo={poolInfo}
         activityInfo={activityInfo}
+        tokens={tokens}
       />
 
       <section className="section section_tabs">
@@ -180,11 +197,13 @@ function Address() {
 }
 
 function AddressData({
+  address,
   addressInfo,
   identityInfo,
   contractInfo,
   poolInfo,
   activityInfo,
+  tokens,
 }) {
   return (
     <>
@@ -192,14 +211,10 @@ function AddressData({
         <div className="row">
           <div className="col-12 col-sm-12">
             <h3>Summary</h3>
-            <div className="card">
+            <div className="card" style={{overflow: 'visible'}}>
               <div className="info_block">
                 <div className="row">
-                  <div
-                    className={`col-12 ${
-                      identityInfo ? 'col-sm-4' : 'col-sm-6'
-                    } bordered-col`}
-                  >
+                  <div className="col-sm  bordered-col">
                     <h3 className="info_block__accent">
                       {(addressInfo && dnaFmt(addressInfo.balance)) || '-'}
                     </h3>
@@ -211,33 +226,70 @@ function AddressData({
                       Balance
                     </TooltipText>
                   </div>
-                  <div
-                    className={`col-12 ${
-                      identityInfo ? 'col-sm-4' : 'col-sm-6'
-                    } bordered-col`}
-                    style={{display: identityInfo ? 'block' : 'none'}}
-                  >
-                    <h3 className="info_block__accent">
-                      {(addressInfo && dnaFmt(addressInfo.stake)) || '-'}
-                    </h3>
-                    <TooltipText
-                      className="control-label"
-                      data-toggle="tooltip"
-                      tooltip="Locked balance"
-                    >
-                      Stake
-                    </TooltipText>
-                  </div>
-                  <div
-                    className={`col-12 ${
-                      identityInfo ? 'col-sm-4' : 'col-sm-6'
-                    } bordered-col`}
-                  >
+                  {identityInfo && (
+                    <div className="col-sm bordered-col">
+                      <h3 className="info_block__accent">
+                        {(addressInfo && dnaFmt(addressInfo.stake)) || '-'}
+                      </h3>
+                      <TooltipText
+                        className="control-label"
+                        data-toggle="tooltip"
+                        tooltip="Locked balance"
+                      >
+                        Stake
+                      </TooltipText>
+                    </div>
+                  )}
+                  <div className="col-sm bordered-col">
                     <h3 className="info_block__accent">
                       {(addressInfo && addressInfo.txCount) || '-'}
                     </h3>
                     <div className="control-label">Transactions</div>
                   </div>
+                  {tokens && tokens.length && (
+                    <div className="col-sm bordered-col">
+                      <h3 className="info_block__accent ">
+                        <UncontrolledButtonDropdown direction="down">
+                          <DropdownToggle tag="a">
+                            <div className="nav-item">
+                              <a className="link-col" style={{padding: '5px'}}>
+                                Select a token
+                                <ChevronDownIcon />
+                              </a>
+                            </div>
+                          </DropdownToggle>
+                          <DropdownMenu
+                            style={{
+                              boxShadow:
+                                '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
+                              // padding: '5px 10px',
+                            }}
+                          >
+                            {tokens.map((item) => (
+                              <li className="text-left ">
+                                <div
+                                  className="text_block text_block--ellipsis"
+                                  style={{width: '100%', padding: '0 5px'}}
+                                >
+                                  <Link
+                                    href="/token/[address]"
+                                    as={`/token/${item.token.contractAddress}?holder=${address}`}
+                                  >
+                                    <a className="link-col">
+                                      {tokenNameFmt(item.token)}: {item.balance}
+                                    </a>
+                                  </Link>
+                                </div>
+                              </li>
+                            ))}
+                          </DropdownMenu>
+                        </UncontrolledButtonDropdown>
+                      </h3>
+                      <TooltipText className="control-label">
+                        Token holdings
+                      </TooltipText>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
