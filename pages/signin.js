@@ -120,7 +120,7 @@ Signin.getInitialProps = ({req, query}) => {
   return {
     attempt: query.attempt || 0,
     baseUrl,
-    callbackUrl: decodeURIComponent(query.callback_url),
+    callbackUrl: decodeURIComponent(query.callback_url || '/'),
   }
 }
 
