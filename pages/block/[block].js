@@ -176,9 +176,15 @@ function BlockDetails(data) {
 
               <hr />
               <div className="control-label" data-toggle="tooltip">
-                <TooltipText tooltip="iDNA per byte">Fee rate:</TooltipText>
+                {data.feeRate ? (
+                  <TooltipText tooltip="iDNA per gas">Gas price:</TooltipText>
+                ) : (
+                  <TooltipText tooltip="iDNA per byte">Fee rate:</TooltipText>
+                )}
               </div>
-              <div className="text_block">{data.feeRate}</div>
+              <div className="text_block">
+                {data.feeRate ? data.feeRate : data.feeRatePerByte}
+              </div>
 
               <hr />
               <div className="control-label" data-toggle="tooltip">
