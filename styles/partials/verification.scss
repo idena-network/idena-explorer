@@ -1,0 +1,146 @@
+.verification-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 0;
+  gap: 24px;
+
+  > .verification-card-content {
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    // align-items: flex-start;
+    // padding: 0;
+    gap: 16px;
+    // height: 292px;
+
+    > .verification-card-body {
+      width: 680px;
+      height: 256px;
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      align-items: center;
+      padding: 64px 120px;
+      gap: 24px;
+      border-radius: 6px;
+
+      &.dashed {
+        border: 1px dashed #E8EAED;
+      }
+
+      &.active {
+        background-color: rgba(87, 143, 255, 0.04);
+      }
+
+      > .btn {
+        border: 1px solid #E1E3E5;
+      }
+
+      > input[type=file] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        &:enabled {
+          cursor: pointer;
+        }
+      }
+
+      > .verification-card-image {
+        box-sizing: border-box;
+        width: 56px;
+        height: 56px;
+        border: 1px solid rgba(83, 86, 92, 0.1);
+        border-radius: 28px;
+        flex: none;
+        flex-grow: 0;
+        display: flex;
+
+        &.active {
+          background-color: #578FFF;
+        }
+
+        > .icon {
+          margin: 0 auto;
+          display: block;
+
+          &.icon--upload {
+            content: url('/static/images/upload-icn.svg');
+          }
+
+          &.icon--upload-active {
+            content: url('/static/images/upload-icn-active.svg');
+          }
+
+          &.icon--underway {
+            content: url('/static/images/underway-icn.svg');
+            animation: spin 1s linear infinite;
+            @keyframes spin {
+              from {
+                transform: rotate(0deg);
+              }
+              to {
+                transform: rotate(360deg);
+              }
+            }
+          }
+
+          &.icon--error {
+            content: url('/static/images/chat-bubble-error.svg');
+          }
+        }
+      }
+
+      > .verification-card-text {
+        text-align: center;
+        line-height: 24px;
+
+        > .verification-card-text-main {
+          font-size: 16px;
+          font-weight: 500;
+        }
+
+        > .verification-card-text-comment {
+          font-size: 14px;
+          color: #96999E;
+        }
+
+      }
+
+    }
+
+
+    > .verification-card-footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0;
+      gap: 16px;
+      align-self: stretch;
+      font-size: 14px;
+      color: #96999E;
+
+      > .failed {
+        color: #FF6666;
+      }
+
+
+      .icon {
+        padding-left: 5px;
+
+        &.icon--clock {
+          content: url('/static/images/clock.svg');
+        }
+
+        &.icon--warning {
+          content: url('/static/images/warning-triangle.svg');
+        }
+      }
+    }
+  }
+}
