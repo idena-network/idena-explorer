@@ -213,3 +213,19 @@ export function flipRewardMultiplier(grade, gradeScore) {
 
 export const humanizeDuration = (d, unit = 's') =>
   dayjs.duration(d, unit).humanize()
+
+export function undelegationReasonFmt(reason) {
+  if (!reason) {
+    return ''
+  }
+  if (reason === 'Undelegation') {
+    return 'undelegation'
+  }
+  if (reason === 'Termination') {
+    return 'termination'
+  }
+  if (reason === 'ValidationFailure') {
+    return 'validation failure'
+  }
+  return reason
+}

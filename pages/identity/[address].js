@@ -23,6 +23,7 @@ import Flips from '../../screens/identity/components/flips'
 import Invites from '../../screens/identity/components/invites'
 import {useHashChange, useHash} from '../../shared/utils/useHashChange'
 import TooltipText from '../../shared/components/tooltip'
+import Pools from '../../screens/identity/components/pools'
 
 const DEFAULT_TAB = '#validations'
 
@@ -134,6 +135,15 @@ function Identity() {
                       <h3>Invites</h3>
                     </NavLink>
                   </NavItem>
+
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#pools'}
+                      href="#pools"
+                    >
+                      <h3>Identity's pools</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
@@ -161,6 +171,14 @@ function Identity() {
                 <Invites
                   address={address}
                   visible={hashReady && hash === '#invites'}
+                />
+              </div>
+            </TabPane>
+            <TabPane tabId="#pools">
+              <div className="card">
+                <Pools
+                  address={address}
+                  visible={hashReady && hash === '#pools'}
                 />
               </div>
             </TabPane>

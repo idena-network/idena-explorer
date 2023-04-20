@@ -639,3 +639,11 @@ export async function getDelegateeRewardsByAddress(
 export async function getStaking() {
   return getResponse(apiClient().get(`staking`))
 }
+
+export async function getAddressDelegations(address, limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`address/${address}/delegations`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
