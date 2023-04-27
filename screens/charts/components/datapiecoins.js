@@ -96,7 +96,7 @@ export default function DataPieCoinsChart({chartData}) {
   const colors = ['#578fff', '#27d980', '#ff6666']
 
   return (
-    <div style={{width: '100%', height: '320px'}}>
+    <div style={{width: '100%', height: '340px'}}>
       <ResponsiveContainer>
         <PieChart>
           <Pie

@@ -101,6 +101,13 @@ export default function Invites({address, visible}) {
                       </td>
                       <td>{dateTimeFmt(item.activationTimestamp)}</td>
                       <td>
+                        <div className="user-pic">
+                          <img
+                            src={`https://robohash.idena.io/${item.activationAuthor.toLowerCase()}`}
+                            alt="pic"
+                            width="32"
+                          />
+                        </div>
                         <div
                           className="text_block text_block--ellipsis"
                           style={{width: 120}}
@@ -109,15 +116,7 @@ export default function Invites({address, visible}) {
                             href="/identity/[address]"
                             as={`/identity/${item.activationAuthor}`}
                           >
-                            <a>
-                              <img
-                                className="user-pic"
-                                src={`https://robohash.idena.io/${item.activationAuthor.toLowerCase()}`}
-                                alt="pic"
-                                width="32"
-                              />
-                              <span>{item.activationAuthor}</span>
-                            </a>
+                            <a>{item.activationAuthor}</a>
                           </Link>
                         </div>
                       </td>
