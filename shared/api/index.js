@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {contractVerificationErrorFmt} from '../utils/utils'
 
 const BASE_API_URL = 'https://api.idena.io/api'
 
@@ -646,4 +647,23 @@ export async function getAddressDelegations(address, limit, continuationToken) {
       params: {limit, continuationToken},
     })
   )
+}
+
+export async function verifyContract(address, file) {
+  try {
+    await getResponse(
+      apiClient().post(`contract/${address}/verify`, file, {
+        headers: {
+          'content-type': file.type,
+        },
+      })
+    )
+    return null
+  } catch (e) {
+    return contractVerificationErrorFmt(e.message)
+  }
+}
+
+export function getVerifiedCodeFileLink(address) {
+  return `${BASE_API_URL}/contract/${address}/DownloadVerifiedCodeFile`
 }

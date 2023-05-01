@@ -7,12 +7,12 @@ import {WarningTooltip} from '../../../shared/components/tooltip'
 
 const LIMIT = 30
 
-export default function Transfers({address}) {
+export default function Transfers({address, visible}) {
   const fetchTransfers = (_, address, continuationToken = null) =>
     getContractBalanceUpdates(address, LIMIT, continuationToken)
 
   const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
-    address && `${address}/transfers`,
+    address && visible && `${address}/transfers`,
     [address],
     fetchTransfers,
     {
@@ -80,7 +80,7 @@ export default function Transfers({address}) {
           </tr>
         </thead>
         <tbody>
-          {status === 'loading' && <SkeletonRows cols={7} />}
+          {!visible || (status === 'loading' && <SkeletonRows cols={7} />)}
           {data.map(
             (page) =>
               page &&

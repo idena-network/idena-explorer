@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import {ContractVerificationState} from './types';
 
 dayjs.extend(duration)
 dayjs.extend(relativeTime)
@@ -228,4 +229,31 @@ export function undelegationReasonFmt(reason) {
     return 'Validation failure'
   }
   return reason
+}
+
+export function contractVerificationErrorFmt(error) {
+  if (
+    error === 'too large file' ||
+    error === 'already_submitted' ||
+    error === 'already_verified'
+  ) {
+    return error
+  }
+  return 'Something went wrong'
+}
+
+export function contractVerificationFmt(verification) {
+  if (verification === ContractVerificationState.NotVerified) {
+    return 'Not verified'
+  }
+  if (!verification) {
+    return '-'
+  }
+  if (verification === ContractVerificationState.Pending) {
+    return 'Pending verification...'
+  }
+  if (verification === ContractVerificationState.Failed) {
+    return 'Verification failed'
+  }
+  return verification
 }
