@@ -1,10 +1,7 @@
 import {useInfiniteQuery} from 'react-query'
 import Link from 'next/link'
 import {getAddressDelegations} from '../../../shared/api'
-import {
-  dateTimeFmt,
-  undelegationReasonFmt,
-} from '../../../shared/utils/utils'
+import {dateTimeFmt, undelegationReasonFmt} from '../../../shared/utils/utils'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 
 const LIMIT = 10
@@ -46,6 +43,13 @@ export default function Pools({address, visible}) {
               page.map((item) => (
                 <tr key={item.delegationTx.hash}>
                   <td>
+                    <div className="user-pic">
+                      <img
+                        src={`https://robohash.idena.io/${item.delegateeAddress.toLowerCase()}`}
+                        alt="pic"
+                        width="32"
+                      />
+                    </div>
                     <div
                       className="text_block text_block--ellipsis"
                       style={{width: 120}}
@@ -54,15 +58,7 @@ export default function Pools({address, visible}) {
                         href="/pool/[address]"
                         as={`/pool/${item.delegateeAddress}`}
                       >
-                        <a>
-                          <img
-                            className="user-pic"
-                            src={`https://robohash.idena.io/${item.delegateeAddress.toLowerCase()}`}
-                            alt="pic"
-                            width="32"
-                          />
-                          <span>{item.delegateeAddress}</span>
-                        </a>
+                        <a>{item.delegateeAddress}</a>
                       </Link>
                     </div>
                   </td>

@@ -18,35 +18,40 @@ function Block() {
 
   const {data: lastBlockData} = useQuery(['last', block], getLastBlock)
   const lastBlock = lastBlockData && lastBlockData.height
+  const height = data && data.height
 
   return (
     <Layout title={`Block ${block}`}>
       <section className="section">
         <div className="section_main__group">
-          <h1 className="section_main__title">Block {block}</h1>
+          <h1 className="section_main__title">Block {height || '...'}</h1>
           <h3 className="section_main__subtitle">
             <span>{(data && data.hash) || '...'}</span>
           </h3>
         </div>
+        {height && (
+          <div className="button-group">
+            <Link href="/block/[block]" as={`/block/${height - 1}`}>
+              <a
+                className="btn btn-secondary btn-small"
+                disabled={height === 1}
+              >
+                <i className="icon icon--thin_arrow_left" />
+                <span>Previous block</span>
+              </a>
+            </Link>
 
-        <div className="button-group">
-          <Link href="/block/[block]" as={`/block/${block - 1}`}>
-            <a className="btn btn-secondary btn-small" disabled={block === 1}>
-              <i className="icon icon--thin_arrow_left" />
-              <span>Previous block</span>
-            </a>
-          </Link>
-
-          <Link href="/block/[block]" as={`/block/${block * 1 + 1}`}>
-            <a
-              className="btn btn-secondary btn-small"
-              disabled={block * 1 >= lastBlock}
-            >
-              <span>Next block</span>
-              <i className="icon icon--thin_arrow_right" />
-            </a>
-          </Link>
-        </div>
+            <Link href="/block/[block]" as={`/block/${height * 1 + 1}`}>
+              <a
+                className="btn btn-secondary btn-small"
+                disabled={height * 1 >= lastBlock}
+              >
+                <span>Next block</span>
+                <i className="icon icon--thin_arrow_right" />
+              </a>
+            </Link>
+          </div>
+        )}
       </section>
       {status === 'loading' && <PageLoading />}
       {error && status !== 'loading' && <PageError />}

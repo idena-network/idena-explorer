@@ -220,13 +220,13 @@ export function undelegationReasonFmt(reason) {
     return ''
   }
   if (reason === 'Undelegation') {
-    return 'undelegation'
+    return 'Undelegation'
   }
   if (reason === 'Termination') {
-    return 'termination'
+    return 'Termination'
   }
   if (reason === 'ValidationFailure') {
-    return 'validation failure'
+    return 'Validation failure'
   }
   return reason
 }
