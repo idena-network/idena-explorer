@@ -624,6 +624,29 @@ export async function getPoolTotalRewards(address, limit, continuationToken) {
   )
 }
 
+export async function getPoolSizeHistory(address, limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`pool/${address}/sizeHistory`, {
+      params: {limit, continuationToken},
+    })
+  )
+}
+
+export async function getPoolInfo(address) {
+  try {
+    return await getPool(address)
+  } catch (e) {
+    const sizeHistory = await getPoolSizeHistory(address, 1)
+    return (
+      sizeHistory &&
+      sizeHistory.length && {
+        address,
+        size: 0,
+      }
+    )
+  }
+}
+
 export async function getDelegateeRewardsByAddress(
   address,
   epoch,

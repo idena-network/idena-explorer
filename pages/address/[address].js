@@ -7,8 +7,8 @@ import {
   getIdentity,
   getAddressInfo,
   getContract,
-  getPool,
   getAddressChangesSummary,
+  getPoolInfo,
 } from '../../shared/api'
 import {dnaFmt, identityStatusFmt} from '../../shared/utils/utils'
 import Transactions from '../../screens/address/components/transactions'
@@ -44,7 +44,7 @@ function Address() {
 
   const {data: poolInfo} = useQuery(
     address && ['pool', address],
-    (_, address) => getPool(address)
+    (_, address) => getPoolInfo(address)
   )
 
   const {data: activityInfo} = useQuery(
@@ -359,7 +359,7 @@ function AddressData({
               <div className="col-12 col-sm-6">
                 <div className="section__group">
                   <div className="control-label">Size:</div>
-                  <div className="text_block">{poolInfo.size}</div>
+                  <div className="text_block">{poolInfo.size || '-'}</div>
                 </div>
               </div>
             </div>

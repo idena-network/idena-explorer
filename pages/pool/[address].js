@@ -3,12 +3,13 @@ import {NavItem, NavLink, TabPane, TabContent} from 'reactstrap'
 import {useQuery} from 'react-query'
 import {useRouter} from 'next/router'
 import Layout from '../../shared/components/layout'
-import {getPool} from '../../shared/api'
 import Delegators from '../../screens/pool/components/delegators'
 import {useHash, useHashChange} from '../../shared/utils/useHashChange'
 import Rewards from '../../screens/pool/components/rewards'
 import {dnaFmt} from '../../shared/utils/utils'
 import TooltipText from '../../shared/components/tooltip'
+import History from '../../screens/pool/components/history'
+import {getPoolInfo} from '../../shared/api'
 
 const DEFAULT_TAB = '#delegators'
 
@@ -21,7 +22,7 @@ function Contract() {
 
   const {data: poolInfo} = useQuery(
     address && ['pool', address],
-    (_, address) => getPool(address)
+    (_, address) => getPoolInfo(address)
   )
 
   return (
@@ -83,6 +84,14 @@ function Contract() {
                       <h3>Rewards</h3>
                     </NavLink>
                   </NavItem>
+                  <NavItem>
+                    <NavLink
+                      active={hashReady && hash === '#sizeHistory'}
+                      href="#sizeHistory"
+                    >
+                      <h3>History</h3>
+                    </NavLink>
+                  </NavItem>
                 </ul>
               </div>
             </div>
@@ -105,6 +114,16 @@ function Contract() {
                   <Rewards
                     address={address}
                     visible={hashReady && hash === '#rewards'}
+                  />
+                )}
+              </div>
+            </TabPane>
+            <TabPane tabId="#sizeHistory">
+              <div className="card">
+                {poolInfo && (
+                  <History
+                    address={address}
+                    visible={hashReady && hash === '#sizeHistory'}
                   />
                 )}
               </div>
