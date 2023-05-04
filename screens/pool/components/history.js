@@ -1,12 +1,14 @@
 import Link from 'next/link'
-import {useInfiniteQuery} from 'react-query'
-import {getPoolSizeHistory} from '../../../shared/api'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {getLastEpoch, getPoolSizeHistory} from '../../../shared/api'
 import {SkeletonRows} from '../../../shared/components/skeleton'
 import {epochFmt} from '../../../shared/utils/utils'
 
-const LIMIT = 30
+const LIMIT = 10
 
-export default function History({address, visible}) {
+export default function History({address, poolInfo, visible}) {
+  const {data: lastEpoch} = useQuery('last-epoch', getLastEpoch)
+
   const fetchSizeHistory = (_, address, continuationToken = null) =>
     getPoolSizeHistory(address, LIMIT, continuationToken)
 
@@ -22,19 +24,44 @@ export default function History({address, visible}) {
     }
   )
 
+  const latestHistoryItem = data && data.length && data[0].length && data[0][0]
+
+  const currentEpochSize =
+    latestHistoryItem &&
+    lastEpoch &&
+    latestHistoryItem.epoch === lastEpoch.epoch - 1
+      ? latestHistoryItem.endSize
+      : 0
+
   return (
     <div className="table-responsive">
       <table className="table">
         <thead>
           <tr>
             <th>Epoch</th>
-            <th>Start size</th>
-            <th>Validation size</th>
-            <th>End size</th>
+            <th>Validated identities</th>
+            <th>
+              Validated identities
+              <br />
+              before next validation
+            </th>
           </tr>
         </thead>
         <tbody>
-          {!visible || (status === 'loading' && <SkeletonRows cols={4} />)}
+          {!visible || (status === 'loading' && <SkeletonRows cols={3} />)}
+          {visible && lastEpoch && (currentEpochSize || poolInfo.size || '') && (
+            <tr key={lastEpoch.epoch}>
+              <td>
+                <div className="text_block text_block--ellipsis">
+                  <Link href="/epoch/[epoch]" as={`/epoch/${lastEpoch.epoch}`}>
+                    <a>{epochFmt(lastEpoch.epoch)}</a>
+                  </Link>
+                </div>
+              </td>
+              <td>{currentEpochSize}</td>
+              <td>{poolInfo.size}</td>
+            </tr>
+          )}
           {data.map(
             (page) =>
               page &&
@@ -49,7 +76,6 @@ export default function History({address, visible}) {
                   </td>
                   <td>{item.startSize}</td>
                   <td>{item.validationSize}</td>
-                  <td>{item.endSize}</td>
                 </tr>
               ))
           )}

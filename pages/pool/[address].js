@@ -123,6 +123,7 @@ function Contract() {
                 {poolInfo && (
                   <History
                     address={address}
+                    poolInfo={poolInfo}
                     visible={hashReady && hash === '#sizeHistory'}
                   />
                 )}
