@@ -9,6 +9,7 @@ import {
   contractVerificationFmt,
   dnaFmt,
   precise6,
+  tokenNameFmt,
 } from '../../shared/utils/utils'
 import Transfers from '../../screens/contract/components/transfers'
 import VotingData from '../../screens/contract/components/voting'
@@ -194,6 +195,7 @@ function Contract() {
 
 function ContractData({addressInfo, contractInfo, verification}) {
   const isWasm = contractInfo && contractInfo.type === 'Contract'
+  const token = isWasm && contractInfo.token
   const isEmbedded = contractInfo && contractInfo.type !== 'Contract'
   return (
     <>
@@ -201,7 +203,7 @@ function ContractData({addressInfo, contractInfo, verification}) {
         <h3>Details</h3>
         <div className="card">
           <div className="row">
-            <div className="col-12 col-sm-4">
+            <div className="col-sm">
               <div className="section__group">
                 <div className="control-label">Author:</div>
                 <div
@@ -230,7 +232,7 @@ function ContractData({addressInfo, contractInfo, verification}) {
               </div>
             </div>
             {isEmbedded && (
-              <div className="col-12 col-sm-4">
+              <div className="col-sm">
                 <div className="section__group">
                   <div className="control-label">Type:</div>
                   <div className="text_block">
@@ -240,7 +242,7 @@ function ContractData({addressInfo, contractInfo, verification}) {
               </div>
             )}
 
-            <div className="col-12 col-sm-4">
+            <div className="col-sm">
               <div className="section__group">
                 <div className="control-label">Balance:</div>
                 <div className="text_block">
@@ -249,9 +251,8 @@ function ContractData({addressInfo, contractInfo, verification}) {
                 </div>
               </div>
             </div>
-
             {isWasm && (
-              <div style={{textAlign: 'right'}} className="col-12 col-sm-4">
+              <div style={{textAlign: 'right'}} className="col-sm">
                 <div className="section__group" style={{paddingBottom: 0}}>
                   <div className="control-label">
                     <VerificationBadge verification={verification} />
@@ -262,6 +263,51 @@ function ContractData({addressInfo, contractInfo, verification}) {
           </div>
         </div>
       </section>
+      {token && (
+        <section className="section section_details">
+          <h3>Token</h3>
+          <div className="card">
+            <div className="row">
+              <div className="col-sm">
+                <div className="section__group">
+                  <div className="control-label">Address:</div>
+                  <div
+                    className="text_block text_block--ellipsis"
+                    style={{width: '80%'}}
+                  >
+                    <Link
+                      href="/token/[address]"
+                      as={`/token/${token.contractAddress}`}
+                    >
+                      <a>
+                        <img
+                          alt="user-pic"
+                          className="user-pic"
+                          width="32"
+                          src={`https://robohash.idena.io/${token.contractAddress}`}
+                        />
+                        <span>{token.contractAddress}</span>
+                      </a>
+                    </Link>
+                  </div>
+                  <hr />
+                  <div className="control-label">Name:</div>
+                  <div className="text_block">{token.name || '-'}</div>
+                </div>
+              </div>
+              <div className="col-12 col-sm-6">
+                <div className="section__group">
+                  <div className="control-label">Decimals:</div>
+                  <div className="text_block">{token.decimals || 0}</div>
+                  <hr />
+                  <div className="control-label">Symbol:</div>
+                  <div className="text_block">{token.symbol || '-'}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
     </>
   )
 }

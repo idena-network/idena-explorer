@@ -1,13 +1,15 @@
 import Link from 'next/link'
 import {useRouter} from 'next/router'
-import {useQuery} from 'react-query'
-import {getToken} from '../../shared/api'
+import {useInfiniteQuery, useQuery} from 'react-query'
+import {getAddressToken, getToken, getTokenHolders} from '../../shared/api'
 import Layout from '../../shared/components/layout'
-import {tokenNameFmt} from '../../shared/utils/utils'
+import {precise6, tokenBalanceFmt, tokenNameFmt} from '../../shared/utils/utils'
+import {SkeletonRows} from '../../shared/components/skeleton'
 
 function Token() {
   const router = useRouter()
   const address = router.query.address || ''
+  const holder = router.query.holder || ''
 
   const {data: tokenInfo} = useQuery(
     address && ['token', address],
@@ -42,12 +44,20 @@ function Token() {
                   <span>Address details</span>
                 </a>
               </Link>
+
+              <Link href="/contract/[address]" as={`/contract/${address}`}>
+                <a className="btn btn-small btn-secondary">
+                  <span>Contract details</span>
+                </a>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       <TokenData tokenInfo={tokenInfo} />
+      {holder && <HolderData address={holder} tokenAddress={address} />}
+      {!holder && <HoldersData address={address}  tokenAddress={address} />}
     </Layout>
   )
 }
@@ -104,6 +114,135 @@ function TokenData({tokenInfo}) {
                 {(tokenInfo && tokenInfo.symbol) || '-'}
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function HolderData({address, tokenAddress}) {
+  const {data: holderInfo} = useQuery(
+    address && tokenAddress && ['tokenHolder', address, tokenAddress],
+    (_, address) => getAddressToken(address, tokenAddress)
+  )
+
+  return (
+    <section className="section section_details">
+      <h3>Holder details</h3>
+      <div className="card">
+        <div className="row">
+          <div className="col-12 col-sm-6">
+            <div className="section__group">
+              <div className="control-label">Address:</div>
+
+              <div
+                className="text_block text_block--ellipsis"
+                style={{width: '80%'}}
+              >
+                <Link
+                  href={`/token/[address]?holder=${address}`}
+                  as={`/token/${tokenAddress}?holder=${address}`}
+                >
+                  <a>
+                    <img
+                      alt="user-pic"
+                      className="user-pic"
+                      width="32"
+                      src={`https://robohash.idena.io/${address}`}
+                    />
+                    <span>{address}</span>
+                  </a>
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="col-12 col-sm-6">
+            <div className="section__group">
+              <div className="control-label">Balance:</div>
+              <div className="text_block">
+                {(holderInfo &&
+                  tokenBalanceFmt(precise6(holderInfo.balance))) ||
+                  '-'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function HoldersData({address, tokenAddress}) {
+  const LIMIT = 10
+  const fetchHolders = (_, address, continuationToken = null) =>
+    getTokenHolders(address, LIMIT, continuationToken)
+
+  const {data, fetchMore, canFetchMore, status} = useInfiniteQuery(
+    address && `${address}/tokenHolders`,
+    [address],
+    fetchHolders,
+    {
+      getFetchMore: (lastGroup) =>
+        lastGroup && lastGroup.continuationToken
+          ? lastGroup.continuationToken
+          : false,
+    }
+  )
+
+  return (
+    <section className="section">
+      <h3>Holders</h3>
+      <div className="card">
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Address</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {status === 'loading' && <SkeletonRows cols={2} />}
+              {data.map(
+                (page) =>
+                  page &&
+                  page.map((item) => (
+                    <tr key={item.address}>
+                      <td>
+                        <div className="user-pic">
+                          <img
+                            src={`https://robohash.idena.io/${item.address.toLowerCase()}`}
+                            alt="pic"
+                            width="32"
+                          />
+                        </div>
+                        <div className="text_block text_block--ellipsis">
+                          <Link
+                            href={`/token/[address]?holder=${item.address}`}
+                            as={`/token/${tokenAddress}?holder=${item.address}`}
+                          >
+                            <a>{item.address}</a>
+                          </Link>
+                        </div>
+                      </td>
+                      <td>{tokenBalanceFmt(precise6(item.balance))}</td>
+                    </tr>
+                  ))
+              )}
+            </tbody>
+          </table>
+          <div
+            className="text-center"
+            style={{display: canFetchMore ? 'block' : 'none'}}
+          >
+            <button
+              type="button"
+              className="btn btn-small"
+              onClick={() => fetchMore()}
+            >
+              Show more
+            </button>
           </div>
         </div>
       </div>

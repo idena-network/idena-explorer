@@ -76,6 +76,12 @@ export async function getAddressTokens(address, limit, continuationToken) {
   )
 }
 
+export async function getAddressToken(address, tokenAddress) {
+  return getResponse(
+    apiClient().get(`address/${address}/token/${tokenAddress}`)
+  )
+}
+
 export async function getTransaction(hash) {
   return getResponse(apiClient().get(`transaction/${hash}`))
 }
@@ -701,4 +707,12 @@ export function getVerifiedCodeFileLink(address) {
 
 export async function getToken(address) {
   return getResponse(apiClient().get(`token/${address}`))
+}
+
+export async function getTokenHolders(address, limit, continuationToken) {
+  return getResponse(
+    apiClient().get(`token/${address}/holders`, {
+      params: {limit, continuationToken},
+    })
+  )
 }
