@@ -64,6 +64,7 @@ function Address() {
       </section>
 
       <AddressData
+        address={address}
         addressInfo={addressInfo}
         identityInfo={identityInfo}
         contractInfo={contractInfo}
@@ -180,6 +181,7 @@ function Address() {
 }
 
 function AddressData({
+  address,
   addressInfo,
   identityInfo,
   contractInfo,
@@ -192,14 +194,10 @@ function AddressData({
         <div className="row">
           <div className="col-12 col-sm-12">
             <h3>Summary</h3>
-            <div className="card">
+            <div className="card" style={{overflow: 'visible'}}>
               <div className="info_block">
                 <div className="row">
-                  <div
-                    className={`col-12 ${
-                      identityInfo ? 'col-sm-4' : 'col-sm-6'
-                    } bordered-col`}
-                  >
+                  <div className="col-sm  bordered-col">
                     <h3 className="info_block__accent">
                       {(addressInfo && dnaFmt(addressInfo.balance)) || '-'}
                     </h3>
@@ -211,28 +209,43 @@ function AddressData({
                       Balance
                     </TooltipText>
                   </div>
-                  <div
-                    className={`col-12 ${
-                      identityInfo ? 'col-sm-4' : 'col-sm-6'
-                    } bordered-col`}
-                    style={{display: identityInfo ? 'block' : 'none'}}
-                  >
-                    <h3 className="info_block__accent">
-                      {(addressInfo && dnaFmt(addressInfo.stake)) || '-'}
-                    </h3>
-                    <TooltipText
-                      className="control-label"
-                      data-toggle="tooltip"
-                      tooltip="Locked balance"
-                    >
-                      Stake
-                    </TooltipText>
-                  </div>
-                  <div
-                    className={`col-12 ${
-                      identityInfo ? 'col-sm-4' : 'col-sm-6'
-                    } bordered-col`}
-                  >
+                  {identityInfo && (
+                    <div className="col-sm bordered-col">
+                      <h3 className="info_block__accent">
+                        {(addressInfo && dnaFmt(addressInfo.stake)) || '-'}
+                      </h3>
+                      <TooltipText
+                        className="control-label"
+                        data-toggle="tooltip"
+                        tooltip="Locked balance"
+                      >
+                        Stake
+                      </TooltipText>
+                    </div>
+                  )}
+                  {(addressInfo && addressInfo.tokenCount && (
+                    <div className="col-sm bordered-col">
+                      <Link
+                        href={`/tokenholdings?address=${address}`}
+                        as={`/tokenholdings?address=${address}`}
+                      >
+                        <a className="link-col">
+                          <h3 className="accent">
+                            <span>{addressInfo.tokenCount}</span>
+                          </h3>
+                          <TooltipText
+                            className="control-label"
+                            data-toggle="tooltip"
+                            tooltip="Total number of tokens. Click to view in Token Holdings"
+                          >
+                            Token Holdings &rsaquo;
+                          </TooltipText>
+                        </a>
+                      </Link>
+                    </div>
+                  )) ||
+                    ''}
+                  <div className="col-sm bordered-col">
                     <h3 className="info_block__accent">
                       {(addressInfo && addressInfo.txCount) || '-'}
                     </h3>

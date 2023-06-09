@@ -22,7 +22,11 @@ export function precise6(x) {
   return Math.round(x * 1000000) / 1000000
 }
 
-export function dnaFmt(amount, curency = ' iDNA') {
+export function dnaFmt(amount, currency = ' iDNA') {
+  return tokenBalanceFmt(amount, currency)
+}
+
+export function tokenBalanceFmt(amount, currency = '') {
   if (!amount || amount === 0) return '-'
   let value
   if (amount !== precise6(amount)) {
@@ -32,7 +36,7 @@ export function dnaFmt(amount, curency = ' iDNA') {
   }
   return `${Number(value).toLocaleString(undefined, {
     maximumFractionDigits: 6,
-  })}${curency}`
+  })}${currency}`
 }
 
 export function usdFmt(amount, curency = '$') {
@@ -256,4 +260,14 @@ export function contractVerificationFmt(verification) {
     return 'Verification failed'
   }
   return verification
+}
+
+export function tokenNameFmt(token) {
+  if (!token) {
+    return ''
+  }
+  return (
+    (token.name ? token.name : token.contractAddress) +
+    (token.symbol ? ` (${token.symbol})` : '')
+  )
 }
