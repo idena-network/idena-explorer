@@ -57,7 +57,7 @@ function Token() {
 
       <TokenData tokenInfo={tokenInfo} />
       {holder && <HolderData address={holder} tokenAddress={address} />}
-      {!holder && <HoldersData address={address}  tokenAddress={address} />}
+      {!holder && <HoldersData address={address} tokenAddress={address} />}
     </Layout>
   )
 }
@@ -140,10 +140,7 @@ function HolderData({address, tokenAddress}) {
                 className="text_block text_block--ellipsis"
                 style={{width: '80%'}}
               >
-                <Link
-                  href={`/token/[address]?holder=${address}`}
-                  as={`/token/${tokenAddress}?holder=${address}`}
-                >
+                <Link href="/address/[address]" as={`/address/${address}`}>
                   <a>
                     <img
                       alt="user-pic"
