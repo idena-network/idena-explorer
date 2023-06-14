@@ -86,7 +86,7 @@ function TokenData({tokenInfo}) {
                         className="user-pic"
                         width="32"
                         src={`https://robohash.idena.io/${
-                          tokenInfo && tokenInfo.contractAddress
+                          tokenInfo && tokenInfo.contractAddress.toLowerCase()
                         }`}
                       />
                       <span>{tokenInfo && tokenInfo.contractAddress}</span>
@@ -146,7 +146,7 @@ function HolderData({address, tokenAddress}) {
                       alt="user-pic"
                       className="user-pic"
                       width="32"
-                      src={`https://robohash.idena.io/${address}`}
+                      src={`https://robohash.idena.io/${address.toLowerCase()}`}
                     />
                     <span>{address}</span>
                   </a>
