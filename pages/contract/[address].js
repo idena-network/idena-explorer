@@ -284,7 +284,7 @@ function ContractData({addressInfo, contractInfo, verification}) {
                           alt="user-pic"
                           className="user-pic"
                           width="32"
-                          src={`https://robohash.idena.io/${token.contractAddress}`}
+                          src={`https://robohash.idena.io/${token.contractAddress.toLowerCase()}`}
                         />
                         <span>{token.contractAddress}</span>
                       </a>
