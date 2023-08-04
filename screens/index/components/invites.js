@@ -34,10 +34,11 @@ export default function Invites({epoch}) {
             getCount(identitiesSummary, 'Newbie')
           : 0
 
-      const totalCount = Math.max(
-        500,
-        Math.round(prevNodesCount / 2 + prevNodesCount * 0.1)
+      const godNodeInvites = Math.min(
+        Math.max(500, prevNodesCount * 0.1),
+        Math.max(50, prevNodesCount / 3)
       )
+      const totalCount = Math.round(prevNodesCount / 2 + godNodeInvites)
       const {usedCount, allCount: issuedCount} = invitesSummary
 
       setState({
