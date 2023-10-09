@@ -49,19 +49,6 @@ export default function History({address, poolInfo, visible}) {
         </thead>
         <tbody>
           {!visible || (status === 'loading' && <SkeletonRows cols={3} />)}
-          {visible && lastEpoch && (currentEpochSize || poolInfo.size || '') && (
-            <tr key={lastEpoch.epoch}>
-              <td>
-                <div className="text_block text_block--ellipsis">
-                  <Link href="/epoch/[epoch]" as={`/epoch/${lastEpoch.epoch}`}>
-                    <a>{epochFmt(lastEpoch.epoch)}</a>
-                  </Link>
-                </div>
-              </td>
-              <td>{currentEpochSize}</td>
-              <td>{poolInfo.size}</td>
-            </tr>
-          )}
           {data.map(
             (page) =>
               page &&
@@ -75,7 +62,11 @@ export default function History({address, poolInfo, visible}) {
                     </div>
                   </td>
                   <td>{item.startSize}</td>
-                  <td>{item.validationSize}</td>
+                  <td>
+                    {lastEpoch && poolInfo && lastEpoch.epoch === item.epoch
+                      ? poolInfo.size
+                      : item.validationSize}
+                  </td>
                 </tr>
               ))
           )}
