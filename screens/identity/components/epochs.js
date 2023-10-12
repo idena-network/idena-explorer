@@ -260,7 +260,18 @@ function WrongAnswers({identity, address, shortScoreTxt, longScoreTxt}) {
       </td>
       <td>{identityStatusFmt(identity.prevState)}</td>
       <td>{identityStatusFmt(identity.state)}</td>
-      <td>-</td>
+      <td>
+        {identity.totalValidationReward * 1 ? (
+          <Link
+            href="/identity/[address]/epoch/[epoch]/rewards"
+            as={`/identity/${address}/epoch/${identity.epoch + 1}/rewards`}
+          >
+            <a>{dnaFmt(identity.totalValidationReward, '')}</a>
+          </Link>
+        ) : (
+          '-'
+        )}
+      </td>
       <td>{shortScoreTxt}</td>
       <td>{longScoreTxt}</td>
       <td>Wrong answers</td>
